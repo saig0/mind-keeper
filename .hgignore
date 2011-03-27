@@ -1,0 +1,13 @@
+
+syntax: regexp
+.classpath
+syntax: regexp
+.settings/.*
+syntax: regexp
+target/.*
+syntax: regexp
+.*(.svn).*
+
+syntax: regexp
+
+.*(lib/).*
