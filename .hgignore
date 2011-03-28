@@ -11,3 +11,8 @@ syntax: regexp
 syntax: regexp
 
 .*(lib/).*
+syntax: regexp
+war/openNoteKeeper*
+
+syntax: regexp
+.*(.class)

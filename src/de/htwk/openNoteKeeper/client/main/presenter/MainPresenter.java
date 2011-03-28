@@ -12,6 +12,8 @@ import de.htwk.openNoteKeeper.client.main.view.MainViewImpl;
 public class MainPresenter extends BasePresenter<MainViewImpl, MainEventBus> {
 	public interface MainView extends IsWidget {
 		public void setContent(Widget content);
+
+		public void setUserWidget(Widget userWidget);
 	}
 
 	@Override
@@ -21,6 +23,10 @@ public class MainPresenter extends BasePresenter<MainViewImpl, MainEventBus> {
 
 	public void onStart() {
 
+	}
+
+	public void onSetUserWidget(Widget userWidget) {
+		view.setUserWidget(userWidget);
 	}
 
 }

@@ -16,7 +16,7 @@ public enum IconPool {
 			"offline_user.png"), Chat_User("chat_user.png"), User_Request(
 			"user_request.png"), User_Notification("user_notification.png"), Favourite(
 			"favourite.png"), Find("find.png"), Notice("notice.png"), Loading(
-			"loading2.gif");
+			"loading2.gif"), Google("google.jpg");
 
 	private final String dir = "images/";
 	private final String url;
