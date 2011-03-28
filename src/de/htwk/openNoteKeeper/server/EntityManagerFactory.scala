@@ -1,4 +1,4 @@
-package de.le.mfw.server
+package de.htwk.openNoteKeeper.server
 
 import javax.jdo.JDOHelper
 
