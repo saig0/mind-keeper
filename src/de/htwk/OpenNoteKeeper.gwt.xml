@@ -2,7 +2,7 @@
 <!DOCTYPE module PUBLIC "-//Google Inc.//DTD Google Web Toolkit 2.2.0//EN" "http://google-web-toolkit.googlecode.com/svn/tags/2.2.0/distro-source/core/src/gwt-module.dtd">
 <module rename-to='openNoteKeeper'>
 	<inherits name="com.google.gwt.user.User" />
-	
+
 	<inherits name="com.smartclient.theme.graphite.Graphite" />
 
 	<!-- Other module inherits -->
@@ -12,6 +12,6 @@
 	<!-- Specify the paths for translatable code -->
 	<source path='client' />
 	<source path='shared' />
-	
+
 	<entry-point class="de.htwk.openNoteKeeper.client.OpenNoteKeeper" />
 </module>
