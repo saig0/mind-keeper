@@ -1,16 +1,18 @@
 package de.htwk.openNoteKeeper.client.main.view;
 
 import com.google.gwt.user.client.ui.Widget;
-import com.smartgwt.client.widgets.Label;
+import com.smartgwt.client.types.Alignment;
+import com.smartgwt.client.widgets.layout.HLayout;
 import com.smartgwt.client.widgets.layout.Layout;
 import com.smartgwt.client.widgets.layout.VLayout;
 
 import de.htwk.openNoteKeeper.client.main.presenter.MainPresenter.MainView;
+import de.htwk.openNoteKeeper.client.util.IconPool;
 
 public class MainViewImpl implements MainView {
 
+	private HLayout subHeader = new HLayout();
 	private Layout content = new VLayout();
-	private Layout header = new VLayout();
 
 	public Widget asWidget() {
 		VLayout main = new VLayout();
@@ -18,17 +20,25 @@ public class MainViewImpl implements MainView {
 		main.setMembersMargin(20);
 		main.setLayoutMargin(5);
 
+		HLayout header = new HLayout();
+		header.setHeight(75);
 		header.setWidth100();
-		header.setHeight("50px");
 
-		header.addMember(new Label("header"));
+		HLayout logo = new HLayout();
+		logo.setWidth(600);
+		logo.addMember(IconPool.Logo.createImage());
+		header.addMember(logo);
+
+		subHeader.setWidth("*");
+		subHeader.setAlign(Alignment.RIGHT);
+		subHeader.setMembersMargin(5);
+		subHeader.setLayoutMargin(10);
+		header.addMember(subHeader);
 
 		main.addMember(header);
 
 		content.setWidth100();
 		content.setHeight("*");
-
-		content.addMember(new Label("content"));
 
 		main.addMember(content);
 
@@ -43,9 +53,6 @@ public class MainViewImpl implements MainView {
 	}
 
 	public void setUserWidget(Widget userWidget) {
-		Layout container = new VLayout();
-		container.setSize("100%", "100%");
-		container.addMember(userWidget);
-		header.setMembers(container);
+		subHeader.addMember(userWidget);
 	}
 }
