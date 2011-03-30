@@ -17,7 +17,8 @@ public enum IconPool {
 			"user_request.png"), User_Notification("user_notification.png"), Favourite(
 			"favourite.png"), Find("find.png"), Notice("notice.png"), Loading(
 			"loading2.gif"), Google("google.jpg"), Google_Transparent(
-			"google_transparent.gif");
+			"google_transparent.gif"), Trash("trash.png"), Trash_Big(
+			"trash_big.png");
 
 	private final String dir = "images/";
 	private final String url;
