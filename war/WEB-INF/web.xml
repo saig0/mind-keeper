@@ -16,6 +16,16 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
 		<url-pattern>/openNoteKeeper/user</url-pattern>
 	</servlet-mapping>
 
+	<servlet>
+		<servlet-name>noteServlet</servlet-name>
+		<servlet-class>de.htwk.openNoteKeeper.server.NoteServiceImpl</servlet-class>
+	</servlet>
+
+	<servlet-mapping>
+		<servlet-name>noteServlet</servlet-name>
+		<url-pattern>/openNoteKeeper/note</url-pattern>
+	</servlet-mapping>
+
 	<!-- Default page to serve -->
 	<welcome-file-list>
 		<welcome-file>OpenNoteKeeper.html</welcome-file>

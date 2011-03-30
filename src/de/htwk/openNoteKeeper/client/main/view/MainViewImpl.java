@@ -17,11 +17,11 @@ public class MainViewImpl implements MainView {
 	public Widget asWidget() {
 		VLayout main = new VLayout();
 		main.setSize("100%", "100%");
-		main.setMembersMargin(20);
-		main.setLayoutMargin(5);
+		main.setMembersMargin(50);
+		main.setLayoutMargin(10);
 
 		HLayout header = new HLayout();
-		header.setHeight(75);
+		header.setHeight(100);
 		header.setWidth100();
 
 		HLayout logo = new HLayout();
