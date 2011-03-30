@@ -25,7 +25,7 @@ public class UserViewImpl implements UserView {
 		}
 
 		public void onClick(ClickEvent event) {
-			Window.open(url, "", "");
+			Window.open(url, "_self", "");
 		}
 	}
 
