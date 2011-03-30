@@ -15,6 +15,7 @@ public class DragableImage extends Img {
 		setCanDrag(true);
 		setCanDrop(true);
 		setDragAppearance(DragAppearance.TRACKER);
+		setDragType("new note");
 	}
 
 	@Override
