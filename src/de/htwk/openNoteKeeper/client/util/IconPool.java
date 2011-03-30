@@ -15,10 +15,11 @@ public enum IconPool {
 			"add_user.png"), Remove_User("remove_user.png"), User("user.png"), User_Offline(
 			"offline_user.png"), Chat_User("chat_user.png"), User_Request(
 			"user_request.png"), User_Notification("user_notification.png"), Favourite(
-			"favourite.png"), Find("find.png"), Notice("notice.png"), Loading(
-			"loading2.gif"), Google("google.jpg"), Google_Transparent(
+			"favourite.png"), Find("find.png"), Notice("notice.png"), Notice_Big(
+			"notice_big.png"), Loading("loading2.gif"), Google("google.jpg"), Google_Transparent(
 			"google_transparent.gif"), Trash("trash.png"), Trash_Big(
-			"trash_big.png");
+			"trash_big.png"), Trash_Full("trash_full.png"), Trash_Full_Big(
+			"trash_full_big.png");
 
 	private final String dir = "images/";
 	private final String url;

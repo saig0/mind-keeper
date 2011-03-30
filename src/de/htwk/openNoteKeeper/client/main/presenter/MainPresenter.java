@@ -7,6 +7,7 @@ import com.mvp4g.client.presenter.BasePresenter;
 
 import de.htwk.openNoteKeeper.client.main.MainEventBus;
 import de.htwk.openNoteKeeper.client.main.view.MainViewImpl;
+import de.htwk.openNoteKeeper.shared.UserDTO;
 
 @Presenter(view = MainViewImpl.class)
 public class MainPresenter extends BasePresenter<MainViewImpl, MainEventBus> {
@@ -25,8 +26,15 @@ public class MainPresenter extends BasePresenter<MainViewImpl, MainEventBus> {
 
 	}
 
+	public void onLoggedIn(UserDTO user) {
+
+	}
+
 	public void onSetUserWidget(Widget userWidget) {
 		view.setUserWidget(userWidget);
 	}
 
+	public void onSetContent(Widget content) {
+		view.setContent(content);
+	}
 }

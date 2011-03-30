@@ -67,6 +67,7 @@ public class UserPresenter extends BasePresenter<UserViewImpl, MainEventBus> {
 			@Override
 			protected void success(UserDTO user) {
 				view.setUser(user);
+				eventBus.loggedIn(user);
 			}
 		});
 	}
