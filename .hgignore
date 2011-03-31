@@ -7,12 +7,7 @@ syntax: regexp
 target/.*
 syntax: regexp
 .*(.svn).*
-
-syntax: regexp
-
-.*(lib/).*
 syntax: regexp
 war/openNoteKeeper*
-
 syntax: regexp
 .*(.class)
