@@ -6,7 +6,6 @@ import com.google.gwt.user.client.ui.Widget;
 import com.smartgwt.client.types.Cursor;
 import com.smartgwt.client.widgets.Canvas;
 import com.smartgwt.client.widgets.Img;
-import com.smartgwt.client.widgets.Window;
 import com.smartgwt.client.widgets.events.DropEvent;
 import com.smartgwt.client.widgets.events.DropHandler;
 import com.smartgwt.client.widgets.events.DropOutEvent;
@@ -18,7 +17,9 @@ import com.smartgwt.client.widgets.layout.Layout;
 import com.smartgwt.client.widgets.layout.VLayout;
 
 import de.htwk.openNoteKeeper.client.main.presenter.NotePresenter.NoteView;
-import de.htwk.openNoteKeeper.client.util.DragableImage;
+import de.htwk.openNoteKeeper.client.main.view.widget.ConfigureNoteWidget;
+import de.htwk.openNoteKeeper.client.main.view.widget.DragableImage;
+import de.htwk.openNoteKeeper.client.main.view.widget.NoteWidget;
 import de.htwk.openNoteKeeper.client.util.IconPool;
 import de.htwk.openNoteKeeper.shared.NoteDTO;
 
@@ -29,6 +30,7 @@ public class NoteViewImpl implements NoteView {
 	private Img removeButton = new Img(IconPool.Trash_Big.getUrl(), 64, 64);
 
 	private Canvas notePanel = new Canvas();
+	private Canvas activeNote = null;
 
 	public Widget asWidget() {
 		Layout main = new HLayout();
@@ -75,14 +77,12 @@ public class NoteViewImpl implements NoteView {
 		removeButton.addDropHandler(new DropHandler() {
 
 			public void onDrop(DropEvent event) {
-
-				notePanel.removeChild(notePanel.getChildren()[ch]);
+				if (activeNote != null)
+					notePanel.removeChild(activeNote);
 			}
 		});
 		return control;
 	}
-
-	int ch = 0;
 
 	private Canvas createNotePanel() {
 		notePanel.setWidth("*");
@@ -94,37 +94,33 @@ public class NoteViewImpl implements NoteView {
 		notePanel.addDropHandler(new DropHandler() {
 
 			public void onDrop(DropEvent event) {
-				Window note = new Window();
-				note.setWidth("200px");
-				note.setHeight("200px");
-				note.setLeft(notePanel.getOffsetX() - 15);
-				note.setTop(notePanel.getOffsetY() - 15);
-				note.setTitle("Notiz");
-				note.setShowCloseButton(false);
-				note.setIsModal(false);
-				note.setAnimateMinimize(true);
-				note.setCanDrag(true);
-				note.setCanDrop(true);
-				note.setCanDragResize(true);
-				note.setDragType("note");
-
-				int c = 0;
-				for (Canvas child : notePanel.getChildren())
-					if (!child.equals(note))
-						c++;
-					else
-						ch = c;
-
-				notePanel.addChild(note);
+				createNewNoteConfigureWidget(event);
 			}
 		});
 
 		return notePanel;
 	}
 
+	public void createNewNoteWidget(String title) {
+		NoteWidget note = new NoteWidget(title);
+		note.setPosition(notePanel.getOffsetX(), notePanel.getOffsetY());
+		note.setNoteView(this);
+		notePanel.addChild(note);
+	}
+
+	public void setActiveNote(NoteWidget note) {
+		this.activeNote = note;
+	}
+
 	public void setNotes(List<NoteDTO> notes) {
 		// TODO Auto-generated method stub
 
+	}
+
+	private void createNewNoteConfigureWidget(DropEvent event) {
+		ConfigureNoteWidget noteTitleWidget = new ConfigureNoteWidget();
+		noteTitleWidget.setPosition(event.getX(), event.getY());
+		noteTitleWidget.setNoteView(this);
 	}
 
 }
