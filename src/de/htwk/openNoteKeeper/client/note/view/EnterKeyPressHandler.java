@@ -1,4 +1,4 @@
-package de.htwk.openNoteKeeper.client.main.view.widget;
+package de.htwk.openNoteKeeper.client.note.view;
 
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.NativeEvent;

@@ -5,7 +5,7 @@ import de.htwk.openNoteKeeper.server.model.Note
 
 import de.htwk.openNoteKeeper.shared.NoteDTO
 
-import de.htwk.openNoteKeeper.client.main.service.NoteService
+import de.htwk.openNoteKeeper.client.note.service.NoteService
 import com.google.gwt.user.server.rpc.RemoteServiceServlet
 
 class NoteServiceImpl extends RemoteServiceServlet with NoteService with Persistence {
@@ -19,9 +19,10 @@ class NoteServiceImpl extends RemoteServiceServlet with NoteService with Persist
     noteDtos.toList.asInstanceOf[java.util.List[NoteDTO]]
   }
 
-  def addNoteToUser(userId: String, noteDto: NoteDTO) = {
-    val note = new Note(userId, noteDto.getTitle, noteDto.getContent)
+  def createNoteForUser(userId: String, title: String) = {
+    val note = new Note(userId, title, "")
     persist(note)
+    new NoteDTO(note.id, note.title, note.content)
   }
 
   def updateNoteOfUser(userId: String, noteDto: NoteDTO) = {

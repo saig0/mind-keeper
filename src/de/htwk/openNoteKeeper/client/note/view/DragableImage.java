@@ -1,4 +1,4 @@
-package de.htwk.openNoteKeeper.client.main.view.widget;
+package de.htwk.openNoteKeeper.client.note.view;
 
 import com.smartgwt.client.types.Cursor;
 import com.smartgwt.client.types.DragAppearance;
