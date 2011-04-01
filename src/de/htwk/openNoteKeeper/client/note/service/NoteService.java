@@ -1,4 +1,4 @@
-package de.htwk.openNoteKeeper.client.main.service;
+package de.htwk.openNoteKeeper.client.note.service;
 
 import java.util.List;
 
@@ -12,7 +12,7 @@ public interface NoteService extends RemoteService {
 
 	public List<NoteDTO> getAllNotesForUser(String userId);
 
-	public void addNoteToUser(String userId, NoteDTO note);
+	public NoteDTO createNoteForUser(String userId, String title);
 
 	public void updateNoteOfUser(String userId, NoteDTO note);
 

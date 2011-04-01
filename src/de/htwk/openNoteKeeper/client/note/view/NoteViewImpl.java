@@ -1,4 +1,4 @@
-package de.htwk.openNoteKeeper.client.main.view;
+package de.htwk.openNoteKeeper.client.note.view;
 
 import java.util.List;
 
@@ -6,20 +6,17 @@ import com.google.gwt.user.client.ui.Widget;
 import com.smartgwt.client.types.Cursor;
 import com.smartgwt.client.widgets.Canvas;
 import com.smartgwt.client.widgets.Img;
-import com.smartgwt.client.widgets.events.DropEvent;
-import com.smartgwt.client.widgets.events.DropHandler;
 import com.smartgwt.client.widgets.events.DropOutEvent;
 import com.smartgwt.client.widgets.events.DropOutHandler;
 import com.smartgwt.client.widgets.events.DropOverEvent;
 import com.smartgwt.client.widgets.events.DropOverHandler;
+import com.smartgwt.client.widgets.events.HasDropHandlers;
 import com.smartgwt.client.widgets.layout.HLayout;
 import com.smartgwt.client.widgets.layout.Layout;
 import com.smartgwt.client.widgets.layout.VLayout;
 
-import de.htwk.openNoteKeeper.client.main.presenter.NotePresenter.NoteView;
-import de.htwk.openNoteKeeper.client.main.view.widget.ConfigureNoteWidget;
-import de.htwk.openNoteKeeper.client.main.view.widget.DragableImage;
-import de.htwk.openNoteKeeper.client.main.view.widget.NoteWidget;
+import de.htwk.openNoteKeeper.client.note.presenter.NotePresenter.NoteView;
+import de.htwk.openNoteKeeper.client.note.presenter.NoteWidgetPresenter.NoteWidgetView;
 import de.htwk.openNoteKeeper.client.util.IconPool;
 import de.htwk.openNoteKeeper.shared.NoteDTO;
 
@@ -30,7 +27,6 @@ public class NoteViewImpl implements NoteView {
 	private Img removeButton = new Img(IconPool.Trash_Big.getUrl(), 64, 64);
 
 	private Canvas notePanel = new Canvas();
-	private Canvas activeNote = null;
 
 	public Widget asWidget() {
 		Layout main = new HLayout();
@@ -74,13 +70,6 @@ public class NoteViewImpl implements NoteView {
 				removeButton.setSrc(IconPool.Trash_Big.getUrl());
 			}
 		});
-		removeButton.addDropHandler(new DropHandler() {
-
-			public void onDrop(DropEvent event) {
-				if (activeNote != null)
-					notePanel.removeChild(activeNote);
-			}
-		});
 		return control;
 	}
 
@@ -90,26 +79,7 @@ public class NoteViewImpl implements NoteView {
 		notePanel.setShowEdges(true);
 		notePanel.setCanAcceptDrop(true);
 		notePanel.setDropTypes("new note");
-
-		notePanel.addDropHandler(new DropHandler() {
-
-			public void onDrop(DropEvent event) {
-				createNewNoteConfigureWidget(event);
-			}
-		});
-
 		return notePanel;
-	}
-
-	public void createNewNoteWidget(String title) {
-		NoteWidget note = new NoteWidget(title);
-		note.setPosition(notePanel.getOffsetX(), notePanel.getOffsetY());
-		note.setNoteView(this);
-		notePanel.addChild(note);
-	}
-
-	public void setActiveNote(NoteWidget note) {
-		this.activeNote = note;
 	}
 
 	public void setNotes(List<NoteDTO> notes) {
@@ -117,10 +87,20 @@ public class NoteViewImpl implements NoteView {
 
 	}
 
-	private void createNewNoteConfigureWidget(DropEvent event) {
-		ConfigureNoteWidget noteTitleWidget = new ConfigureNoteWidget();
-		noteTitleWidget.setPosition(event.getX(), event.getY());
-		noteTitleWidget.setNoteView(this);
+	public HasDropHandlers getDeleteNoteButton() {
+		return removeButton;
 	}
 
+	public void addNoteWidget(NoteWidgetView noteWidget) {
+		noteWidget.setPosition(notePanel.getOffsetX(), notePanel.getOffsetY());
+		notePanel.addChild((Canvas) noteWidget.asWidget());
+	}
+
+	public void removeNoteWidget(NoteWidgetView noteWidget) {
+		notePanel.removeChild((Canvas) noteWidget.asWidget());
+	}
+
+	public HasDropHandlers getCreateNewNoteButton() {
+		return notePanel;
+	}
 }

@@ -1,4 +1,4 @@
-package de.htwk.openNoteKeeper.client.main.service;
+package de.htwk.openNoteKeeper.client.note.service;
 
 import java.util.List;
 
@@ -10,7 +10,8 @@ public interface NoteServiceAsync {
 
 	void getAllNotesForUser(String userId, AsyncCallback<List<NoteDTO>> callback);
 
-	void addNoteToUser(String userId, NoteDTO note, AsyncCallback<Void> callback);
+	void createNoteForUser(String userId, String title,
+			AsyncCallback<NoteDTO> callback);
 
 	void updateNoteOfUser(String userId, NoteDTO note,
 			AsyncCallback<Void> callback);
