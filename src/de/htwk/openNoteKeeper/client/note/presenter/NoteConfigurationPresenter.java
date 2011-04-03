@@ -9,6 +9,7 @@ import com.smartgwt.client.widgets.events.HasClickHandlers;
 
 import de.htwk.openNoteKeeper.client.note.NoteEventBus;
 import de.htwk.openNoteKeeper.client.note.view.ConfigureNoteWidget;
+import de.htwk.openNoteKeeper.shared.UserDTO;
 
 @Presenter(view = ConfigureNoteWidget.class)
 public class NoteConfigurationPresenter extends
@@ -32,12 +33,17 @@ public class NoteConfigurationPresenter extends
 				String title = view.getNoteTitle();
 				view.hide();
 
-				NoteWidgetPresenter presenter = eventBus
-						.addHandler(NoteWidgetPresenter.class);
-				presenter.onCreateNewNote(title);
-				// eventBus.createNewNote(title);
+				NoteWidgetPresenter presenter = NoteWidgetPresenterFactory
+						.createPresenter(eventBus);
+				presenter.onCreateNewNote(user, title);
 			}
 		});
+	}
+
+	private UserDTO user;
+
+	public void onLoggedIn(UserDTO user) {
+		this.user = user;
 	}
 
 	public void onShowConfigurationNoteView(int left, int top) {

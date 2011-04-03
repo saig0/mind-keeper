@@ -69,7 +69,7 @@ public class NoteWidget implements NoteWidgetView {
 		widget.setShowDragShadow(true);
 	}
 
-	private void swithToEditor() {
+	public void switchToEditor() {
 		hideContent();
 		setEditorHeader();
 		showEditor();
@@ -92,7 +92,7 @@ public class NoteWidget implements NoteWidgetView {
 		editHeaderControl.addClickHandler(new ClickHandler() {
 
 			public void onClick(ClickEvent event) {
-				swithToEditor();
+				switchToEditor();
 			}
 		});
 
@@ -108,7 +108,7 @@ public class NoteWidget implements NoteWidgetView {
 		cancelHeaderControl.enable();
 	}
 
-	private void switchToContent() {
+	public void switchToContent() {
 		hideEditor();
 		setContentHeader();
 		showContent();
@@ -129,7 +129,6 @@ public class NoteWidget implements NoteWidgetView {
 
 	private Layout createEditorLayout() {
 		editor.setShowEdges(true);
-		editor.setCanFocus(true);
 		editorLayout.addMember(editor);
 		return editorLayout;
 	}
@@ -186,8 +185,6 @@ public class NoteWidget implements NoteWidgetView {
 	}
 
 	public Widget asWidget() {
-		swithToEditor();
-		editor.focus();
 		return widget;
 	}
 
