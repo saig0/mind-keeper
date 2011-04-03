@@ -10,12 +10,13 @@ import de.htwk.openNoteKeeper.client.note.presenter.NoteConfigurationPresenter;
 import de.htwk.openNoteKeeper.client.note.presenter.NotePresenter;
 import de.htwk.openNoteKeeper.client.note.presenter.NoteWidgetPresenter;
 import de.htwk.openNoteKeeper.client.note.presenter.NoteWidgetPresenter.NoteWidgetView;
+import de.htwk.openNoteKeeper.shared.NoteDTO;
 import de.htwk.openNoteKeeper.shared.UserDTO;
 
 @Events(startView = NoStartView.class, module = NoteModule.class)
 public interface NoteEventBus extends EventBus {
 
-	@Event(handlers = NotePresenter.class)
+	@Event(handlers = { NotePresenter.class, NoteConfigurationPresenter.class })
 	public void loggedIn(UserDTO user);
 
 	@Event(forwardToParent = true)
@@ -25,10 +26,16 @@ public interface NoteEventBus extends EventBus {
 	public void showConfigurationNoteView(int left, int top);
 
 	@Event(handlers = NoteWidgetPresenter.class)
-	public void createNewNote(String title);
+	public void createNewNote(UserDTO user, String title);
+
+	@Event(handlers = NoteWidgetPresenter.class)
+	public void showNote(UserDTO user, NoteDTO note);
 
 	@Event(handlers = NotePresenter.class)
 	public void newNoteCreated(NoteWidgetView noteWidget);
+
+	@Event(handlers = NotePresenter.class)
+	public void noteCreated(NoteWidgetView noteWidget);
 
 	@Event(handlers = NotePresenter.class)
 	public void editNoteWidget(NoteWidgetView noteWidget);

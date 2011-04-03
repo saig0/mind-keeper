@@ -26,7 +26,7 @@ public class NotePresenter extends BasePresenter<NoteViewImpl, NoteEventBus> {
 
 		public HasDropHandlers getCreateNewNoteButton();
 
-		public void setNotes(List<NoteDTO> notes);
+		public void addNewNoteWidget(NoteWidgetView noteWidget);
 
 		public void addNoteWidget(NoteWidgetView noteWidget);
 
@@ -44,6 +44,16 @@ public class NotePresenter extends BasePresenter<NoteViewImpl, NoteEventBus> {
 
 			public void onDrop(DropEvent event) {
 				view.removeNoteWidget(noteWidget);
+				NoteWidgetPresenterFactory.destroyPresenter(noteWidget);
+
+				noteService.removeNoteOfUser(user.getId(), noteWidget.getNote()
+						.getId(), new AbstractCallback<Void>() {
+
+					@Override
+					protected void success(Void result) {
+						// removed
+					}
+				});
 			}
 		});
 
@@ -59,22 +69,32 @@ public class NotePresenter extends BasePresenter<NoteViewImpl, NoteEventBus> {
 
 	public void onLoggedIn(UserDTO user) {
 		this.user = user;
-		// initView(user);
+
 		eventBus.setContent(view.asWidget());
+
+		loadNotesFromUser();
 	}
 
-	private void initView(UserDTO user) {
+	private void loadNotesFromUser() {
 		noteService.getAllNotesForUser(user.getId(),
 				new AbstractCallback<List<NoteDTO>>() {
 
 					@Override
 					protected void success(List<NoteDTO> notes) {
-						view.setNotes(notes);
+						for (NoteDTO note : notes) {
+							NoteWidgetPresenter presenter = NoteWidgetPresenterFactory
+									.createPresenter(eventBus);
+							presenter.onShowNote(user, note);
+						}
 					}
 				});
 	}
 
 	public void onNewNoteCreated(NoteWidgetView noteWidget) {
+		view.addNewNoteWidget(noteWidget);
+	}
+
+	public void onNoteCreated(NoteWidgetView noteWidget) {
 		view.addNoteWidget(noteWidget);
 	}
 

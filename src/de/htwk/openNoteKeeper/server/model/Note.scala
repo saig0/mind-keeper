@@ -1,7 +1,6 @@
 package de.htwk.openNoteKeeper.server.model
 
 import javax.jdo.annotations._
-import org.datanucleus._
 
 @PersistenceCapable
 class Note(
