@@ -9,12 +9,12 @@ import com.smartgwt.client.widgets.RichTextEditor;
 import com.smartgwt.client.widgets.Window;
 import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
-import com.smartgwt.client.widgets.events.DragResizeStopEvent;
-import com.smartgwt.client.widgets.events.DragResizeStopHandler;
 import com.smartgwt.client.widgets.events.HasClickHandlers;
 import com.smartgwt.client.widgets.events.HasDragRepositionStopHandlers;
 import com.smartgwt.client.widgets.events.HasDragResizeStopHandlers;
 import com.smartgwt.client.widgets.events.HasMouseDownHandlers;
+import com.smartgwt.client.widgets.events.ResizedEvent;
+import com.smartgwt.client.widgets.events.ResizedHandler;
 import com.smartgwt.client.widgets.layout.Layout;
 import com.smartgwt.client.widgets.layout.VLayout;
 
@@ -36,6 +36,8 @@ public class NoteWidget implements NoteWidgetView {
 
 	private int width = 200;
 	private int height = 200;
+
+	private boolean isEditorActive = false;
 
 	private HeaderControl saveHeaderControl = new HeaderControl(
 			HeaderControl.SAVE);
@@ -73,11 +75,13 @@ public class NoteWidget implements NoteWidgetView {
 		widget.setDragAppearance(DragAppearance.TARGET);
 		widget.setShowDragShadow(true);
 
-		widget.addDragResizeStopHandler(new DragResizeStopHandler() {
+		widget.addResizedHandler(new ResizedHandler() {
 
-			public void onDragResizeStop(DragResizeStopEvent event) {
-				width = widget.getWidth();
-				height = widget.getHeight();
+			public void onResized(ResizedEvent event) {
+				if (!isEditorActive) {
+					width = widget.getOffsetWidth();
+					height = widget.getOffsetHeight();
+				}
 			}
 		});
 	}
@@ -147,6 +151,9 @@ public class NoteWidget implements NoteWidgetView {
 	}
 
 	private void showContent() {
+		widget.setWidth(width);
+		widget.setHeight(height);
+
 		content.setContents(note.getContent());
 		contentLayout.setVisible(true);
 	}
@@ -156,6 +163,7 @@ public class NoteWidget implements NoteWidgetView {
 	}
 
 	private void showEditor() {
+		isEditorActive = true;
 		width = widget.getOffsetWidth();
 		height = widget.getOffsetHeight();
 
@@ -173,6 +181,7 @@ public class NoteWidget implements NoteWidgetView {
 
 		widget.setWidth(width);
 		widget.setHeight(height);
+		isEditorActive = false;
 	}
 
 	public void setPosition(Coordinate coordinate) {
