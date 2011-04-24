@@ -1,7 +1,5 @@
 package de.htwk.openNoteKeeper.client.note.view;
 
-import java.util.Random;
-
 import com.google.gwt.user.client.ui.Widget;
 import com.smartgwt.client.types.Cursor;
 import com.smartgwt.client.widgets.Canvas;
@@ -18,6 +16,7 @@ import com.smartgwt.client.widgets.layout.VLayout;
 import de.htwk.openNoteKeeper.client.note.presenter.NotePresenter.NoteView;
 import de.htwk.openNoteKeeper.client.note.presenter.NoteWidgetPresenter.NoteWidgetView;
 import de.htwk.openNoteKeeper.client.util.IconPool;
+import de.htwk.openNoteKeeper.shared.Coordinate;
 
 public class NoteViewImpl implements NoteView {
 
@@ -26,7 +25,6 @@ public class NoteViewImpl implements NoteView {
 	private Img removeButton = new Img(IconPool.Trash_Big.getUrl(), 64, 64);
 
 	private Canvas notePanel = new Canvas();
-	private Random random = new Random();
 
 	public Widget asWidget() {
 		Layout main = new HLayout();
@@ -87,15 +85,15 @@ public class NoteViewImpl implements NoteView {
 	}
 
 	public void addNewNoteWidget(NoteWidgetView noteWidget) {
-		noteWidget.setPosition(notePanel.getOffsetX(), notePanel.getOffsetY());
+		noteWidget.setPosition(new Coordinate(notePanel.getOffsetX(), notePanel
+				.getOffsetY()));
 		noteWidget.switchToEditor();
 		notePanel.addChild((Canvas) noteWidget.asWidget());
 	}
 
 	public void addNoteWidget(NoteWidgetView noteWidget) {
-		int left = notePanel.getLeft() + notePanel.getWidth() / 2;
-		int top = notePanel.getTop() + notePanel.getHeight() / 2;
-		noteWidget.setPosition(left, top);
+		noteWidget.setPosition(noteWidget.getNote().getPosition());
+		noteWidget.setSize(noteWidget.getNote().getSize());
 		noteWidget.switchToContent();
 		notePanel.addChild((Canvas) noteWidget.asWidget());
 	}

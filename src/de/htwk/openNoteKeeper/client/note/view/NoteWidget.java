@@ -9,12 +9,17 @@ import com.smartgwt.client.widgets.RichTextEditor;
 import com.smartgwt.client.widgets.Window;
 import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
+import com.smartgwt.client.widgets.events.DragResizeStopEvent;
+import com.smartgwt.client.widgets.events.DragResizeStopHandler;
 import com.smartgwt.client.widgets.events.HasClickHandlers;
+import com.smartgwt.client.widgets.events.HasDragRepositionStopHandlers;
+import com.smartgwt.client.widgets.events.HasDragResizeStopHandlers;
 import com.smartgwt.client.widgets.events.HasMouseDownHandlers;
 import com.smartgwt.client.widgets.layout.Layout;
 import com.smartgwt.client.widgets.layout.VLayout;
 
 import de.htwk.openNoteKeeper.client.note.presenter.NoteWidgetPresenter.NoteWidgetView;
+import de.htwk.openNoteKeeper.shared.Coordinate;
 import de.htwk.openNoteKeeper.shared.NoteDTO;
 
 public class NoteWidget implements NoteWidgetView {
@@ -67,6 +72,14 @@ public class NoteWidget implements NoteWidgetView {
 		widget.setKeepInParentRect(true);
 		widget.setDragAppearance(DragAppearance.TARGET);
 		widget.setShowDragShadow(true);
+
+		widget.addDragResizeStopHandler(new DragResizeStopHandler() {
+
+			public void onDragResizeStop(DragResizeStopEvent event) {
+				width = widget.getWidth();
+				height = widget.getHeight();
+			}
+		});
 	}
 
 	public void switchToEditor() {
@@ -162,9 +175,9 @@ public class NoteWidget implements NoteWidgetView {
 		widget.setHeight(height);
 	}
 
-	public void setPosition(int left, int top) {
-		widget.setLeft(left - widget.getOffsetWidth() / 2);
-		widget.setTop(top - widget.getOffsetHeight() / 2);
+	public void setPosition(Coordinate coordinate) {
+		widget.setLeft(coordinate.getX() - widget.getOffsetWidth() / 2);
+		widget.setTop(coordinate.getY() - widget.getOffsetHeight() / 2);
 	}
 
 	public HasClickHandlers getSaveNoteButton() {
@@ -186,6 +199,27 @@ public class NoteWidget implements NoteWidgetView {
 
 	public Widget asWidget() {
 		return widget;
+	}
+
+	public Coordinate getPosition() {
+		return new Coordinate(widget.getAbsoluteLeft(), widget.getAbsoluteTop());
+	}
+
+	public Coordinate getSize() {
+		return new Coordinate(width, height);
+	}
+
+	public HasDragRepositionStopHandlers getDragWidget() {
+		return widget;
+	}
+
+	public HasDragResizeStopHandlers getResizeWidget() {
+		return widget;
+	}
+
+	public void setSize(Coordinate size) {
+		widget.setWidth(size.getX());
+		widget.setHeight(size.getY());
 	}
 
 }

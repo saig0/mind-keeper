@@ -46,14 +46,14 @@ public class NotePresenter extends BasePresenter<NoteViewImpl, NoteEventBus> {
 				view.removeNoteWidget(noteWidget);
 				NoteWidgetPresenterFactory.destroyPresenter(noteWidget);
 
-				noteService.removeNoteOfUser(user.getId(), noteWidget.getNote()
-						.getId(), new AbstractCallback<Void>() {
+				noteService.removeNoteOfUser(user.getId(),
+						noteWidget.getNote(), new AbstractCallback<Void>() {
 
-					@Override
-					protected void success(Void result) {
-						// removed
-					}
-				});
+							@Override
+							protected void success(Void result) {
+								// removed
+							}
+						});
 			}
 		});
 

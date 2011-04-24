@@ -33,8 +33,11 @@ trait Persistence {
       modify(objectToModify)
     })
 
-  def delete[T](objectToPersist: T) =
-    request(pm => pm.getObjectById(pm.deletePersistent(objectToPersist)))
+  def delete[T](id: Long, objectType: Class[T]) =
+    request { pm =>
+      val objectToPersist = pm.getObjectById(objectType, id)
+      pm.deletePersistent(objectToPersist)
+    }
 
   def query[T](queryString: String): Option[T] =
     request(pm => {
