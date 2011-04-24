@@ -10,6 +10,7 @@ import de.htwk.openNoteKeeper.client.note.presenter.NoteConfigurationPresenter;
 import de.htwk.openNoteKeeper.client.note.presenter.NotePresenter;
 import de.htwk.openNoteKeeper.client.note.presenter.NoteWidgetPresenter;
 import de.htwk.openNoteKeeper.client.note.presenter.NoteWidgetPresenter.NoteWidgetView;
+import de.htwk.openNoteKeeper.shared.Coordinate;
 import de.htwk.openNoteKeeper.shared.NoteDTO;
 import de.htwk.openNoteKeeper.shared.UserDTO;
 
@@ -26,7 +27,7 @@ public interface NoteEventBus extends EventBus {
 	public void showConfigurationNoteView(int left, int top);
 
 	@Event(handlers = NoteWidgetPresenter.class)
-	public void createNewNote(UserDTO user, String title);
+	public void createNewNote(UserDTO user, String title, Coordinate position);
 
 	@Event(handlers = NoteWidgetPresenter.class)
 	public void showNote(UserDTO user, NoteDTO note);

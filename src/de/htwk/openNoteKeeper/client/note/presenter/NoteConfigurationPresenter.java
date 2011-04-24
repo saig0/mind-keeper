@@ -9,6 +9,7 @@ import com.smartgwt.client.widgets.events.HasClickHandlers;
 
 import de.htwk.openNoteKeeper.client.note.NoteEventBus;
 import de.htwk.openNoteKeeper.client.note.view.ConfigureNoteWidget;
+import de.htwk.openNoteKeeper.shared.Coordinate;
 import de.htwk.openNoteKeeper.shared.UserDTO;
 
 @Presenter(view = ConfigureNoteWidget.class)
@@ -35,7 +36,8 @@ public class NoteConfigurationPresenter extends
 
 				NoteWidgetPresenter presenter = NoteWidgetPresenterFactory
 						.createPresenter(eventBus);
-				presenter.onCreateNewNote(user, title);
+				presenter.onCreateNewNote(user, title,
+						new Coordinate(event.getX(), event.getY()));
 			}
 		});
 	}
