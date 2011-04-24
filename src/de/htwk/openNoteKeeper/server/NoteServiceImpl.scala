@@ -15,8 +15,11 @@ class NoteServiceImpl extends RemoteServiceServlet with NoteService with Persist
     findObjectsByCriteria(classOf[Note], new Criteria("ownerId", userId)) match {
       case Some(notes) => notes.map { note => noteDtos += new NoteDTO(note.id, note.title, note.content) }
       case None =>
-    }
-    noteDtos.toList.asInstanceOf[java.util.List[NoteDTO]]
+    }    
+    
+    val result = new java.util.LinkedList[NoteDTO]()
+    noteDtos foreach (note => result.add(note))
+    result
   }
 
   def createNoteForUser(userId: String, title: String) = {
