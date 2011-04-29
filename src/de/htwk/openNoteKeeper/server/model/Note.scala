@@ -8,10 +8,8 @@ class Note(
   @Persistent var ownerId: String,
   @Persistent var title: String,
   @Persistent var content: Text,
-  @Persistent var left: Int,
-  @Persistent var top: Int,
-  @Persistent var width: Int,
-  @Persistent var height: Int) {
+  @Persistent @Embedded var position: Position,
+  @Persistent @Embedded var size: Size) {
 
   @PrimaryKey
   @Persistent(valueStrategy = IdGeneratorStrategy.IDENTITY)
