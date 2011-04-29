@@ -172,7 +172,7 @@ public class NoteWidget implements NoteWidgetView {
 		if (height < 250)
 			widget.setHeight(250);
 
-		editor.setContents(note.getContent());
+		editor.setValue(note.getContent());
 		editorLayout.setVisible(true);
 	}
 
