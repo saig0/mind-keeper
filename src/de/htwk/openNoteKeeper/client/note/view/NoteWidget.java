@@ -140,12 +140,14 @@ public class NoteWidget implements NoteWidgetView {
 	private Layout createContentLayout() {
 		contentLayout.setLayoutMargin(10);
 		content.setContents("");
+		content.setHeight("*");
 		contentLayout.addMember(content);
 		return contentLayout;
 	}
 
 	private Layout createEditorLayout() {
-		editor.setShowEdges(true);
+		editor.setShowEdges(false);
+		editor.setValue("");
 		editorLayout.addMember(editor);
 		return editorLayout;
 	}
@@ -172,6 +174,7 @@ public class NoteWidget implements NoteWidgetView {
 		if (height < 250)
 			widget.setHeight(250);
 
+		editor.setValue(note.getContent());
 		editor.setValue(note.getContent());
 		editorLayout.setVisible(true);
 	}

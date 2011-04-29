@@ -16,6 +16,7 @@ import com.smartgwt.client.widgets.layout.VLayout;
 import de.htwk.openNoteKeeper.client.note.presenter.NotePresenter.NoteView;
 import de.htwk.openNoteKeeper.client.note.presenter.NoteWidgetPresenter.NoteWidgetView;
 import de.htwk.openNoteKeeper.client.util.IconPool;
+import de.htwk.openNoteKeeper.client.widget.DragableImage;
 import de.htwk.openNoteKeeper.shared.Coordinate;
 
 public class NoteViewImpl implements NoteView {

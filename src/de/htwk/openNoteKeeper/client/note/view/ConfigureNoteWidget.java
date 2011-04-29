@@ -85,4 +85,5 @@ public class ConfigureNoteWidget implements NoteConfigurationView {
 		titleItem.setValue("");
 		widget.hide();
 	}
+
 }
