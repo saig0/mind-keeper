@@ -10,10 +10,15 @@ import de.htwk.openNoteKeeper.shared.NoteDTO
 
 import de.htwk.openNoteKeeper.client.note.service.NoteService
 import com.google.gwt.user.server.rpc.RemoteServiceServlet
+import com.google.appengine.api.datastore.Text;
 
 class NoteServiceImpl extends RemoteServiceServlet with NoteService with Persistence {
 
   implicit def javaToScalaInt(d: java.lang.Integer) = d.intValue
+  
+  implicit def textToString(t: Text) = t.getValue
+  
+  implicit def stringToText(s: String) = new Text(s)
  
   def getAllNotesForUser(userId: String) = {
     val noteDtos = ListBuffer[NoteDTO]()
