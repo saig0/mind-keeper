@@ -11,3 +11,7 @@ syntax: regexp
 war/openNoteKeeper*
 syntax: regexp
 .*(.class)
+syntax: regexp
+^war/WEB-INF/appengine-generated$
+syntax: regexp
+^war/WEB-INF/deploy$
