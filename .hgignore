@@ -1,13 +1,11 @@
-
-syntax: regexp
-paper/*.log
-syntax: regexp
-paper/*.aux
-syntax: regexp
-paper/*.out
-syntax: regexp
-paper/*.pdf
-
+syntax: glob
+./paper/*.log
+syntax: glob
+./paper/*.aux
+syntax: glob
+./paper/*.out
+syntax: glob
+./paper/*.pdf
 syntax: regexp
 .classpath
 syntax: regexp
