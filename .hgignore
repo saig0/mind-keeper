@@ -1,5 +1,14 @@
 
 syntax: regexp
+paper/*.log
+syntax: regexp
+paper/*.aux
+syntax: regexp
+paper/*.out
+syntax: regexp
+paper/*.pdf
+
+syntax: regexp
 .classpath
 syntax: regexp
 .settings/.*
