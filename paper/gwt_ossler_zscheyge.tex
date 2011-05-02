@@ -1,0 +1,109 @@
+\documentclass[12pt, a4paper, ngerman]{article}
+\usepackage{babel}
+\usepackage[utf8]{inputenc}
+
+\usepackage[numbers]{natbib}
+
+%\usepackage{ucs}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+
+\usepackage[T1]{fontenc}
+\usepackage[bitstream-charter]{mathdesign}
+\usepackage[pdftex]{graphicx}
+\usepackage[usenames, dvipsnames]{color}
+
+\usepackage{vmargin}
+\usepackage{float}
+\usepackage[font=small, format=plain, labelfont=bf]{caption}
+\usepackage{url}
+\usepackage{verbatim}
+\usepackage{listings}
+\usepackage[colorlinks]{hyperref}
+
+\usepackage{fancyhdr}
+%\usepackage[bottom]{footmisc}
+
+%% Define a new 'leo' style for the package that will use a smaller font.
+\makeatletter
+\def\url@leostyle{%
+  \@ifundefined{selectfont}{\def\UrlFont{\sf}}{\def\UrlFont{\small\ttfamily}}}
+\makeatother
+%% Now actually use the newly defined style.
+\urlstyle{leo}
+
+\setmarginsrb{2.5cm}{1.5cm}{2.5cm}{1.5cm}%
+			 {7mm}{1.2cm}{4mm}{1.5cm}
+
+\author{Philipp Ossler, Oliver Zscheyge}
+\title{Anwendungsentwicklung mit dem Google Web Toolkit}
+
+\setlength{\parindent}{0pt}
+
+% Document begin
+% ==============
+\begin{document}
+\pagestyle{plain}
+
+ref:learnmore
+http://code.google.com/webtoolkit/learnmore-sdk.html
+
+Entry Point (http://code.google.com/webtoolkit/doc/latest/DevGuideCodingBasicsClient.html)
+/DevGuideMvpActivitiesAndPlaces.html)
+
+% Einleitung
+% ==========
+\section{Einleitung}
+
+Web bietet längst nicht nur Webseiten, sondern vielmehr komplexe Web-Applikationen. Entwicklung von Web-Apps aufwändig, tangiert viele Technologien: HTML/XML. CSS und Javascript/Ajax (Frontend) und beliebige Backends. Nachteil Javascript: keine statische Typkontrolle.
+
+Ansatz GWT: siehe Stichpunkte
+
+\begin{itemize}
+\item Anwendungsgebiete: komplexe browserbasierte Client-Server-Anwendungen.
+\item Front-End: optimiertes Javascript/AJAX wird aus browserunabhängigen, statisch getypten Java-Code generiert \cite{ref:learnmore}. Vorteil: Nutzung vieler Java-Bibliotheken und -Frameworks problemlos möglich
+\item Back-End: kann, muss aber nicht in Java geschrieben werden (gängige Protokolle werden unterstützt)!
+\end{itemize}
+
+% Konzepte und Technologien
+% =========================
+\section{Konzepte und Technologien}
+\begin{itemize}
+\item Client-Server-Kommunikation (JSON, XML, RPC \cite{ref:learnmore})
+\item Client: HTML, CSS, Javascript (Ajax)
+\item Model-View-Presenter (MVP)
+\item Activities & Places (http://code.google.com/webtoolkit/doc/latest)
+\end{itemize}
+
+% Architektur einer GWT-Applikation
+% =================================
+\section{Architektur einer GWT-Applikation}
+
+\subsection{Vorstellung der Beispielanwendung "`OpenNoteKeeper"'}
+
+\subsection{Projektorganisation einer GWT-Anwendung}
+\url{http://code.google.com/webtoolkit/doc/latest/DevGuideOrganizingProjects.html}
+
+\subsection{Model-View-Presenter}
+Realisierung des MVC-Patterns in GWT:
+EntryPoint, EventBus, Activities&Places, AppController mit eingebautem Historymanagement
+
+\subsection{Erstellung der Benutzerschnittstelle}
+Ggf. ergänzende Frameworks nutzen: Smart GWT (Widget-Bibliothek)
+
+\subsection{Serverseitige Funktionserweiterung}
+
+% TODO: ggf streichen und mit in der Architektur als Möglichkeit erwähnen
+% Über dem Tellerrand: Ergänzende Frameworks
+% ==========================================   
+\section{Über dem Tellerrand: Ergänzende Frameworks}
+
+% Zusammenfassung
+% ===============
+\section{Zusammenfassung}
+
+\end{document}
+
+
+
