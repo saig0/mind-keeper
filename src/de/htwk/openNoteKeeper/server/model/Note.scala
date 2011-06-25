@@ -8,10 +8,12 @@ class Note(
   @Persistent var ownerId: String,
   @Persistent var title: String,
   @Persistent var content: Text,
-  @Persistent @Embedded var position: Position,
-  @Persistent @Embedded var size: Size) {
+  @Persistent var left: Int,
+  @Persistent var top: Int,
+  @Persistent var width: Int,
+  @Persistent var height: Int) {
 
   @PrimaryKey
   @Persistent(valueStrategy = IdGeneratorStrategy.IDENTITY)
-  var id: java.lang.Long = null
+  var id: java.lang.Long = _
 }

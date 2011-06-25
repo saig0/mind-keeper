@@ -1,43 +1,46 @@
 package de.htwk.openNoteKeeper.client.widget;
 
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.dom.client.Style.Unit;
+import com.google.gwt.i18n.client.Constants;
+import com.google.gwt.user.client.ui.DockLayoutPanel;
 import com.google.gwt.user.client.ui.Image;
-import com.smartgwt.client.widgets.Label;
-import com.smartgwt.client.widgets.Window;
-import com.smartgwt.client.widgets.layout.HLayout;
+import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.PopupPanel;
 
 import de.htwk.openNoteKeeper.client.util.IconPool;
 
 public class InfoPopup {
 
-	private final Window window = new Window();
+	public static interface InfoPopupConstants extends Constants {
+		String getTitle();
+	}
+
+	private final InfoPopupConstants constants = GWT
+			.create(InfoPopupConstants.class);
+
+	private final PopupPanel window = new PopupPanel(false, true);
 
 	public InfoPopup(String message) {
-		window.setAutoSize(true);
-		window.setAutoCenter(true);
-		window.setShowMinimizeButton(false);
-		window.setIsModal(true);
-		window.setShowModalMask(true);
-		window.setTitle("Info");
+		window.setAnimationEnabled(true);
+		window.setGlassEnabled(true);
+		window.setTitle(constants.getTitle());
 
-		HLayout layout = new HLayout();
-		layout.setWidth(250);
-		layout.setHeight(50);
-		layout.setMembersMargin(15);
-		layout.setLayoutMargin(10);
+		DockLayoutPanel layout = new DockLayoutPanel(Unit.EM);
 
 		Image image = IconPool.Info_Big.createImage();
-		image.setWidth("50px");
-		layout.addMember(image);
+		// image.setWidth("50px");
+		layout.addWest(image, 10);
 
 		Label errorMessage = new Label(message);
-		errorMessage.setWidth("*");
-		layout.addMember(errorMessage);
+		// errorMessage.setWidth("*");
+		layout.add(errorMessage);
 
-		window.addItem(layout);
+		window.add(layout);
 	}
 
 	public void show() {
-		window.show();
+		window.center();
 	}
 
 }
