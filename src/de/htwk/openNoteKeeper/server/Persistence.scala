@@ -11,7 +11,6 @@ import com.google.gwt.user.client.rpc.SerializationException
 
 trait Persistence {
 
-  @throws(classOf[SerializationException])
   private def request[T](f: (PersistenceManager) => T): T = {
     val entityManager = EntityManagerFactory.persistenceManager
     try {
