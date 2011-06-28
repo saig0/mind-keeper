@@ -1,35 +1,37 @@
 package de.htwk.openNoteKeeper.client.util;
 
 import com.google.gwt.event.shared.GwtEvent;
+import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.smartgwt.client.widgets.Canvas;
-import com.smartgwt.client.widgets.Window;
+import com.google.gwt.user.client.ui.FocusWidget;
+import com.google.gwt.user.client.ui.PopupPanel;
 
 import de.htwk.openNoteKeeper.client.widget.ErrorPopup;
 
 public abstract class LoadingScreenCallback<T> implements AsyncCallback<T> {
 
-	private final Canvas widget;
-	private final Window loadingPanel;
+	private final FocusWidget widget;
+	private final PopupPanel loadingPanel;
 
 	public LoadingScreenCallback(GwtEvent<?> event) {
-		widget = (Canvas) event.getSource();
+		widget = (FocusWidget) event.getSource();
 		loadingPanel = addLoading(widget);
+		loadingPanel.show();
 	}
 
-	private Window addLoading(Canvas widget) {
-		widget.disable();
+	private PopupPanel addLoading(FocusWidget widget) {
+		widget.setEnabled(false);
 
-		int x = calculatePosition(widget.getAbsoluteLeft(), widget.getWidth());
-		int y = calculatePosition(widget.getAbsoluteTop(), widget.getHeight());
+		Element element = widget.getElement();
+		int x = calculatePosition(element.getAbsoluteLeft(),
+				element.getClientWidth());
+		int y = calculatePosition(element.getAbsoluteTop(),
+				element.getClientHeight());
 
-		Window loadingPanel = new Window();
-		loadingPanel.setShowEdges(false);
-		loadingPanel.setShowHeader(false);
-		loadingPanel.setShowStatusBar(false);
-		loadingPanel.addItem(IconPool.Loading.createImage());
-		loadingPanel.moveTo(x, y);
-		loadingPanel.show();
+		PopupPanel loadingPanel = new PopupPanel(false, false);
+		loadingPanel.setAnimationEnabled(true);
+		loadingPanel.add(IconPool.Loading.createImage());
+		loadingPanel.setPopupPosition(x, y);
 		return loadingPanel;
 	}
 
@@ -39,7 +41,7 @@ public abstract class LoadingScreenCallback<T> implements AsyncCallback<T> {
 
 	private void removeLoading() {
 		loadingPanel.hide();
-		widget.enable();
+		widget.setEnabled(true);
 	}
 
 	public void onFailure(Throwable caught) {
