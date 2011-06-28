@@ -13,8 +13,6 @@ import de.htwk.openNoteKeeper.shared.UserDTO;
 public class MainPresenter extends BasePresenter<MainViewImpl, MainEventBus> {
 	public interface MainView extends IsWidget {
 		public void setContent(Widget content);
-
-		public void setUserWidget(Widget userWidget);
 	}
 
 	@Override
@@ -28,10 +26,6 @@ public class MainPresenter extends BasePresenter<MainViewImpl, MainEventBus> {
 
 	public void onLoggedIn(UserDTO user) {
 
-	}
-
-	public void onSetUserWidget(Widget userWidget) {
-		view.setUserWidget(userWidget);
 	}
 
 	public void onSetContent(Widget content) {

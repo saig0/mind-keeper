@@ -1,11 +1,12 @@
 package de.htwk.openNoteKeeper.server
 import com.google.gwt.user.server.rpc.RemoteServiceServlet
 
-import de.htwk.openNoteKeeper.shared.UserDTO
+import de.htwk.openNoteKeeper.shared._
 
 import com.google.appengine.api.users.UserServiceFactory
 
 import de.htwk.openNoteKeeper.client.main.service.UserService
+import scala.collection.JavaConversions._
 
 class UserServiceImpl extends RemoteServiceServlet with UserService {
 
@@ -13,7 +14,10 @@ class UserServiceImpl extends RemoteServiceServlet with UserService {
 
   def isLoggedIn = userService.isUserLoggedIn
 
-  def getLoginUrl = userService.createLoginURL("/")
+  def getLoginUrl(openIdProvider: String) = userService.createLoginURL("/", null, openIdProvider, Set[String]())
+
+  def getLoginUrlsForOpenIdProviders =
+    (OpenIdProvider.values() map ((provider) => provider -> getLoginUrl(provider.getUrl))).toMap[OpenIdProvider, String]
 
   def getLogoutUrl = userService.createLogoutURL("/")
 

@@ -2,19 +2,19 @@ package de.htwk.openNoteKeeper.client.util;
 
 import com.google.gwt.event.shared.GwtEvent;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.smartgwt.client.widgets.Canvas;
+import com.google.gwt.user.client.ui.FocusWidget;
 
 import de.htwk.openNoteKeeper.client.widget.ErrorPopup;
 
-public abstract class AbstractCallback<T> implements AsyncCallback<T> {
+public abstract class NonBlockingCallback<T> implements AsyncCallback<T> {
 
-	private Canvas widget;
+	private FocusWidget widget;
 
-	public AbstractCallback() {
+	public NonBlockingCallback() {
 	}
 
-	public AbstractCallback(GwtEvent<?> event) {
-		widget = (Canvas) event.getSource();
+	public NonBlockingCallback(GwtEvent<?> event) {
+		widget = (FocusWidget) event.getSource();
 	}
 
 	public void onFailure(Throwable caught) {

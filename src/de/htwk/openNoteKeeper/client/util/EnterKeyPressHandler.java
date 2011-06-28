@@ -3,9 +3,10 @@ package de.htwk.openNoteKeeper.client.util;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.event.dom.client.DomEvent;
+import com.google.gwt.event.dom.client.KeyCodes;
+import com.google.gwt.event.dom.client.KeyPressEvent;
+import com.google.gwt.event.dom.client.KeyPressHandler;
 import com.google.gwt.event.shared.HasHandlers;
-import com.smartgwt.client.widgets.form.fields.events.KeyPressEvent;
-import com.smartgwt.client.widgets.form.fields.events.KeyPressHandler;
 
 public class EnterKeyPressHandler implements KeyPressHandler {
 
@@ -16,7 +17,7 @@ public class EnterKeyPressHandler implements KeyPressHandler {
 	}
 
 	public void onKeyPress(KeyPressEvent event) {
-		if (event.getKeyName().toUpperCase().equals("ENTER")) {
+		if (event.getUnicodeCharCode() == KeyCodes.KEY_ENTER) {
 			NativeEvent clickEvent = Document.get().createClickEvent(0, 0, 0,
 					0, 0, false, true, false, false);
 			DomEvent.fireNativeEvent(clickEvent, targetWidget);
