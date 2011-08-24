@@ -23,9 +23,6 @@ public interface MainEventBus extends EventBus {
 	public void start();
 
 	@Event(handlers = MainPresenter.class)
-	public void setUserWidget(Widget userWidget);
-
-	@Event(handlers = MainPresenter.class)
 	public void setContent(Widget content);
 
 	@Event(handlers = MainPresenter.class, modulesToLoad = NoteModule.class)

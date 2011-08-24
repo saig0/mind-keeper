@@ -44,13 +44,13 @@
 			</exclusions>
 		</dependency>
 
-
-
+		<!-- 
 		<dependency>
 			<groupId>com.google.appengine</groupId>
 			<artifactId>appengine-api-1.0-sdk</artifactId>
 			<version>${gae.version}</version>
 		</dependency>
+		 -->
 
 		<!-- GWT dependencies -->
 		<dependency>
@@ -160,7 +160,7 @@
 		<sourceDirectory>src</sourceDirectory>
 		<outputDirectory>war/WEB-INF/classes</outputDirectory>
 		<testSourceDirectory>test</testSourceDirectory>
-		
+
 		<plugins>
 			<plugin>
 				<groupId>org.datanucleus</groupId>
@@ -213,6 +213,7 @@
 					<execution>
 						<goals>
 							<goal>compile</goal>
+							 <goal>i18n</goal>
 							<!-- <goal>generateAsync</goal> -->
 							<goal>test</goal>
 						</goals>
@@ -238,7 +239,7 @@
 					<webXml>web.xml</webXml>
 					<hostedWebapp>war</hostedWebapp>
 					<debugPort>8001</debugPort>
-				</configuration> 
+				</configuration>
 			</plugin>
 			<!-- <plugin> <groupId>org.scala-tools</groupId> <artifactId>maven-scala-plugin</artifactId> 
 				<version>2.15.2</version> <executions> <execution> <goals> <goal>compile</goal> 
