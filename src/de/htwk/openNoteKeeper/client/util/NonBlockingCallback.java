@@ -19,7 +19,6 @@ public abstract class NonBlockingCallback<T> implements AsyncCallback<T> {
 
 	public void onFailure(Throwable caught) {
 		ErrorPopup panel = new ErrorPopup(caught);
-
 		if (widget != null)
 			panel.showRelativeTo(widget);
 		else

@@ -51,6 +51,7 @@ public class UserPresenter extends BasePresenter<UserViewImpl, MainEventBus> {
 					@Override
 					protected void success(
 							Map<OpenIdProvider, String> openIdProviders) {
+						System.out.println("show login: " + openIdProviders);
 						view.showLoginForOpenIdProviders(openIdProviders);
 					}
 				});

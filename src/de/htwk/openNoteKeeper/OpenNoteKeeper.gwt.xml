@@ -7,6 +7,9 @@
 	<extend-property name="locale" values="de" />
 	<extend-property name="locale" values="en" />
 
+	<inherits name='com.google.gwt.user.theme.standard.Standard' />
+	<!-- <inherits name='com.google.gwt.user.theme.chrome.Chrome' /> -->
+	
 	<!-- Other module inherits -->
 	<inherits name='com.mvp4g.Mvp4gModule' />
 	<!-- <inherits name='com.allen_sauer.gwt.dnd.gwt-dnd' />  -->
