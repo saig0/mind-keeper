@@ -21,7 +21,6 @@ public class MainPresenter extends BasePresenter<MainViewImpl, MainEventBus> {
 	}
 
 	public void onStart() {
-
 	}
 
 	public void onLoggedIn(UserDTO user) {

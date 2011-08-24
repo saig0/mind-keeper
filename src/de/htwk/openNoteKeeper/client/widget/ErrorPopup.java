@@ -25,12 +25,13 @@ public class ErrorPopup {
 		window.setGlassEnabled(true);
 		// window.setTitle(constants.getTitle());
 		window.setTitle("Fehler");
+		window.setSize("200px", "200px");
 
-		DockLayoutPanel layout = new DockLayoutPanel(Unit.EM);
+		DockLayoutPanel layout = new DockLayoutPanel(Unit.PX);
 
 		Image image = IconPool.Alert_Big.createImage();
 		// image.setWidth("50px");
-		layout.addWest(image, 10);
+		layout.addWest(image, 50);
 
 		Label errorMessage = new Label(caught.getLocalizedMessage());
 		// errorMessage.setWidth("*");
