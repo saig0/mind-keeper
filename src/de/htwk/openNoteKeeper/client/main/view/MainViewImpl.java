@@ -7,32 +7,31 @@ import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 
 import de.htwk.openNoteKeeper.client.main.presenter.MainPresenter.MainView;
-import de.htwk.openNoteKeeper.client.main.presenter.UserPresenter.UserView;
-import de.htwk.openNoteKeeper.client.note.presenter.NotePresenter.NoteView;
+import de.htwk.openNoteKeeper.client.note.view.NoteViewImpl;
 import de.htwk.openNoteKeeper.client.util.IconPool;
 
 public class MainViewImpl implements MainView {
 
 	@Inject
-	private UserView userView;
+	private UserViewImpl userView;
 	@Inject
-	private NoteView noteView;
+	private NoteViewImpl noteView;
 
 	private ScrollPanel content = new ScrollPanel();
 
 	public Widget asWidget() {
-		DockLayoutPanel main = new DockLayoutPanel(Unit.EM);
+		DockLayoutPanel main = new DockLayoutPanel(Unit.PX);
 		main.setSize("100%", "100%");
 
-		DockLayoutPanel header = new DockLayoutPanel(Unit.EM);
-		header.setHeight("10");
+		DockLayoutPanel header = new DockLayoutPanel(Unit.PX);
+		header.setHeight("100");
 		header.setWidth("100%");
 
-		header.addWest(IconPool.Logo.createImage(), 10);
-		header.addEast(userView.asWidget(), 10);
+		header.addWest(IconPool.Logo.createImage(), 600);
+		header.addEast(userView.asWidget(), 300);
 
-		main.addNorth(header, 10);
-		main.addEast(noteView, 5);
+		main.addNorth(header, 100);
+		main.addEast(noteView, 50);
 		main.add(content);
 
 		return main;

@@ -1,8 +1,6 @@
 package de.htwk.openNoteKeeper.client.widget;
 
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Style.Unit;
-import com.google.gwt.i18n.client.Constants;
 import com.google.gwt.user.client.ui.DockLayoutPanel;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
@@ -13,19 +11,20 @@ import de.htwk.openNoteKeeper.client.util.IconPool;
 
 public class ErrorPopup {
 
-	public static interface ErrorPopupConstants extends Constants {
-		String getTitle();
-	}
+	// public static interface ErrorPopupConstants extends Constants {
+	// String getTitle();
+	// }
 
-	private final ErrorPopupConstants constants = GWT
-			.create(ErrorPopupConstants.class);
+	// private final ErrorPopupConstants constants = GWT
+	// .create(ErrorPopupConstants.class);
 
 	private final PopupPanel window = new PopupPanel(false, true);
 
 	public ErrorPopup(Throwable caught) {
 		window.setAnimationEnabled(true);
 		window.setGlassEnabled(true);
-		window.setTitle(constants.getTitle());
+		// window.setTitle(constants.getTitle());
+		window.setTitle("Fehler");
 
 		DockLayoutPanel layout = new DockLayoutPanel(Unit.EM);
 

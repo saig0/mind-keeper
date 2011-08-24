@@ -1,2 +1,0 @@
-serviceClass: de.htwk.openNoteKeeper.client.main.service.UserService
-path: 2B938AEBDBF27CDBB068D1DD782FDFB3.gwt.rpc

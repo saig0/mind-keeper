@@ -1,10 +1,7 @@
 package de.htwk.openNoteKeeper.server
 import com.google.gwt.user.server.rpc.RemoteServiceServlet
-
 import de.htwk.openNoteKeeper.shared._
-
 import com.google.appengine.api.users.UserServiceFactory
-
 import de.htwk.openNoteKeeper.client.main.service.UserService
 import scala.collection.JavaConversions._
 

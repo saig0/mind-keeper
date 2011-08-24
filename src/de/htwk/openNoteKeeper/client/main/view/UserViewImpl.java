@@ -21,8 +21,9 @@ public class UserViewImpl implements UserView {
 	private FlowPanel userPanel = new FlowPanel();
 
 	public Widget asWidget() {
-		DockLayoutPanel layout = new DockLayoutPanel(Unit.EM);
-		layout.addEast(providerPanel, 10);
+		DockLayoutPanel layout = new DockLayoutPanel(Unit.PX);
+		layout.setSize("100%", "100%");
+		layout.addEast(providerPanel, 100);
 		layout.add(userPanel);
 		return layout;
 	}
