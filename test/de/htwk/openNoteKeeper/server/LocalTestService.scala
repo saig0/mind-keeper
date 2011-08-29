@@ -32,16 +32,20 @@ trait LocalTestService {
   def channelService = LocalServiceTestHelper.getLocalService(LocalChannelService.PACKAGE).asInstanceOf[LocalChannelService]
 
   @Before
-  def setUpTestService() = {
+  def setUpTestService() {
     localDataStoreService.setUp()
     localMailService.setUp()
     localChannelService.setUp()
   }
 
   @After
-  def tearDownTestService() = {
-    localDataStoreService.tearDown()
-    localMailService.tearDown()
-    localChannelService.tearDown()
+  def tearDownTestService() {
+    try {
+      localDataStoreService.tearDown()
+      localChannelService.tearDown()
+      localMailService.tearDown()
+    } catch {
+      case e => e.printStackTrace()
+    }
   }
 }

@@ -14,4 +14,11 @@ class NoteServiceTest extends LocalTestService with Persistence {
 
   val userId = "test"
 
+  @Test
+  def test {
+    service.createNoteForUser(userId, "title", new Coordinate(0, 0), new Coordinate(0, 0))
+
+    assertEquals(1, service.getAllNotesForUser(userId).size)
+  }
+
 }
