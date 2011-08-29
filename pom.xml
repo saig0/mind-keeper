@@ -25,24 +25,18 @@
 			<artifactId>jta</artifactId>
 			<version>1.1</version>
 		</dependency>
-
+		
+		<!-- 
 		<dependency>
 			<groupId>com.google.appengine.orm</groupId>
 			<artifactId>datanucleus-appengine</artifactId>
 			<version>1.0.8</version>
 		</dependency>
+		 -->
 
-		<dependency>
-			<groupId>org.datanucleus</groupId>
-			<artifactId>datanucleus-core</artifactId>
-			<version>1.1.5</version>
-			<exclusions>
-				<exclusion>
-					<groupId>javax.transaction</groupId>
-					<artifactId>transaction-api</artifactId>
-				</exclusion>
-			</exclusions>
-		</dependency>
+		<!-- <dependency> <groupId>org.datanucleus</groupId> <artifactId>datanucleus-core</artifactId> 
+			<version>1.1.5</version> <exclusions> <exclusion> <groupId>javax.transaction</groupId> 
+			<artifactId>transaction-api</artifactId> </exclusion> </exclusions> </dependency> -->
 
 		<!-- <dependency> <groupId>com.google.appengine</groupId> <artifactId>appengine-api-1.0-sdk</artifactId> 
 			<version>${gae.version}</version> </dependency> -->
@@ -250,13 +244,13 @@
 
 		<!-- Specify AppEngine version for your project. It should match SDK version 
 			pointed to by ${gae.home} property (Typically, one used by your Eclipse plug-in) -->
-		<gae.version>1.5.1</gae.version>
+		<gae.version>1.5.3</gae.version>
 
 		<!-- GWT version -->
 		<gwt.version>2.3.0</gwt.version>
 
 		<!-- Upload to http://test.latest.<applicationName>.appspot.com by default -->
-		<gae.application.version>1</gae.application.version>
+		<gae.application.version>2</gae.application.version>
 
 		<!-- port defaults to 8080 -->
 		<gae.port>8080</gae.port>
