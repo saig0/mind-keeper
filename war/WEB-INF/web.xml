@@ -30,6 +30,14 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
 	<welcome-file-list>
 		<welcome-file>OpenNoteKeeper.html</welcome-file>
 	</welcome-file-list>
-	
+		
+	<security-constraint>
+        <web-resource-collection>
+            <url-pattern>/profile/*</url-pattern>
+        </web-resource-collection>
+        <user-data-constraint>
+            <transport-guarantee>CONFIDENTIAL</transport-guarantee>
+        </user-data-constraint>
+    </security-constraint>
 
 </web-app>
