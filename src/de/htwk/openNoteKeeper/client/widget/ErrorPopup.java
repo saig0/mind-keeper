@@ -1,5 +1,6 @@
 package de.htwk.openNoteKeeper.client.widget;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.Button;
@@ -10,24 +11,20 @@ import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.UIObject;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
+import de.htwk.openNoteKeeper.client.i18n.ErrorPopupConstants;
 import de.htwk.openNoteKeeper.client.util.IconPool;
 
 public class ErrorPopup {
 
-	// public static interface ErrorPopupConstants extends Constants {
-	// String getTitle();
-	// }
-	//
-	// private final ErrorPopupConstants constants = GWT
-	// .create(ErrorPopupConstants.class);
+	private ErrorPopupConstants constants = GWT
+			.create(ErrorPopupConstants.class);
 
 	private final DialogBox window = new DialogBox(false, false);
 
 	public ErrorPopup(Throwable caught) {
 		window.setAnimationEnabled(true);
 		window.setGlassEnabled(true);
-		// window.setTitle(constants.getTitle());
-		window.setText("Fehler");
+		window.setText(constants.title());
 		window.setSize("300px", "100px");
 
 		VerticalPanel layout = new VerticalPanel();
@@ -43,7 +40,7 @@ public class ErrorPopup {
 		Label errorMessage = new Label(caught.getLocalizedMessage());
 		content.add(errorMessage);
 
-		Button closeButton = new Button("Schließen");
+		Button closeButton = new Button(constants.close());
 		closeButton.addClickHandler(new ClickHandler() {
 
 			public void onClick(ClickEvent event) {
