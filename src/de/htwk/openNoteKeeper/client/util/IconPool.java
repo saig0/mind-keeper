@@ -19,7 +19,8 @@ public enum IconPool {
 			"notice_big.png"), Loading("loading2.gif"), Trash("trash.png"), Trash_Big(
 			"trash_big.png"), Trash_Full("trash_full.png"), Trash_Full_Big(
 			"trash_full_big.png"), Google_Logo("google_logo.png"), Yahoo_Logo(
-			"yahoo_logo.png");
+			"yahoo_logo.png"), Flag_German("flag_german.png"), Flag_Us(
+			"flag_us.png");
 
 	private final String dir = "images/";
 	private final String url;
