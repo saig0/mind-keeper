@@ -11,20 +11,19 @@ import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.UIObject;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
-import de.htwk.openNoteKeeper.client.i18n.ErrorPopupConstants;
+import de.htwk.openNoteKeeper.client.i18n.CommonConstants;
 import de.htwk.openNoteKeeper.client.util.IconPool;
 
 public class ErrorPopup {
 
-	private ErrorPopupConstants constants = GWT
-			.create(ErrorPopupConstants.class);
+	private CommonConstants constants = GWT.create(CommonConstants.class);
 
 	private final DialogBox window = new DialogBox(false, false);
 
 	public ErrorPopup(Throwable caught) {
 		window.setAnimationEnabled(true);
 		window.setGlassEnabled(true);
-		window.setText(constants.title());
+		window.setText(constants.error());
 		window.setSize("300px", "100px");
 
 		VerticalPanel layout = new VerticalPanel();

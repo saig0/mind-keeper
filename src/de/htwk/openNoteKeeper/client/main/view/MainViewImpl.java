@@ -9,11 +9,14 @@ import com.google.inject.Inject;
 import de.htwk.openNoteKeeper.client.main.presenter.MainPresenter.MainView;
 import de.htwk.openNoteKeeper.client.note.view.NoteViewImpl;
 import de.htwk.openNoteKeeper.client.util.IconPool;
+import de.htwk.openNoteKeeper.client.widget.LanguageChooser;
 
 public class MainViewImpl implements MainView {
 
 	@Inject
 	private UserViewImpl userView;
+	@Inject
+	private LanguageChooser languageChooser;
 	@Inject
 	private NoteViewImpl noteView;
 
@@ -28,7 +31,8 @@ public class MainViewImpl implements MainView {
 		header.setWidth("100%");
 
 		header.addWest(IconPool.Logo.createImage(), 600);
-		header.addEast(userView.asWidget(), 300);
+		header.addEast(languageChooser.asWidget(), 150);
+		header.addEast(userView, 300);
 
 		main.addNorth(header, 100);
 		main.addEast(noteView, 50);
