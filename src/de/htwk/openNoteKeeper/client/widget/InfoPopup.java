@@ -15,7 +15,7 @@ import de.htwk.openNoteKeeper.client.util.IconPool;
 
 public class InfoPopup {
 
-	private final CommonConstants constants = GWT.create(CommonConstants.class);
+	private CommonConstants constants = GWT.create(CommonConstants.class);
 
 	private final DialogBox window = new DialogBox(false, false);
 

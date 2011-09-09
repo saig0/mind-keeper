@@ -8,6 +8,7 @@ import com.mvp4g.client.annotation.module.ChildModule;
 import com.mvp4g.client.annotation.module.ChildModules;
 import com.mvp4g.client.event.EventBus;
 
+import de.htwk.openNoteKeeper.client.main.presenter.LanguageChooserPresenter;
 import de.htwk.openNoteKeeper.client.main.presenter.MainPresenter;
 import de.htwk.openNoteKeeper.client.main.presenter.UserPresenter;
 import de.htwk.openNoteKeeper.client.main.view.MainViewImpl;
@@ -19,7 +20,8 @@ import de.htwk.openNoteKeeper.shared.UserDTO;
 public interface MainEventBus extends EventBus {
 
 	@Start
-	@Event(handlers = { MainPresenter.class, UserPresenter.class })
+	@Event(handlers = { MainPresenter.class, UserPresenter.class,
+			LanguageChooserPresenter.class })
 	public void start();
 
 	@Event(handlers = MainPresenter.class)
