@@ -9,12 +9,14 @@ import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.PushButton;
 import com.google.gwt.user.client.ui.Widget;
+import com.google.inject.Singleton;
 
 import de.htwk.openNoteKeeper.client.main.presenter.UserPresenter.UserView;
 import de.htwk.openNoteKeeper.client.util.RedirectClickHandler;
 import de.htwk.openNoteKeeper.shared.OpenIdProvider;
 import de.htwk.openNoteKeeper.shared.UserDTO;
 
+@Singleton
 public class UserViewImpl implements UserView {
 
 	private FlowPanel providerPanel = new FlowPanel();

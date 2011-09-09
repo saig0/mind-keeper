@@ -30,18 +30,18 @@ public class UserPresenter extends BasePresenter<UserViewImpl, MainEventBus> {
 	private UserServiceAsync userService;
 
 	public void onStart() {
-		userService.isLoggedIn(new NonBlockingCallback<Boolean>() {
-
-			@Override
-			protected void success(Boolean isLoggedIn) {
-				if (isLoggedIn) {
-					showLogout();
-					showUser();
-				} else {
-					showLogin();
-				}
-			}
-		});
+		// userService.isLoggedIn(new NonBlockingCallback<Boolean>() {
+		//
+		// @Override
+		// protected void success(Boolean isLoggedIn) {
+		// if (isLoggedIn) {
+		// showLogout();
+		// showUser();
+		// } else {
+		// showLogin();
+		// }
+		// }
+		// });
 	}
 
 	private void showLogin() {
