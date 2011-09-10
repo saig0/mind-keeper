@@ -18,10 +18,10 @@ public enum IconPool {
 			"favourite.png"), Find("find.png"), Notice("notice.png"), Notice_Big(
 			"notice_big.png"), Loading("loading2.gif"), Trash("trash.png"), Trash_Big(
 			"trash_big.png"), Trash_Full("trash_full.png"), Trash_Full_Big(
-			"trash_full_big.png"), Google_Logo("google_logo.png"), Yahoo_Logo(
-			"yahoo_logo.png"), Flag_German("flag_german.png"), Flag_Us(
-			"flag_us.png"), Arrow_Right_Light("right_arrow_light.png"), Arrow_Down_Light(
-			"down_arrow_light.png");
+			"trash_full_big.png"), Google_Logo("gmail.png"), Yahoo_Logo(
+			"yahoo.png"), Aol_Logo("aol.png"), Hotmail_Logo("hotmail.png"), Flag_German(
+			"flag_german.png"), Flag_Us("flag_us.png"), Arrow_Right_Light(
+			"right_arrow_light.png"), Arrow_Down_Light("down_arrow_light.png");
 
 	private final String dir = "images/";
 	private final String url;
