@@ -11,10 +11,10 @@ class UserServiceImpl extends RemoteServiceServlet with UserService {
 
   def isLoggedIn = userService.isUserLoggedIn
 
-  def getLoginUrl(openIdProvider: String) = userService.createLoginURL("/", null, openIdProvider, Set[String]())
+  def getLoginUrl(openIdProvider: String) = userService.createLoginURL("/", null, openIdProvider, new java.util.HashSet[String]())
 
   def getLoginUrlsForOpenIdProviders = {
-    var providers = new java.util.HashMap[OpenIdProvider, String]()
+    var providers = new java.util.HashMap[OpenIdProvider, java.lang.String]()
     for (provider <- (OpenIdProvider.values() map ((provider) => provider -> getLoginUrl(provider.getUrl))).toMap[OpenIdProvider, String]) { providers += provider }
     providers
   }
