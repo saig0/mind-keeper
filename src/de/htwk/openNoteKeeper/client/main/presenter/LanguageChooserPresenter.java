@@ -62,14 +62,13 @@ public class LanguageChooserPresenter extends
 
 	private void setLocaleTo(String newLocale) {
 		String actualLocale = LocaleInfo.getCurrentLocale().getLocaleName();
-		if (actualLocale == null || !actualLocale.equals(newLocale)) {
+		if (!actualLocale.equals(newLocale)) {
 			UrlBuilder builder = Location.createUrlBuilder().setParameter(
 					"locale", newLocale);
 			Location.replace(builder.buildString());
-
-			Date expires = new Date(new Date().getTime() + COOKIE_TIMEOUT);
-			Cookies.setCookie(COOKIE_NAME, newLocale, expires);
 		}
+		Date expires = new Date(new Date().getTime() + COOKIE_TIMEOUT);
+		Cookies.setCookie(COOKIE_NAME, newLocale, expires);
 	}
 
 }

@@ -1,13 +1,14 @@
 package de.htwk.openNoteKeeper.client.main.view;
 
-import com.google.gwt.dom.client.Style.Unit;
-import com.google.gwt.user.client.ui.DockLayoutPanel;
+import com.google.gwt.user.client.ui.HasHorizontalAlignment;
+import com.google.gwt.user.client.ui.HorizontalPanel;
+import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.ScrollPanel;
+import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 
 import de.htwk.openNoteKeeper.client.main.presenter.MainPresenter.MainView;
-import de.htwk.openNoteKeeper.client.note.view.NoteViewImpl;
 import de.htwk.openNoteKeeper.client.util.IconPool;
 
 public class MainViewImpl implements MainView {
@@ -16,31 +17,26 @@ public class MainViewImpl implements MainView {
 	private UserViewImpl userView;
 	@Inject
 	private LanguageChooserViewImpl languageChooser;
-	@Inject
-	private NoteViewImpl noteView;
 
 	private ScrollPanel content = new ScrollPanel();
 
 	public Widget asWidget() {
-		DockLayoutPanel main = new DockLayoutPanel(Unit.PX);
+		VerticalPanel main = new VerticalPanel();
 		main.setSize("100%", "100%");
 
-		DockLayoutPanel top = new DockLayoutPanel(Unit.PX);
-		top.setHeight("25");
-		top.setWidth("100%");
-
-		top.addEast(languageChooser, 150);
-
-		DockLayoutPanel header = new DockLayoutPanel(Unit.PX);
-		header.setHeight("100");
+		HorizontalPanel header = new HorizontalPanel();
 		header.setWidth("100%");
+		header.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_RIGHT);
 
-		header.addWest(IconPool.Logo.createImage(), 600);
-		header.addEast(userView, 200);
+		Image logo = IconPool.Logo.createImage();
+		header.add(logo);
+		header.setCellHorizontalAlignment(logo,
+				HasHorizontalAlignment.ALIGN_LEFT);
 
-		main.addNorth(top, 25);
-		main.addNorth(header, 100);
-		main.addEast(noteView, 50);
+		header.add(languageChooser);
+		header.add(userView);
+
+		main.add(header);
 		main.add(content);
 
 		return main;
