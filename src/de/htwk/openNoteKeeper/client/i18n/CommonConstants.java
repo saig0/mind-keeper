@@ -10,4 +10,8 @@ public interface CommonConstants extends Constants {
 	String close();
 
 	String language();
+
+	String signIn();
+
+	String signOut();
 }
