@@ -6,9 +6,9 @@ import de.htwk.openNoteKeeper.client.util.IconPool;
 
 public enum OpenIdProvider implements IsSerializable {
 
-	Google("https://www.google.com/accounts/o8/id", IconPool.Google_Logo), Yahoo(
-			"http://yahoo.com/", IconPool.Yahoo_Logo), Aol(
-			"http://openid.aol.com/", IconPool.Aol_Logo);
+	Google("www.google.com/accounts/o8/id", IconPool.Google_Logo), Yahoo(
+			"yahoo.com/", IconPool.Yahoo_Logo), Aol("openid.aol.com/",
+			IconPool.Aol_Logo);
 
 	private String url;
 	private IconPool icon;
