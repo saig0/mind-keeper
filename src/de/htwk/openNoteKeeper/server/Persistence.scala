@@ -1,105 +1,58 @@
 package de.htwk.openNoteKeeper.server
 import scala.collection.mutable.ArrayBuffer
-
 import java.io.Serializable
-
 import scala.collection.mutable.ListBuffer
-
 import javax.jdo._
-
 import com.google.gwt.user.client.rpc.SerializationException
+import com.vercer.engine.persist.annotation.AnnotationObjectDatastore
+import com.google.appengine.api.datastore.Key
+import com.vercer.engine.persist.FindCommand.RootFindCommand
+import com.google.appengine.api.datastore.Query.FilterOperator
+import com.google.appengine.api.datastore.Query.SortDirection
+import com.google.appengine.api.datastore.KeyFactory
+
+trait HasKey {
+  var key: String = _
+}
 
 trait Persistence {
 
-  private def request[T](f: (PersistenceManager) => T): T = {
-    val entityManager = EntityManagerFactory.persistenceManager
-    try {
-      f(entityManager)
-    } catch {
-      case e => throw new SerializationException(e)
-    }
-    finally {
-      entityManager.close
-    }
-  }
+  val dataStore = new AnnotationObjectDatastore()
 
-  def persist[T](objectToPersist: T) =
-    request(pm => pm.makePersistent(objectToPersist))
+  implicit def key2String(key: Key) = KeyFactory.keyToString(key)
 
-  def update[T](id: Long, objectType: Class[T], modify: (T) => Unit) =
-    request(pm => {
-      val objectToModify = pm.getObjectById(objectType, id)
-      modify(objectToModify)
-    })
+  implicit def string2Key(key: String) = KeyFactory.stringToKey(key)
 
-  def delete[T](id: Long, objectType: Class[T]) =
-    request { pm =>
-      val objectToPersist = pm.getObjectById(objectType, id)
-      pm.deletePersistent(objectToPersist)
-    }
-
-  def query[T](queryString: String): Option[T] =
-    request(pm => {
-      val query = pm.newQuery(queryString)
-      Some(query.execute().asInstanceOf[T])
-    })
-
-  def findObjectById[T](id: Long, objectType: Class[T]): Option[T] =
-    request { pm =>
-      try {
-        Some(pm.getObjectById(objectType, id))
-      } catch {
-        case e => None
+  def store[T <: HasKey](objectToPersist: Any): Key = {
+    val key = dataStore.store(objectToPersist)
+    objectToPersist match {
+      case o: T => {
+        o.key = key
+        update(o)
       }
+      case _ =>
     }
-
-  def findAllObjects[T](objectType: Class[T]) =
-    request(pm => {
-      val extent = pm.getExtent[T](objectType);
-      val result = createResultList(extent)
-      extent.closeAll()
-      result
-    })
-
-  private def createResultList[T](result: java.lang.Iterable[T]): Option[List[T]] = {
-    val list = ListBuffer[T]()
-    val i = result.iterator
-    while (i.hasNext) {
-      list += i.next
-    }
-    if (!list.isEmpty) Some(list.toList)
-    else None
+    key
   }
 
-  class Criteria[T <: Serializable](val name: String, val value: T) {
-    val objectType = value.getClass.getSimpleName
+  def update(objectToUpdate: Any) = dataStore.update(objectToUpdate)
+
+  def delete(objectToDelete: Any) = dataStore.delete(objectToDelete)
+
+  def findByKey[T](key: Key) = dataStore.load(key)
+
+  def findByType[T](classOfObject: Class[T]) = dataStore.find(classOfObject)
+
+  def findByQuery[T](classOfObject: Class[T]) =
+    dataStore.find().`type`(classOfObject)
+
+  implicit def command2Query[T](command: RootFindCommand[T]) = new {
+
+    def isEqual(column: String, value: Any): RootFindCommand[T] = command.addFilter(column, FilterOperator.EQUAL, value)
+
+    def sort(column: String, direction: SortDirection = SortDirection.ASCENDING): RootFindCommand[T] = command.addSort(column, direction)
+
+    def run = command.returnResultsNow()
   }
 
-  //TODO generischer Type aber trotzdem eindeutig, damit nicht Object ermittelt wird
-  private def findObjectsByGenericCriteria[T](objectType: Class[T], criterias: List[Criteria[_]]) = {
-    request(pm => {
-      val query = pm.newQuery(objectType)
-      for (criteria <- criterias) {
-        query.setFilter(criteria.name + " == " + criteria.name + "Param");
-        query.declareParameters(criteria.objectType + " " + criteria.name + "Param");
-      }
-      val result = query.execute((criterias map (_.value)).toArray).asInstanceOf[java.util.List[T]]
-      createResultList(result)
-    })
-  }
-
-  def findObjectsByCriteria[T](objectType: Class[T], criteria: Criteria[_]) =
-    request(pm => {
-      val query = pm.newQuery(objectType)
-      query.setFilter(criteria.name + " == " + criteria.name + "Param");
-      query.declareParameters(criteria.objectType + " " + criteria.name + "Param");
-      val result = query.execute(criteria.value).asInstanceOf[java.util.List[T]]
-      createResultList(result)
-    })
-
-  def findObjectByCriteria[T](objectType: Class[T], criteria: Criteria[_]) =
-    findObjectsByCriteria(objectType, criteria) match {
-      case Some(results) if (results.size == 1) => Some(results(0))
-      case _ => None
-    }
 }

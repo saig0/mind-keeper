@@ -5,6 +5,13 @@
 	<artifactId>OpenNoteKeeper</artifactId>
 	<version>1.0-SNAPSHOT</version>
 
+	<repositories>
+		<repository>
+			<id>twig</id>
+			<url>http://mvn.twig-persist.googlecode.com/hg</url>
+		</repository>
+	</repositories>
+
 	<dependencies>
 		<dependency>
 			<groupId>javax.jdo</groupId>
@@ -135,6 +142,17 @@
 			<version>3.1.1</version>
 			<type>jar</type>
 			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.vercer.engine.persist</groupId>
+			<artifactId>twig-persist</artifactId>
+			<version>1.0.4</version>
+			<exclusions>
+				<exclusion>
+					<artifactId>appengine-api-1.0-sdk</artifactId>
+					<groupId>com.google.appengine</groupId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 	</dependencies>
 	<build>

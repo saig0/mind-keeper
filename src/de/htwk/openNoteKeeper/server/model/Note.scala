@@ -1,19 +1,15 @@
 package de.htwk.openNoteKeeper.server.model
 
-import javax.jdo.annotations._
-import com.google.appengine.api.datastore.Text;
+import com.google.appengine.api.datastore.Text
+import com.vercer.engine.persist.annotation.Child
+import com.vercer.engine.persist.annotation.Type
+import com.vercer.engine.persist.annotation.Key
+import de.htwk.openNoteKeeper.server.HasKey
 
-@PersistenceCapable
 class Note(
-  @Persistent var ownerId: String,
-  @Persistent var title: String,
-  @Persistent var content: Text,
-  @Persistent var left: Int,
-  @Persistent var top: Int,
-  @Persistent var width: Int,
-  @Persistent var height: Int) {
-
-  @PrimaryKey
-  @Persistent(valueStrategy = IdGeneratorStrategy.IDENTITY)
-  var id: java.lang.Long = _
+    var ownerId: String,
+    var title: String,
+    @Type(classOf[Text]) var content: String,
+    @Child var position: Coordinate,
+    @Child var size: Coordinate) extends HasKey {
 }

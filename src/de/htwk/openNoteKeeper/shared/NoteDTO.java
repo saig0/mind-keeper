@@ -4,26 +4,26 @@ import com.google.gwt.user.client.rpc.IsSerializable;
 
 public class NoteDTO implements IsSerializable {
 
-	private Long id;
+	private String key;
 	private String title;
 	private String content;
-	private Coordinate position;
-	private Coordinate size;
+	private CoordinateDTO position;
+	private CoordinateDTO size;
 
-	public NoteDTO() {
+	NoteDTO() {
 	}
 
-	public NoteDTO(Long id, String title, String content,
-			Coordinate position, Coordinate size) {
-		this.id = id;
+	public NoteDTO(String key, String title, String content,
+			CoordinateDTO position, CoordinateDTO size) {
+		this.key = key;
 		this.title = title;
 		this.content = content;
 		this.position = position;
 		this.size = size;
 	}
 
-	public Long getId() {
-		return id;
+	public String getKey() {
+		return key;
 	}
 
 	public String getTitle() {
@@ -38,19 +38,19 @@ public class NoteDTO implements IsSerializable {
 		this.content = content;
 	}
 
-	public Coordinate getSize() {
+	public CoordinateDTO getSize() {
 		return size;
 	}
 
-	public void setSize(Coordinate size) {
+	public void setSize(CoordinateDTO size) {
 		this.size = size;
 	}
 
-	public Coordinate getPosition() {
+	public CoordinateDTO getPosition() {
 		return position;
 	}
 
-	public void setPosition(Coordinate position) {
+	public void setPosition(CoordinateDTO position) {
 		this.position = position;
 	}
 
