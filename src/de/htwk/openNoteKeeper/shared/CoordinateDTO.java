@@ -2,15 +2,15 @@ package de.htwk.openNoteKeeper.shared;
 
 import com.google.gwt.user.client.rpc.IsSerializable;
 
-public class Coordinate implements IsSerializable {
+public class CoordinateDTO implements IsSerializable {
 
 	private Integer x;
 	private Integer y;
 
-	public Coordinate() {
+	CoordinateDTO() {
 	}
 
-	public Coordinate(Integer x, Integer y) {
+	public CoordinateDTO(Integer x, Integer y) {
 		this.x = x;
 		this.y = y;
 	}
