@@ -39,7 +39,7 @@ class NoteServiceTest extends LocalTestService with Persistence {
     val key = store(note)
 
     val result = service.getAllNotesForUser(userId)
-    assertEquals(1, result)
+    assertEquals(1, result.size)
   }
 
   @Test
