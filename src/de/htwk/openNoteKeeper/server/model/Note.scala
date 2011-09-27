@@ -12,4 +12,7 @@ class Note(
     @Type(classOf[Text]) var content: String,
     @Child var position: Coordinate,
     @Child var size: Coordinate) extends HasKey {
+
+  def this() = this("ownerId", "title", "", new Coordinate, new Coordinate)
+
 }

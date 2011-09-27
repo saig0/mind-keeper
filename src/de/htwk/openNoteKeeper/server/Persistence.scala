@@ -39,7 +39,7 @@ trait Persistence {
 
   def delete(objectToDelete: Any) = dataStore.delete(objectToDelete)
 
-  def findByKey[T](key: Key) = dataStore.load(key)
+  def findByKey[T](key: Key) = dataStore.load[T](key)
 
   def findByType[T](classOfObject: Class[T]) = dataStore.find(classOfObject)
 
