@@ -6,14 +6,23 @@ import org.junit._
 import Assert._
 import com.google.appengine.api.datastore.Text
 import com.vercer.engine.persist.annotation.AnnotationObjectDatastore
-import de.htwk.openNoteKeeper.shared.CoordinateDTO
+import de.htwk.openNoteKeeper.shared._
+import de.htwk.openNoteKeeper.shared.GroupDTO._
 
 class NoteServiceTest extends LocalTestService with Persistence {
 
   val service = new NoteServiceImpl
 
-  val userId = "test"
-  val note = new Note(userId, "title", "content", new Coordinate(0, 0), new Coordinate(0, 0))
+  var userId: String = _
+  val user = new User("test")
+  val group = new Group("root")
+  val whiteboard = new WhiteBoard("test", group)
+  val note = new Note(whiteboard, "title", "content", new Coordinate(0, 0), new Coordinate(0, 0))
+
+  @Before
+  def setup {
+    userId = store(user)
+  }
 
   @Test
   def findByKey {
@@ -25,30 +34,58 @@ class NoteServiceTest extends LocalTestService with Persistence {
   }
 
   @Test
-  def createNewNote {
-    val dto = service.createNoteForUser(userId, "title", new CoordinateDTO(0, 0), new CoordinateDTO(0, 0))
-    assertNotNull(dto.getKey())
+  def getRootGroupForUserIfNoExist {
+    val groups = service.getAllGroupsForUser(userId)
 
-    val result: Note = findByKey(dto.getKey())
-    assertEquals(userId, result.ownerId)
-    assertEquals("title", result.title)
+    assertNotNull(groups)
+    assertEquals(1, groups.size)
+
+    val group = groups.get(0)
+    assertNotNull(group.getKey())
+    assertEquals(AccessRole.Owner, group.getAccessRole())
+    assertEquals("my notes", group.getTitle())
+    assertTrue(group.getSubGroups().isEmpty())
+    assertTrue(group.getWhiteBoards().isEmpty())
   }
 
   @Test
-  def findByOwnerId {
-    val key = store(note)
+  def getRootGroupForUserIfExist {
+    val rootGroup = new Group("my own notes")
+    store(rootGroup)
+    val owner = new Authority(userId, rootGroup, AccessRole.Owner)
+    store(owner)
 
-    val result = service.getAllNotesForUser(userId)
-    assertEquals(1, result.size)
+    user.authorities.add(owner)
+    update(user)
+
+    val groups = service.getAllGroupsForUser(userId)
+    assertEquals(1, groups.size)
+
+    val group = groups.get(0)
+    assertNotNull(group.getKey())
+    assertEquals(AccessRole.Owner, group.getAccessRole())
+    assertEquals("my own notes", group.getTitle())
+    assertTrue(group.getSubGroups().isEmpty())
+    assertTrue(group.getWhiteBoards().isEmpty())
   }
 
   @Test
-  def delete {
-    val dto = service.createNoteForUser(userId, "title", new CoordinateDTO(0, 0), new CoordinateDTO(0, 0))
-    service.removeNoteOfUser(userId, dto)
+  def createNewGroupForUser {
+    val groups = service.getAllGroupsForUser(userId)
+    assertEquals(1, groups.size)
+    val rootGroup = groups.get(0)
 
-    val result: Note = findByKey(dto.getKey())
-    assertNull(result)
+    service.createGroupForUser(userId, rootGroup, "new group")
+
+    val result = service.getAllGroupsForUser(userId)
+    assertEquals(2, groups.size)
+
+    val group = result.get(0)
+    assertNotNull(group.getKey())
+    assertEquals(AccessRole.Owner, group.getAccessRole())
+    assertEquals("new group", group.getTitle())
+    assertTrue(group.getSubGroups().isEmpty())
+    assertTrue(group.getWhiteBoards().isEmpty())
   }
 
 }

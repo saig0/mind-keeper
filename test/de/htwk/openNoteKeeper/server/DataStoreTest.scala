@@ -14,7 +14,9 @@ class DataStoreTest extends LocalTestService with Persistence {
 
   val userId = "test"
 
-  val note = new Note(userId, "title", "content", new Coordinate(0, 0), new Coordinate(0, 0))
+  val group = new Group("root")
+  val whiteboard = new WhiteBoard("test", group)
+  val note = new Note(whiteboard, "title", "content", new Coordinate(0, 0), new Coordinate(0, 0))
 
   val datastore = new AnnotationObjectDatastore()
 
@@ -32,7 +34,7 @@ class DataStoreTest extends LocalTestService with Persistence {
   def findQuery {
     datastore.store(note)
     val result = datastore.find().`type`(classOf[Note]).
-      addFilter("ownerId", FilterOperator.EQUAL, userId).returnResultsNow()
+      addFilter("title", FilterOperator.EQUAL, "title").returnResultsNow()
 
     assertEquals(true, result.hasNext());
     assertEquals(note, result.next())
@@ -61,12 +63,39 @@ class DataStoreTest extends LocalTestService with Persistence {
   }
 
   @Test
-  def loadChild {
+  def loadEmbeddedChild {
     val key = datastore.store(note)
     val result: Note = datastore.load(key)
 
     assertEquals(note.position, result.position);
     assertEquals(note.size, result.size);
+  }
+
+  @Test
+  def loadChild {
+    val key = datastore.store(group)
+    group.whiteBoards.add(whiteboard)
+    val result: Group = datastore.load(key)
+
+    assertEquals(group.title, result.title);
+    assertEquals(group.whiteBoards, result.whiteBoards);
+    assertEquals(group, result.whiteBoards.get(0).group);
+  }
+
+  @Test
+  def loadChildAndParent {
+    val key = datastore.store(group)
+    val keyOfWhiteBoard = datastore.store(whiteboard)
+    group.whiteBoards.add(whiteboard)
+    val result = datastore.find(classOf[WhiteBoard])
+
+    assertEquals(true, result.hasNext())
+    val resultWhiteboard = result.next()
+
+    assertEquals(whiteboard.title, resultWhiteboard.title)
+    assertEquals(whiteboard.group, resultWhiteboard.group)
+
+    assertEquals(false, result.hasNext());
   }
 
   @Test

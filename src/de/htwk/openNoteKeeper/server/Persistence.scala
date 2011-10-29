@@ -6,7 +6,7 @@ import javax.jdo._
 import com.google.gwt.user.client.rpc.SerializationException
 import com.vercer.engine.persist.annotation.AnnotationObjectDatastore
 import com.google.appengine.api.datastore.Key
-import com.vercer.engine.persist.FindCommand.RootFindCommand
+import com.vercer.engine.persist.FindCommand._
 import com.google.appengine.api.datastore.Query.FilterOperator
 import com.google.appengine.api.datastore.Query.SortDirection
 import com.google.appengine.api.datastore.KeyFactory
@@ -46,13 +46,34 @@ trait Persistence {
   def findByQuery[T](classOfObject: Class[T]) =
     dataStore.find().`type`(classOfObject)
 
+  class BranchQuery[T](command: RootFindCommand[T]) {
+
+    def isEqual(column: String, value: Any) = command.addChildQuery().addFilter(column, FilterOperator.EQUAL, value)
+
+    def run = command.returnResultsNow()
+
+    def count = command.countResultsNow()
+  }
+
   implicit def command2Query[T](command: RootFindCommand[T]) = new {
 
-    def isEqual(column: String, value: Any): RootFindCommand[T] = command.addFilter(column, FilterOperator.EQUAL, value)
+    def isEqual(column: String, value: Any) = new BranchQuery(command.addFilter(column, FilterOperator.EQUAL, value))
 
     def sort(column: String, direction: SortDirection = SortDirection.ASCENDING): RootFindCommand[T] = command.addSort(column, direction)
 
     def run = command.returnResultsNow()
+
+    def count = command.countResultsNow()
+  }
+
+  implicit def branchCommand2Query[T](command: BranchFindCommand[T]) = new {
+
+    def isEqual(column: String, value: Any) = command.addChildQuery().addFilter(column, FilterOperator.EQUAL, value).addChildQuery()
+
+    def run = command.returnResultsNow()
+
+    // def count: Int = (0 /: command.run)((count, o) => count + 1)
+
   }
 
 }
