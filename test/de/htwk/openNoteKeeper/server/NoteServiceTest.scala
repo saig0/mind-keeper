@@ -120,4 +120,83 @@ class NoteServiceTest extends LocalTestService with Persistence {
     assertEquals("new whiteboard", whiteboard.getTitle())
   }
 
+  @Test
+  def removeWhiteBoard {
+    val groups_ = service.getAllGroupsForUser(user.key)
+    assertEquals(1, groups_.size)
+    val rootGroup_ = groups_.get(0)
+
+    val whiteboard_ = service.createWhiteBoard(rootGroup_.getKey(), "new whiteboard")
+    service.removeWhiteBoard(whiteboard_.getKey())
+
+    val groups = service.getAllGroupsForUser(user.key)
+    assertEquals(1, groups.size)
+    val group = groups.get(0)
+    assertEquals(0, group.getWhiteBoards.size)
+  }
+
+  @Test
+  def createNote {
+    val groups_ = service.getAllGroupsForUser(user.key)
+    assertEquals(1, groups_.size)
+    val rootGroup_ = groups_.get(0)
+
+    val whiteboard_ = service.createWhiteBoard(rootGroup_.getKey(), "new whiteboard")
+    val note_ = service.createNote(whiteboard_.getKey(), "new note", new CoordinateDTO(0, 0), new CoordinateDTO(0, 0))
+
+    val groups = service.getAllGroupsForUser(user.key)
+    assertEquals(1, groups.size)
+    val group = groups.get(0)
+    assertEquals(1, group.getWhiteBoards.size)
+    val whiteboard = group.getWhiteBoards.get(0)
+    assertEquals(1, whiteboard.getNotes().size)
+    val note = whiteboard.getNotes().get(0)
+    assertEquals("new note", note.getTitle())
+    assertTrue(note.getContent().isEmpty())
+  }
+
+  @Test
+  def removeNote {
+    val groups_ = service.getAllGroupsForUser(user.key)
+    assertEquals(1, groups_.size)
+    val rootGroup_ = groups_.get(0)
+
+    val whiteboard_ = service.createWhiteBoard(rootGroup_.getKey(), "new whiteboard")
+    val note_ = service.createNote(whiteboard_.getKey(), "new note", new CoordinateDTO(0, 0), new CoordinateDTO(0, 0))
+    service.removeNote(note_.getKey())
+
+    val groups = service.getAllGroupsForUser(user.key)
+    assertEquals(1, groups.size)
+    val group = groups.get(0)
+    assertEquals(1, group.getWhiteBoards.size)
+    val whiteboard = group.getWhiteBoards.get(0)
+    assertEquals(0, whiteboard.getNotes().size)
+  }
+
+  @Test
+  def updateNote {
+    val groups_ = service.getAllGroupsForUser(user.key)
+    assertEquals(1, groups_.size)
+    val rootGroup_ = groups_.get(0)
+
+    val whiteboard_ = service.createWhiteBoard(rootGroup_.getKey(), "new whiteboard")
+    val note_ = service.createNote(whiteboard_.getKey(), "new note", new CoordinateDTO(0, 0), new CoordinateDTO(0, 0))
+    note_.setContent("text")
+    note_.setPosition(new CoordinateDTO(1, 2))
+    note_.setSize(new CoordinateDTO(3, 4))
+    service.updateNote(note_)
+
+    val groups = service.getAllGroupsForUser(user.key)
+    assertEquals(1, groups.size)
+    val group = groups.get(0)
+    assertEquals(1, group.getWhiteBoards.size)
+    val whiteboard = group.getWhiteBoards.get(0)
+    assertEquals(1, whiteboard.getNotes().size)
+    val note = whiteboard.getNotes().get(0)
+    assertEquals("new note", note.getTitle())
+    assertEquals("text", note.getContent())
+    assertEquals(note_.getPosition(), note.getPosition())
+    assertEquals(note_.getSize(), note.getSize())
+  }
+
 }
