@@ -11,13 +11,14 @@ import de.htwk.openNoteKeeper.shared.WhiteBoardDTO;
 
 public interface NoteServiceAsync {
 
-	void getAllGroupsForUser(String userId,
+	void getAllGroupsForUser(String userKey,
 			AsyncCallback<List<GroupDTO>> callback);
 
-	void createGroupForUser(String userId, GroupDTO parentGroup, String title,
-			AsyncCallback<GroupDTO> callback);
+	void createGroupForUser(String userKey, String parentGroupKey,
+			String title, AsyncCallback<GroupDTO> callback);
 
-	void removeGroup(GroupDTO group, AsyncCallback<Void> callback);
+	void removeGroup(String userKey, String groupKey,
+			AsyncCallback<Void> callback);
 
 	void createWhiteBoard(GroupDTO group, String title,
 			AsyncCallback<WhiteBoardDTO> callback);

@@ -14,14 +14,6 @@ object Note {
   implicit def textToString(t: Text) = t.getValue
 
   implicit def stringToText(s: String) = new Text(s)
-
-  implicit def coordinateToPosition(c: Coordinate) = new Position(c.x, c.y)
-
-  implicit def positionToCoordinate(p: Position) = new Coordinate(p.left, p.top)
-
-  implicit def coordinateToSize(c: Coordinate) = new Size(c.x, c.y)
-
-  implicit def sizeToCoordinate(s: Size) = new Coordinate(s.width, s.height)
 }
 
 @PersistenceCapable
@@ -29,8 +21,10 @@ class Note(
     @Persistent var title: String,
     @Persistent var content: Text,
     @Persistent var whiteboard: Key,
-    @Persistent @Embedded var position: Position,
-    @Persistent @Embedded var size: Size) {
+    @Persistent var width: Int,
+    @Persistent var height: Int,
+    @Persistent var left: Int,
+    @Persistent var top: Int) {
 
   @PrimaryKey
   @Persistent(valueStrategy = IdGeneratorStrategy.IDENTITY)

@@ -20,4 +20,6 @@ class Group(
   @Persistent var subGroups: java.util.List[Key] = new java.util.LinkedList[Key]()
 
   @Persistent var parentGroup: Key = _
+
+  @Persistent var authorities: java.util.List[Key] = new java.util.LinkedList[Key]()
 }

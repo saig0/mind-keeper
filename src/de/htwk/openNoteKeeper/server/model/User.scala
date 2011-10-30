@@ -8,7 +8,7 @@ import com.google.appengine.api.datastore.Key
 
 @PersistenceCapable
 class User(
-    @Persistent var userId: String) {
+    @PrimaryKey @Persistent var userId: String) {
 
   @PrimaryKey
   @Persistent(valueStrategy = IdGeneratorStrategy.IDENTITY)

@@ -13,8 +13,6 @@ import com.google.appengine.api.datastore.KeyFactory
 
 class DataStoreTest extends LocalTestService with Persistence {
 
-  val userId = "test"
-
   @Test
   def findByType {
     val group = new Group("root")
