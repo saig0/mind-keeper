@@ -1,6 +1,12 @@
 package de.htwk.openNoteKeeper.server.model
+import javax.jdo.annotations.PersistenceCapable
+import javax.jdo.annotations.EmbeddedOnly
+import javax.jdo.annotations.Persistent
 
-class Coordinate(var x: Int, var y: Int) {
+@PersistenceCapable
+@EmbeddedOnly
+class Coordinate(
+    @Persistent var x: Int,
+    @Persistent var y: Int) {
 
-  def this() = this(0, 0)
 }
