@@ -82,7 +82,7 @@ class NoteServiceTest extends LocalTestService with Persistence {
 
     try {
       service.removeGroup(user.key, rootGroup_.getKey())
-      fail("should be not allowed")
+      fail("should not be allowed")
     } catch {
       case e: SerializableException =>
       case e                        => throw e
@@ -102,6 +102,22 @@ class NoteServiceTest extends LocalTestService with Persistence {
     assertEquals(1, groups.size)
     val group = groups.get(0)
     assertTrue(group.getSubGroups().isEmpty())
+  }
+
+  @Test
+  def createWhiteBoard {
+    val groups_ = service.getAllGroupsForUser(user.key)
+    assertEquals(1, groups_.size)
+    val rootGroup_ = groups_.get(0)
+
+    service.createWhiteBoard(rootGroup_.getKey(), "new whiteboard")
+
+    val groups = service.getAllGroupsForUser(user.key)
+    assertEquals(1, groups.size)
+    val group = groups.get(0)
+    assertEquals(1, group.getWhiteBoards.size)
+    val whiteboard = group.getWhiteBoards.get(0)
+    assertEquals("new whiteboard", whiteboard.getTitle())
   }
 
 }

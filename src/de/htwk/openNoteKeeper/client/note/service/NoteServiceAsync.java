@@ -20,7 +20,7 @@ public interface NoteServiceAsync {
 	void removeGroup(String userKey, String groupKey,
 			AsyncCallback<Void> callback);
 
-	void createWhiteBoard(GroupDTO group, String title,
+	void createWhiteBoard(String groupKey, String title,
 			AsyncCallback<WhiteBoardDTO> callback);
 
 	void removeWhiteBoard(WhiteBoardDTO whiteBoard, AsyncCallback<Void> callback);

@@ -13,13 +13,6 @@ import com.google.gwt.user.client.rpc.SerializableException
 
 class NoteServiceImpl extends RemoteServiceServlet with NoteService with Persistence {
 
-  //  implicit def note2Dto(note: Note) =
-  //    new NoteDTO(note.key, note.title, note.content,
-  //      new CoordinateDTO(note.position.x, note.position.y),
-  //      new CoordinateDTO(note.size.x, note.size.x))
-
-  // private def findNoteById(noteDto: NoteDTO) = findByKey[Note](noteDto.getKey())
-
   def getAllGroupsForUser(userKey: String) = {
     findObjectByKey(userKey, classOf[User]) match {
       case None => throw new SerializableException("no user with given key found")
@@ -49,52 +42,60 @@ class NoteServiceImpl extends RemoteServiceServlet with NoteService with Persist
   }
 
   private def createGroupDtoForKey(key: String): GroupDTO = {
-    findObjectByKey(key, classOf[Group]) match {
-      case None => throw new SerializableException("no group with given key found")
-      case Some(group) => {
-        val dto = new GroupDTO(group.key, group.title, AccessRole.Owner)
-        group.subGroups foreach (subGroup => dto.addSubGroup(createGroupDtoForKey(subGroup)))
-        dto
-      }
-    }
+    val group = findGroupByKey(key)
+    val dto = new GroupDTO(group.key, group.title, AccessRole.Owner)
+    group.subGroups foreach (subGroup => dto.addSubGroup(createGroupDtoForKey(subGroup)))
+    group.whiteBoards foreach (whiteBoard => dto.addWhiteBoard(createWhiteBoardDtoForKey(whiteBoard)))
+    dto
   }
 
   def createGroupForUser(userKey: String, parentGroupKey: String, title: String) = {
-    findObjectByKey(parentGroupKey, classOf[Group]) match {
-      case None => throw new SerializableException("no parent group with given key found")
-      case Some(parentGroup) => {
-        val group = new Group(title)
-        group.parentGroup = parentGroup.key
-        persist(group)
+    val parentGroup = findGroupByKey(parentGroupKey)
+    val group = new Group(title)
+    group.parentGroup = parentGroup.key
+    persist(group)
 
-        val owner = new Authority(userKey, group.key, AccessRole.Owner)
-        persist(owner)
+    val owner = new Authority(userKey, group.key, AccessRole.Owner)
+    persist(owner)
 
-        update[Group](group.key, classOf[Group], group => group.authorities.add(owner.key))
-        update[Group](parentGroupKey, classOf[Group], parentGroup => parentGroup.subGroups.add(group.key))
+    update[Group](group.key, classOf[Group], group => group.authorities.add(owner.key))
+    update[Group](parentGroupKey, classOf[Group], parentGroup => parentGroup.subGroups.add(group.key))
 
-        new GroupDTO(group.key, title, owner.accessRole)
-      }
-    }
+    new GroupDTO(group.key, title, owner.accessRole)
+  }
+
+  private def findGroupByKey(key: String) = findObjectByKey(key, classOf[Group]) match {
+    case None        => throw new SerializableException("no group with given key found")
+    case Some(group) => group
+  }
+
+  private def createWhiteBoardDtoForKey(whiteBoardKey: String) = {
+    val whiteboard = fiundWhiteBoardByKey(whiteBoardKey)
+    new WhiteBoardDTO(whiteboard.key, whiteboard.title)
+  }
+
+  private def fiundWhiteBoardByKey(whiteBoardKey: String) = findObjectByKey(whiteBoardKey, classOf[WhiteBoard]) match {
+    case None             => throw new SerializableException("no white board with given key found")
+    case Some(whiteboard) => whiteboard
   }
 
   def removeGroup(userKey: String, groupKey: String) {
-    findObjectByKey(groupKey, classOf[Group]) match {
-      case None => throw new SerializableException("no group with given key found")
-      case Some(group) => {
-        if (group.parentGroup == null) throw new SerializableException("deleting the root group is not allowed")
-        update[Group](group.parentGroup, classOf[Group], { parentGroup =>
-          val groupKey: Key = group.key
-          parentGroup.subGroups.remove(groupKey)
-        })
-        group.authorities foreach (authorityKey => delete(authorityKey, classOf[Authority]))
-        delete(group.key, classOf[Group])
-      }
-    }
+    val group = findGroupByKey(groupKey)
+    if (group.parentGroup == null) throw new SerializableException("deleting the root group is not allowed")
+    update[Group](group.parentGroup, classOf[Group], { parentGroup =>
+      val groupKey: Key = group.key
+      parentGroup.subGroups.remove(groupKey)
+    })
+    group.authorities foreach (authorityKey => delete(authorityKey, classOf[Authority]))
+    delete(group.key, classOf[Group])
   }
 
-  def createWhiteBoard(group: GroupDTO, title: String) = {
-    new WhiteBoardDTO("key", title)
+  def createWhiteBoard(groupKey: String, title: String) = {
+    val group = findGroupByKey(groupKey)
+    val whiteBoard = new WhiteBoard(title, group.key)
+    persist(whiteBoard)
+    update[Group](group.key, classOf[Group], group => group.whiteBoards.add(whiteBoard.key))
+    new WhiteBoardDTO(whiteBoard.key, title)
   }
 
   def removeWhiteBoard(whiteBoard: WhiteBoardDTO) {

@@ -20,7 +20,7 @@ public interface NoteService extends RemoteService {
 
 	public void removeGroup(String userKey, String groupKey);
 
-	public WhiteBoardDTO createWhiteBoard(GroupDTO group, String title);
+	public WhiteBoardDTO createWhiteBoard(String groupKey, String title);
 
 	public void removeWhiteBoard(WhiteBoardDTO whiteBoard);
 
