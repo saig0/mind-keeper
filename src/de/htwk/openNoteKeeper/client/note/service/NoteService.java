@@ -22,12 +22,12 @@ public interface NoteService extends RemoteService {
 
 	public WhiteBoardDTO createWhiteBoard(String groupKey, String title);
 
-	public void removeWhiteBoard(WhiteBoardDTO whiteBoard);
+	public void removeWhiteBoard(String whiteBoardKey);
 
-	public NoteDTO createNote(WhiteBoardDTO whiteBoard, String title,
+	public NoteDTO createNote(String whiteBoardKey, String title,
 			CoordinateDTO position, CoordinateDTO size);
 
 	public void updateNote(NoteDTO note);
 
-	public void removeNote(NoteDTO note);
+	public void removeNote(String noteKey);
 }

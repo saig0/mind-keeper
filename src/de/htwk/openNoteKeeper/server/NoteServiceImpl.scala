@@ -70,13 +70,25 @@ class NoteServiceImpl extends RemoteServiceServlet with NoteService with Persist
   }
 
   private def createWhiteBoardDtoForKey(whiteBoardKey: String) = {
-    val whiteboard = fiundWhiteBoardByKey(whiteBoardKey)
-    new WhiteBoardDTO(whiteboard.key, whiteboard.title)
+    val whiteboard = findWhiteBoardByKey(whiteBoardKey)
+    val dto = new WhiteBoardDTO(whiteboard.key, whiteboard.title)
+    whiteboard.notes foreach (note => dto.addNote(createNoteDtoForKey(note)))
+    dto
   }
 
-  private def fiundWhiteBoardByKey(whiteBoardKey: String) = findObjectByKey(whiteBoardKey, classOf[WhiteBoard]) match {
+  private def findWhiteBoardByKey(whiteBoardKey: String) = findObjectByKey(whiteBoardKey, classOf[WhiteBoard]) match {
     case None             => throw new SerializableException("no white board with given key found")
     case Some(whiteboard) => whiteboard
+  }
+
+  private def createNoteDtoForKey(noteKey: String) = {
+    val note = findNoteByKey(noteKey)
+    new NoteDTO(note.key, note.title, note.content, new CoordinateDTO(note.width, note.height), new CoordinateDTO(note.left, note.top))
+  }
+
+  private def findNoteByKey(noteKey: String) = findObjectByKey(noteKey, classOf[Note]) match {
+    case None       => throw new SerializableException("no note with given key found")
+    case Some(note) => note
   }
 
   def removeGroup(userKey: String, groupKey: String) {
@@ -98,21 +110,43 @@ class NoteServiceImpl extends RemoteServiceServlet with NoteService with Persist
     new WhiteBoardDTO(whiteBoard.key, title)
   }
 
-  def removeWhiteBoard(whiteBoard: WhiteBoardDTO) {
-
+  def removeWhiteBoard(whiteBoardKey: String) {
+    val whiteboard = findWhiteBoardByKey(whiteBoardKey)
+    update[Group](whiteboard.group, classOf[Group], { group =>
+      val whiteBoardKey: Key = whiteboard.key
+      group.whiteBoards.remove(whiteBoardKey)
+    })
+    delete(whiteboard.key, classOf[WhiteBoard])
   }
 
-  def createNote(whiteBoard: WhiteBoardDTO, title: String,
+  def createNote(whiteBoardKey: String, title: String,
                  position: CoordinateDTO, size: CoordinateDTO) = {
-    new NoteDTO("key", title, "", new CoordinateDTO(0, 0), new CoordinateDTO(0, 0))
+    val whiteboard = findWhiteBoardByKey(whiteBoardKey)
+    val note = new Note(title, "", whiteboard.key, size.getY, size.getY, position.getX, position.getY)
+    persist(note)
+    update[WhiteBoard](whiteboard.key, classOf[WhiteBoard], whiteBoard => whiteBoard.notes.add(note.key))
+
+    new NoteDTO(note.key, title, "", new CoordinateDTO(0, 0), new CoordinateDTO(0, 0))
   }
 
-  def updateNote(note: NoteDTO) {
-
+  def updateNote(noteDto: NoteDTO) {
+    update[Note](noteDto.getKey(), classOf[Note], { note =>
+      note.title = noteDto.getTitle()
+      note.content = noteDto.getContent()
+      note.width = noteDto.getPosition().getX
+      note.height = noteDto.getPosition().getY
+      note.left = noteDto.getSize().getX
+      note.top = noteDto.getSize().getY
+    })
   }
 
-  def removeNote(note: NoteDTO) {
-
+  def removeNote(noteKey: String) {
+    val note = findNoteByKey(noteKey)
+    update[WhiteBoard](note.whiteboard, classOf[WhiteBoard], { whiteBoard =>
+      val noteKey: Key = note.key
+      whiteBoard.notes.remove(noteKey)
+    })
+    delete(note.key, classOf[Note])
   }
 
 }
