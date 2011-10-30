@@ -1,17 +1,23 @@
 package de.htwk.openNoteKeeper.server.model
+import javax.jdo.annotations.Persistent
+import javax.jdo.annotations.PrimaryKey
+import javax.jdo.annotations.IdGeneratorStrategy
+import javax.jdo.annotations.Extension
+import javax.jdo.annotations.PersistenceCapable
+import com.google.appengine.api.datastore.Key
 
-import de.htwk.openNoteKeeper.server.HasKey
-import com.vercer.engine.persist.annotation.Child
-import com.vercer.engine.persist.annotation.Parent
+@PersistenceCapable
+class Group(
+    @Persistent var title: String) {
 
-class Group(var title: String) extends HasKey {
+  @PrimaryKey
+  @Persistent(valueStrategy = IdGeneratorStrategy.IDENTITY)
+  @Extension(vendorName = "datanucleus", key = "gae.encoded-pk", value = "true")
+  var key: String = _
 
-  def this() = this("title")
+  @Persistent var whiteBoards: java.util.List[Key] = new java.util.LinkedList[Key]()
 
-  @Child var whiteBoards: java.util.List[WhiteBoard] = new java.util.LinkedList[WhiteBoard]()
+  @Persistent var subGroups: java.util.List[Key] = new java.util.LinkedList[Key]()
 
-  @Child var subGroups: java.util.List[Group] = new java.util.LinkedList[Group]()
-
-  var parentGroup: Group = _
-
+  @Persistent var parentGroup: Key = _
 }

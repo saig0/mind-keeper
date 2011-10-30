@@ -164,7 +164,7 @@
 			<plugin>
 				<groupId>org.datanucleus</groupId>
 				<artifactId>maven-datanucleus-plugin</artifactId>
-				<version>1.1.4</version>
+				<version>3.0.0-release</version>
 				<configuration>
 					<!-- Make sure this path contains your persistent classes! -->
 					<mappingIncludes>**/model/*.class</mappingIncludes>
@@ -184,7 +184,7 @@
 					<dependency>
 						<groupId>org.datanucleus</groupId>
 						<artifactId>datanucleus-core</artifactId>
-						<version>1.1.5</version>
+						<version>3.0.2</version>
 						<exclusions>
 							<exclusion>
 								<groupId>javax.transaction</groupId>
@@ -195,12 +195,12 @@
 					<dependency>
 						<groupId>org.datanucleus</groupId>
 						<artifactId>datanucleus-rdbms</artifactId>
-						<version>1.1.5</version>
+						<version>3.0.2</version>
 					</dependency>
 					<dependency>
 						<groupId>org.datanucleus</groupId>
 						<artifactId>datanucleus-enhancer</artifactId>
-						<version>1.1.4</version>
+						<version>3.0.1</version>
 					</dependency>
 				</dependencies>
 			</plugin>
@@ -254,7 +254,7 @@
 
 		<!-- Specify AppEngine version for your project. It should match SDK version 
 			pointed to by ${gae.home} property (Typically, one used by your Eclipse plug-in) -->
-		<gae.version>1.5.3</gae.version>
+		<gae.version>1.5.5</gae.version>
 
 		<!-- GWT version -->
 		<gwt.version>2.3.0</gwt.version>

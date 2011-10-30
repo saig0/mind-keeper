@@ -2,6 +2,7 @@ package de.htwk.openNoteKeeper.server
 
 import de.htwk.openNoteKeeper.server._
 import de.htwk.openNoteKeeper.server.model._
+import de.htwk.openNoteKeeper.server.model.Note._
 import org.junit._
 import Assert._
 import com.google.appengine.api.datastore.Text
@@ -14,117 +15,122 @@ class DataStoreTest extends LocalTestService with Persistence {
 
   val userId = "test"
 
-  val group = new Group("root")
-  val whiteboard = new WhiteBoard("test", group)
-  val note = new Note(whiteboard, "title", "content", new Coordinate(0, 0), new Coordinate(0, 0))
-
-  val datastore = new AnnotationObjectDatastore()
-
   @Test
   def findByType {
-    datastore.store(note)
-    val result = datastore.find(classOf[Note])
+    val group = new Group("root")
+    persist(group)
+    val result = findAllObjects(classOf[Group])
 
-    assertEquals(true, result.hasNext());
-    result.next()
-    assertEquals(false, result.hasNext());
-  }
-
-  @Test
-  def findQuery {
-    datastore.store(note)
-    val result = datastore.find().`type`(classOf[Note]).
-      addFilter("title", FilterOperator.EQUAL, "title").returnResultsNow()
-
-    assertEquals(true, result.hasNext());
-    assertEquals(note, result.next())
-    assertEquals(false, result.hasNext());
+    assertFalse(result.isEmpty)
+    assertEquals(1, result.size)
   }
 
   @Test
   def loadByKey {
-    val key = datastore.store(note)
-    val result: Note = datastore.load(key)
+    val group = new Group("root")
+    persist(group)
 
-    assertEquals(note, result);
-  }
-
-  @Test
-  def keyFactory {
-    val key = datastore.store(note)
-    note.key = key
-    datastore.update(note)
-    val keyAsString = KeyFactory.keyToString(note.key)
-
-    val restoreKey = KeyFactory.stringToKey(keyAsString)
-    val result: Note = datastore.load(restoreKey)
-
-    assertEquals(note, result);
-  }
-
-  @Test
-  def loadEmbeddedChild {
-    val key = datastore.store(note)
-    val result: Note = datastore.load(key)
-
-    assertEquals(note.position, result.position);
-    assertEquals(note.size, result.size);
+    findObjectByKey(group.key, classOf[Group]) match {
+      case None => fail("no object found with key")
+      case Some(g) => {
+        assertEquals(group.title, g.title)
+      }
+    }
   }
 
   @Test
   def loadChild {
-    val key = datastore.store(group)
-    group.whiteBoards.add(whiteboard)
-    val result: Group = datastore.load(key)
+    val group = new Group("root")
+    persist(group)
 
-    assertEquals(group.title, result.title);
-    assertEquals(group.whiteBoards, result.whiteBoards);
-    assertEquals(group, result.whiteBoards.get(0).group);
+    val whiteboard = new WhiteBoard("test", group.key)
+    persist(whiteboard)
+
+    update[Group](group.key, classOf[Group], { g =>
+      g.whiteBoards.add(whiteboard.key)
+    })
+
+    findObjectByKey(group.key, classOf[Group]) match {
+      case None => fail("no object found with key")
+      case Some(g) => {
+        assertEquals(group.title, g.title)
+        assertEquals(1, g.whiteBoards.size)
+        val keyOfWhiteboard: String = g.whiteBoards.get(0)
+        assertEquals(whiteboard.key, keyOfWhiteboard)
+
+        findObjectByKey(keyOfWhiteboard, classOf[WhiteBoard]) match {
+          case None => fail("no object found with key")
+          case Some(w) => {
+            val keyOfGroup: String = w.group
+            assertEquals(group.key, keyOfGroup)
+          }
+        }
+
+      }
+    }
   }
 
   @Test
-  def loadChildAndParent {
-    val key = datastore.store(group)
-    val keyOfWhiteBoard = datastore.store(whiteboard)
-    group.whiteBoards.add(whiteboard)
-    val result = datastore.find(classOf[WhiteBoard])
+  def keyFactory {
+    val group = new Group("root")
+    persist(group)
 
-    assertEquals(true, result.hasNext())
-    val resultWhiteboard = result.next()
-
-    assertEquals(whiteboard.title, resultWhiteboard.title)
-    assertEquals(whiteboard.group, resultWhiteboard.group)
-
-    assertEquals(false, result.hasNext());
+    val key: String = group.key
+    findObjectByKey(key, classOf[Group]) match {
+      case None    => fail("no object found with key")
+      case Some(g) => assertEquals(group.title, g.title)
+    }
   }
 
   @Test
   def update {
-    val key = datastore.store(note)
-    note.content = "new"
-    datastore.update(note)
-    val result: Note = datastore.load(key)
+    val group = new Group("root")
+    persist(group)
 
-    assertEquals(note, result);
+    group.title = "my group"
+    persist(group)
+
+    findObjectByKey(group.key, classOf[Group]) match {
+      case None    => fail("no object found with key")
+      case Some(g) => assertEquals(group.title, g.title)
+    }
   }
 
   @Test
   def updateByKey {
-    val key = datastore.store(note)
-    note.content = "new"
-    datastore.update(note, key)
-    val result: Note = datastore.load(key)
+    val group = new Group("root")
+    persist(group)
 
-    assertEquals(note, result);
+    update[Group](group.key, classOf[Group], g => g.title = "my group")
+
+    findObjectByKey(group.key, classOf[Group]) match {
+      case None    => fail("no object found with key")
+      case Some(g) => assertEquals("my group", g.title)
+    }
   }
 
   @Test
   def delete {
-    val key = datastore.store(note)
-    datastore.delete(note)
-    val result = datastore.find(classOf[Note])
+    val group = new Group("root")
+    persist(group)
 
-    assertEquals(false, result.hasNext());
+    delete(group.key, classOf[Group])
+
+    findObjectByKey(group.key, classOf[Group]) match {
+      case None    =>
+      case Some(g) => fail("object found with key after delete")
+    }
+  }
+
+  @Test
+  def findQueryWithSingleObject {
+    val group = new Group("root")
+    persist(group)
+
+    findObjectByCriteria(classOf[Group], new Criteria("title", "root")) match {
+      case None    => fail("no object found with key")
+      case Some(g) => assertEquals(group.title, g.title)
+    }
   }
 
 }
