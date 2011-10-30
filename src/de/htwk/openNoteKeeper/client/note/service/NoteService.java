@@ -13,12 +13,12 @@ import de.htwk.openNoteKeeper.shared.WhiteBoardDTO;
 @RemoteServiceRelativePath("note")
 public interface NoteService extends RemoteService {
 
-	public List<GroupDTO> getAllGroupsForUser(String userId);
+	public List<GroupDTO> getAllGroupsForUser(String userKey);
 
-	public GroupDTO createGroupForUser(String userId, GroupDTO parentGroup,
+	public GroupDTO createGroupForUser(String userKey, String parentGroupKey,
 			String title);
 
-	public void removeGroup(GroupDTO group);
+	public void removeGroup(String userKey, String groupKey);
 
 	public WhiteBoardDTO createWhiteBoard(GroupDTO group, String title);
 
