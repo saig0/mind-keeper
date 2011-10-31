@@ -1,19 +1,14 @@
 package de.htwk.openNoteKeeper.server
 import com.google.appengine.api.channel.dev.LocalChannelService
-
 import com.google.appengine.api.mail.dev.LocalMailService
-
 import com.google.appengine.api.channel.ChannelServiceFactory
-
 import com.google.appengine.api.datastore.DatastoreServiceFactory
-
 import com.google.appengine.api.mail._
-
 import com.google.appengine.api.datastore.dev._
-
 import com.google.appengine.tools.development.testing._
 import org.junit._
 import org.junit._
+import com.google.appengine.api.users.dev.LocalUserService
 
 trait LocalTestService {
 
@@ -31,8 +26,13 @@ trait LocalTestService {
 
   def channelService = LocalServiceTestHelper.getLocalService(LocalChannelService.PACKAGE).asInstanceOf[LocalChannelService]
 
+  val localUserService = new LocalServiceTestHelper(new LocalUserServiceTestConfig()).setEnvIsAdmin(true).setEnvIsLoggedIn(true)
+
+  def userService = LocalServiceTestHelper.getLocalService(LocalUserService.PACKAGE).asInstanceOf[LocalUserService]
+
   @Before
   def setUpTestService() {
+    localUserService.setUp()
     localDataStoreService.setUp()
     localMailService.setUp()
     localChannelService.setUp()
@@ -41,6 +41,7 @@ trait LocalTestService {
   @After
   def tearDownTestService() {
     try {
+      localUserService.tearDown()
       localDataStoreService.tearDown()
       localChannelService.tearDown()
       localMailService.tearDown()

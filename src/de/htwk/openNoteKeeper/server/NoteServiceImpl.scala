@@ -21,12 +21,14 @@ class NoteServiceImpl extends RemoteServiceServlet with NoteService with Persist
           createRootGroupForUser(user)
         }
 
-        (ListBuffer[GroupDTO]() /: user.authorities) { (groups, authorityKey) =>
+        val groups = new java.util.LinkedList[GroupDTO]()
+        user.authorities foreach { authorityKey =>
           findObjectByKey(authorityKey, classOf[Authority]) match {
             case None            => throw new SerializableException("no authority with given key found")
-            case Some(authority) => groups += createGroupDtoForKey(authority.group)
+            case Some(authority) => groups.add(createGroupDtoForKey(authority.group))
           }
-        }.toList
+        }
+        groups
       }
     }
   }

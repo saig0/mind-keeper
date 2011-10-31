@@ -4,8 +4,9 @@ import de.htwk.openNoteKeeper.shared._
 import com.google.appengine.api.users.UserServiceFactory
 import de.htwk.openNoteKeeper.client.main.service.UserService
 import scala.collection.JavaConversions._
+import de.htwk.openNoteKeeper.server.model.User
 
-class UserServiceImpl extends RemoteServiceServlet with UserService {
+class UserServiceImpl extends RemoteServiceServlet with UserService with Persistence {
 
   val userService = UserServiceFactory.getUserService()
 
@@ -22,10 +23,18 @@ class UserServiceImpl extends RemoteServiceServlet with UserService {
   def getLogoutUrl = userService.createLogoutURL("/")
 
   def getUser = {
-    val user = userService.getCurrentUser
-    val id = user.getUserId
-    val nick = user.getNickname
-    val email = user.getEmail
-    new UserDTO(id, nick, email)
+    val currentUser = userService.getCurrentUser
+    val id = currentUser.getUserId
+    val nick = currentUser.getNickname
+    val email = currentUser.getEmail
+
+    findObjectByCriteria(classOf[User], new Criteria("userId", id)) match {
+      case None => {
+        val user = new User(id)
+        persist(user)
+        new UserDTO(user.key, nick, email)
+      }
+      case Some(user) => new UserDTO(user.key, nick, email)
+    }
   }
 }

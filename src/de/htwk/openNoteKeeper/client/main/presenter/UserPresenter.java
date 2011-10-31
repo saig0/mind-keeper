@@ -35,7 +35,6 @@ public class UserPresenter extends BasePresenter<UserViewImpl, MainEventBus> {
 			@Override
 			protected void success(Boolean isLoggedIn) {
 				if (isLoggedIn) {
-					showLogout();
 					showUser();
 				} else {
 					showLogin();
@@ -63,6 +62,8 @@ public class UserPresenter extends BasePresenter<UserViewImpl, MainEventBus> {
 			protected void success(UserDTO user) {
 				view.showUserData(user);
 				eventBus.loggedIn(user);
+
+				showLogout();
 			}
 		});
 	}
