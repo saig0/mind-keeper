@@ -21,7 +21,9 @@ public enum IconPool {
 			"trash_full_big.png"), Google_Logo("gmail.png"), Yahoo_Logo(
 			"yahoo.png"), Aol_Logo("aol.png"), Hotmail_Logo("hotmail.png"), Flag_German(
 			"flag_german.png"), Flag_Us("flag_us.png"), Arrow_Right_Light(
-			"right_arrow_light.png"), Arrow_Down_Light("down_arrow_light.png");
+			"right_arrow_light.png"), Arrow_Down_Light("down_arrow_light.png"), Folder_Big(
+			"folder_big.png"), Folder("folder.png"), Blank_Sheet_Big(
+			"blank_sheet_big.png"), Blank_Sheet("blank_sheet.png");
 
 	private final String dir = "images/";
 	private final String url;

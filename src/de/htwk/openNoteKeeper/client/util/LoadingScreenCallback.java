@@ -13,6 +13,12 @@ public abstract class LoadingScreenCallback<T> implements AsyncCallback<T> {
 	private final FocusWidget widget;
 	private final PopupPanel loadingPanel;
 
+	public LoadingScreenCallback() {
+		widget = null;
+		loadingPanel = addLoading(widget);
+		loadingPanel.show();
+	}
+
 	public LoadingScreenCallback(GwtEvent<?> event) {
 		widget = (FocusWidget) event.getSource();
 		loadingPanel = addLoading(widget);
@@ -20,18 +26,20 @@ public abstract class LoadingScreenCallback<T> implements AsyncCallback<T> {
 	}
 
 	private PopupPanel addLoading(FocusWidget widget) {
-		widget.setEnabled(false);
-
-		Element element = widget.getElement();
-		int x = calculatePosition(element.getAbsoluteLeft(),
-				element.getClientWidth());
-		int y = calculatePosition(element.getAbsoluteTop(),
-				element.getClientHeight());
-
 		PopupPanel loadingPanel = new PopupPanel(false, false);
 		loadingPanel.setAnimationEnabled(true);
 		loadingPanel.add(IconPool.Loading.createImage());
-		loadingPanel.setPopupPosition(x, y);
+
+		if (widget != null) {
+			widget.setEnabled(false);
+
+			Element element = widget.getElement();
+			int x = calculatePosition(element.getAbsoluteLeft(),
+					element.getClientWidth());
+			int y = calculatePosition(element.getAbsoluteTop(),
+					element.getClientHeight());
+			loadingPanel.setPopupPosition(x, y);
+		}
 		return loadingPanel;
 	}
 
@@ -41,14 +49,18 @@ public abstract class LoadingScreenCallback<T> implements AsyncCallback<T> {
 
 	private void removeLoading() {
 		loadingPanel.hide();
-		widget.setEnabled(true);
+		if (widget != null)
+			widget.setEnabled(true);
 	}
 
 	public void onFailure(Throwable caught) {
 		removeLoading();
 
 		ErrorPopup popupPanel = new ErrorPopup(caught);
-		popupPanel.showRelativeTo(widget);
+		if (widget != null)
+			popupPanel.showRelativeTo(widget);
+		else
+			popupPanel.show();
 	}
 
 	public void onSuccess(T result) {

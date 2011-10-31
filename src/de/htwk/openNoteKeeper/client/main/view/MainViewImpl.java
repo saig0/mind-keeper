@@ -25,7 +25,7 @@ public class MainViewImpl implements MainView {
 		main.setSize("100%", "100%");
 
 		HorizontalPanel header = new HorizontalPanel();
-		header.setWidth("100%");
+		header.setSize("100%", "100%");
 		header.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_RIGHT);
 
 		Image logo = IconPool.Logo.createImage();
@@ -37,6 +37,9 @@ public class MainViewImpl implements MainView {
 		header.add(userView);
 
 		main.add(header);
+		main.setCellHeight(header, "15%");
+
+		content.setSize("100%", "100%");
 		main.add(content);
 
 		return main;
