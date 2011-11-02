@@ -2,13 +2,10 @@ package de.htwk.openNoteKeeper.client;
 
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.core.client.GWT.UncaughtExceptionHandler;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.RootLayoutPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.mvp4g.client.Mvp4gModule;
-
-import de.htwk.openNoteKeeper.client.widget.ErrorPopup;
 
 public class OpenNoteKeeper implements EntryPoint {
 
@@ -17,14 +14,6 @@ public class OpenNoteKeeper implements EntryPoint {
 		module.createAndStartModule();
 		Widget startView = getStartView(module);
 		RootLayoutPanel.get().add(startView);
-
-		GWT.setUncaughtExceptionHandler(new UncaughtExceptionHandler() {
-
-			public void onUncaughtException(Throwable e) {
-				new ErrorPopup(e).show();
-				e.printStackTrace();
-			}
-		});
 	}
 
 	private Widget getStartView(Mvp4gModule module) {
