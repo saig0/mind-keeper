@@ -27,6 +27,7 @@ public abstract class LoadingScreenCallback<T> implements AsyncCallback<T> {
 
 	private PopupPanel addLoading(FocusWidget widget) {
 		PopupPanel loadingPanel = new PopupPanel(false, false);
+		loadingPanel.addStyleName("PopupPanelWithTransparentContent");
 		loadingPanel.setAnimationEnabled(true);
 		loadingPanel.add(IconPool.Loading.createImage());
 
