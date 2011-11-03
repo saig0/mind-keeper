@@ -105,6 +105,60 @@ class NoteServiceTest extends LocalTestService with Persistence {
   }
 
   @Test
+  def removeGroupWithWhiteBoardAndNotes {
+    val groups_ = service.getAllGroupsForUser(user.key)
+    assertEquals(1, groups_.size)
+    val rootGroup_ = groups_.get(0)
+
+    val group_ = service.createGroupForUser(user.key, rootGroup_.getKey(), "new group")
+    val whiteboard_ = service.createWhiteBoard(group_.getKey(), "new whiteboard")
+    val note_ = service.createNote(whiteboard_.getKey(), "new note", new CoordinateDTO(0, 0), new CoordinateDTO(0, 0))
+    service.removeGroup(user.key, group_.getKey())
+
+    findObjectByKey(group_.getKey, classOf[Group]) match {
+      case Some(_) => fail("found group after remove it")
+      case None    =>
+    }
+
+    findObjectByKey(whiteboard_.getKey, classOf[WhiteBoard]) match {
+      case Some(_) => fail("found whiteboard after remove it")
+      case None    =>
+    }
+
+    findObjectByKey(note_.getKey, classOf[Note]) match {
+      case Some(_) => fail("found note after remove it")
+      case None    =>
+    }
+  }
+
+  @Test
+  def removeGroupWithSubGroups {
+    val groups_ = service.getAllGroupsForUser(user.key)
+    assertEquals(1, groups_.size)
+    val rootGroup_ = groups_.get(0)
+
+    val group_ = service.createGroupForUser(user.key, rootGroup_.getKey(), "new group")
+    val subGroup_ = service.createGroupForUser(user.key, group_.getKey(), "new group")
+    val whiteboard_ = service.createWhiteBoard(subGroup_.getKey(), "new whiteboard")
+    service.removeGroup(user.key, group_.getKey())
+
+    findObjectByKey(group_.getKey, classOf[Group]) match {
+      case Some(_) => fail("found group after remove it")
+      case None    =>
+    }
+
+    findObjectByKey(subGroup_.getKey, classOf[Group]) match {
+      case Some(_) => fail("found group after remove it")
+      case None    =>
+    }
+
+    findObjectByKey(whiteboard_.getKey, classOf[WhiteBoard]) match {
+      case Some(_) => fail("found whiteboard after remove it")
+      case None    =>
+    }
+  }
+
+  @Test
   def createWhiteBoard {
     val groups_ = service.getAllGroupsForUser(user.key)
     assertEquals(1, groups_.size)
@@ -133,6 +187,27 @@ class NoteServiceTest extends LocalTestService with Persistence {
     assertEquals(1, groups.size)
     val group = groups.get(0)
     assertEquals(0, group.getWhiteBoards.size)
+  }
+
+  @Test
+  def removeWhiteBoardWithNotes {
+    val groups_ = service.getAllGroupsForUser(user.key)
+    assertEquals(1, groups_.size)
+    val rootGroup_ = groups_.get(0)
+
+    val whiteboard_ = service.createWhiteBoard(rootGroup_.getKey(), "new whiteboard")
+    val note_ = service.createNote(whiteboard_.getKey(), "new note", new CoordinateDTO(0, 0), new CoordinateDTO(0, 0))
+    service.removeWhiteBoard(whiteboard_.getKey())
+
+    findObjectByKey(whiteboard_.getKey, classOf[WhiteBoard]) match {
+      case Some(_) => fail("found whiteboard after remove it")
+      case None    =>
+    }
+
+    findObjectByKey(note_.getKey, classOf[Note]) match {
+      case Some(_) => fail("found note after remove it")
+      case None    =>
+    }
   }
 
   @Test
