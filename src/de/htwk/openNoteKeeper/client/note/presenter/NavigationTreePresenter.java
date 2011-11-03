@@ -2,9 +2,6 @@ package de.htwk.openNoteKeeper.client.note.presenter;
 
 import java.util.List;
 
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.HasBlurHandlers;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.inject.Inject;
@@ -17,6 +14,7 @@ import de.htwk.openNoteKeeper.client.note.view.NavigationTreeViewImpl;
 import de.htwk.openNoteKeeper.client.util.LoadingScreenCallback;
 import de.htwk.openNoteKeeper.shared.GroupDTO;
 import de.htwk.openNoteKeeper.shared.UserDTO;
+import de.htwk.openNoteKeeper.shared.WhiteBoardDTO;
 
 @Presenter(view = NavigationTreeViewImpl.class)
 public class NavigationTreePresenter extends
@@ -30,96 +28,50 @@ public class NavigationTreePresenter extends
 
 		public HasClickHandlers getCreateNewGroupButton();
 
+		public HasClickHandlers getCreateNewWhiteBoardButton();
+
 		public boolean hasSelectedGroup();
 
-		public void showNewGroupNameField();
+		public boolean hasSelectedWhiteBoard();
 
-		public HasBlurHandlers getNewGroupNameField();
+		public void showNewGroupInputField();
 
-		public HasClickHandlers getCancelNewGroupButton();
+		public void showNewWhiteBoardInputField();
 
-		public HasClickHandlers getSaveNewGroupButton();
+		public HasClickHandlers getCancelInputButton();
 
-		public String getNewGroupName();
+		public HasClickHandlers getSaveInputButton();
+
+		public String getNameOfInputField();
 
 		public GroupDTO getSelectedGroup();
 
-		public void addGroupToSelected(GroupDTO group);
+		public WhiteBoardDTO getSelectedWhiteBoard();
 
-		public void hideNewGroupField();
+		public void addGroupToSelectedGroup(GroupDTO group);
 
-		public HasClickHandlers getRemoveGroupButton();
+		public void addWhiteBoardToSelectedGroup(WhiteBoardDTO whiteboard);
+
+		public void hideInputField();
+
+		public HasClickHandlers getRemoveButton();
 
 		public void removeSelectedGroup();
-	}
 
-	private UserDTO user;
+		public void removeSelectedWhiteBoard();
+	}
 
 	@Override
 	public void bind() {
-		view.getCreateNewGroupButton().addClickHandler(new ClickHandler() {
-
-			public void onClick(ClickEvent event) {
-				if (view.hasSelectedGroup()) {
-					view.showNewGroupNameField();
-					view.getSaveNewGroupButton().addClickHandler(
-							new ClickHandler() {
-
-								public void onClick(ClickEvent event) {
-									GroupDTO group = view.getSelectedGroup();
-									String newGroupName = view
-											.getNewGroupName();
-
-									if (!newGroupName.isEmpty()) {
-										view.hideNewGroupField();
-
-										noteService.createGroupForUser(
-												user.getId(),
-												group.getKey(),
-												newGroupName,
-												new LoadingScreenCallback<GroupDTO>(
-														event) {
-
-													@Override
-													protected void success(
-															GroupDTO newGroup) {
-														view.addGroupToSelected(newGroup);
-													}
-												});
-									}
-								}
-							});
-					view.getCancelNewGroupButton().addClickHandler(
-							new ClickHandler() {
-
-								public void onClick(ClickEvent event) {
-									view.hideNewGroupField();
-								}
-							});
-				}
-			}
-		});
-		view.getRemoveGroupButton().addClickHandler(new ClickHandler() {
-
-			public void onClick(ClickEvent event) {
-				if (view.hasSelectedGroup()) {
-					GroupDTO group = view.getSelectedGroup();
-
-					noteService.removeGroup(user.getId(), group.getKey(),
-							new LoadingScreenCallback<Void>(event) {
-
-								@Override
-								protected void success(Void result) {
-									view.removeSelectedGroup();
-								}
-							});
-				}
-			}
-		});
+		view.getCreateNewGroupButton().addClickHandler(
+				new CreateNewGroupClickHandler(view, noteService));
+		view.getCreateNewWhiteBoardButton().addClickHandler(
+				new CreateNeWhiteBoardClickHandler(view, noteService));
+		view.getRemoveButton().addClickHandler(
+				new RemoveItemClickHandler(view, noteService));
 	}
 
 	public void onLoggedIn(UserDTO user) {
-		this.user = user;
 
 		noteService.getAllGroupsForUser(user.getId(),
 				new LoadingScreenCallback<List<GroupDTO>>() {

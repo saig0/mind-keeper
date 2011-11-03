@@ -60,6 +60,7 @@ public class UserPresenter extends BasePresenter<UserViewImpl, MainEventBus> {
 
 			@Override
 			protected void success(UserDTO user) {
+				Session.setCurrentUser(user);
 				view.showUserData(user);
 				eventBus.loggedIn(user);
 
