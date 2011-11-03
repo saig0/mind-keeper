@@ -101,6 +101,8 @@ class NoteServiceImpl extends RemoteServiceServlet with NoteService with Persist
       parentGroup.subGroups.remove(groupKey)
     })
     group.authorities foreach (authorityKey => delete(authorityKey, classOf[Authority]))
+    group.subGroups foreach (subGroup => removeGroup(userKey, subGroup))
+    group.whiteBoards foreach (whiteboard => removeWhiteBoard(whiteboard))
     delete(group.key, classOf[Group])
   }
 
@@ -118,6 +120,7 @@ class NoteServiceImpl extends RemoteServiceServlet with NoteService with Persist
       val whiteBoardKey: Key = whiteboard.key
       group.whiteBoards.remove(whiteBoardKey)
     })
+    whiteboard.notes foreach (note => removeNote(note))
     delete(whiteboard.key, classOf[WhiteBoard])
   }
 
