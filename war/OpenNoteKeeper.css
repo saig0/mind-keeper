@@ -20,3 +20,7 @@
 .gwt-TreeItem-selected {
 	font-weight: bold;
 }
+
+.dropTarget {
+	background-color:#FFFF66;
+}
