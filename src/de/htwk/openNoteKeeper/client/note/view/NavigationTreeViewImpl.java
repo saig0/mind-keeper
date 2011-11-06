@@ -2,23 +2,26 @@ package de.htwk.openNoteKeeper.client.note.view;
 
 import java.util.List;
 
+import com.allen_sauer.gwt.dnd.client.DragEndEvent;
+import com.allen_sauer.gwt.dnd.client.DragHandler;
+import com.allen_sauer.gwt.dnd.client.DragStartEvent;
+import com.allen_sauer.gwt.dnd.client.PickupDragController;
+import com.allen_sauer.gwt.dnd.client.VetoDragException;
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.user.client.ui.AbsolutePanel;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Image;
-import com.google.gwt.user.client.ui.Label;
-import com.google.gwt.user.client.ui.PushButton;
-import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Tree;
 import com.google.gwt.user.client.ui.TreeItem;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
-import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 import de.htwk.openNoteKeeper.client.note.i18n.NoteConstants;
+import de.htwk.openNoteKeeper.client.note.presenter.HasTreeDropHandler;
 import de.htwk.openNoteKeeper.client.note.presenter.NavigationTreePresenter.NavigationTreeView;
-import de.htwk.openNoteKeeper.client.util.EnterKeyPressHandler;
 import de.htwk.openNoteKeeper.client.util.IconPool;
 import de.htwk.openNoteKeeper.shared.GroupDTO;
 import de.htwk.openNoteKeeper.shared.WhiteBoardDTO;
@@ -31,22 +34,26 @@ public class NavigationTreeViewImpl implements NavigationTreeView {
 	private Image whiteboardIcon;
 	private Image noteIcon;
 	private Image trashIcon;
-	private TextBox inputNameField;
-	private TreeItem inputTreeItem;
-	private PushButton saveButton;
-	private PushButton cancelButton;
-	private TreeItem selectedGroup;
 
-	@Inject
-	private NoteConstants constants;
+	private TreeDropController dropController;
 
-	public Widget asWidget() {
+	private NoteConstants constants = GWT.create(NoteConstants.class);
+
+	private Widget dragWidget;
+
+	private final Widget widget;
+
+	public NavigationTreeViewImpl() {
+		widget = createLayout();
+	}
+
+	public Widget createLayout() {
 		VerticalPanel navigationPanel = new VerticalPanel();
 		navigationPanel.setSize("100%", "100%");
 		navigationPanel
 				.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_LEFT);
 
-		HorizontalPanel controlPanel = new HorizontalPanel();
+		final HorizontalPanel controlPanel = new HorizontalPanel();
 		controlPanel.setSize("100%", "100%");
 		navigationPanel.add(controlPanel);
 
@@ -72,9 +79,52 @@ public class NavigationTreeViewImpl implements NavigationTreeView {
 
 		navigationTree = new Tree();
 		navigationTree.setSize("100%", "100%");
+		navigationTree.setAnimationEnabled(true);
 		navigationPanel.add(navigationTree);
 
-		return navigationPanel;
+		AbsolutePanel p = new AbsolutePanel();
+		p.setSize("100%", "100%");
+		p.add(navigationPanel);
+		final PickupDragController dragController = new PickupDragController(p,
+				true);
+		dragController.setBehaviorMultipleSelection(false);
+		dragController.setBehaviorDragProxy(false);
+		dragController.setBehaviorConstrainedToBoundaryPanel(true);
+
+		dragController.addDragHandler(new DragHandler() {
+
+			public void onPreviewDragStart(DragStartEvent event)
+					throws VetoDragException {
+				dragWidget = event.getContext().draggable;
+				int i = controlPanel.getWidgetIndex(dragWidget);
+				if (i != -1) {
+					Widget clone = IconPool.Folder_Big.createImage();
+					dragController.makeDraggable(clone);
+					controlPanel.insert(clone, i);
+				}
+			}
+
+			public void onPreviewDragEnd(DragEndEvent event)
+					throws VetoDragException {
+			}
+
+			public void onDragStart(DragStartEvent event) {
+			}
+
+			public void onDragEnd(DragEndEvent event) {
+				event.getContext().draggable.removeFromParent();
+			}
+		});
+
+		dropController = new TreeDropController(navigationTree);
+		dragController.registerDropController(dropController);
+		dragController.makeDraggable(groupIcon);
+
+		return p;
+	}
+
+	public Widget asWidget() {
+		return widget;
 	}
 
 	public void setGroups(List<GroupDTO> groups) {
@@ -88,7 +138,7 @@ public class NavigationTreeViewImpl implements NavigationTreeView {
 
 	private void createTreeItem(List<GroupDTO> groups, TreeItem parent) {
 		for (GroupDTO group : groups) {
-			TreeItem groupItem = createGroupTreeItem(group);
+			final TreeItem groupItem = createGroupTreeItem(group);
 			createTreeItem(group.getSubGroups(), groupItem);
 			parent.addItem(groupItem);
 
@@ -100,25 +150,13 @@ public class NavigationTreeViewImpl implements NavigationTreeView {
 	}
 
 	private TreeItem createGroupTreeItem(GroupDTO group) {
-		return createTreeItem(IconPool.Folder.createImage(), group.getTitle(),
-				group);
-	}
-
-	private TreeItem createTreeItem(Image icon, String title, Object userObject) {
-		HorizontalPanel panel = new HorizontalPanel();
-		panel.setSize("100%", "100%");
-		icon.setSize("24px", "24px");
-		panel.add(icon);
-		panel.setCellWidth(icon, "30px");
-		panel.add(new Label(title));
-		TreeItem groupItem = new TreeItem(panel);
-		groupItem.setUserObject(userObject);
-		return groupItem;
+		return new NavigationTreeItem(IconPool.Folder.createImage(),
+				group.getTitle(), group).asWidget();
 	}
 
 	private TreeItem createWhiteBoardTreeItem(WhiteBoardDTO whiteBoard) {
-		return createTreeItem(IconPool.Blank_Sheet.createImage(),
-				whiteBoard.getTitle(), whiteBoard);
+		return new NavigationTreeItem(IconPool.Blank_Sheet.createImage(),
+				whiteBoard.getTitle(), whiteBoard).asWidget();
 	}
 
 	public HasClickHandlers getCreateNewGroupButton() {
@@ -141,77 +179,6 @@ public class NavigationTreeViewImpl implements NavigationTreeView {
 		selectedGroup.remove();
 	}
 
-	public void showNewGroupInputField() {
-		if (inputTreeItem == null)
-			createNewInputFieldInTree(IconPool.Folder.createImage());
-	}
-
-	private void createNewInputFieldInTree(Image icon) {
-		selectedGroup = navigationTree.getSelectedItem();
-
-		HorizontalPanel panel = new HorizontalPanel();
-		panel.setSize("100%", "100%");
-		icon.setSize("24px", "24px");
-		panel.add(icon);
-		panel.setCellWidth(icon, "30px");
-
-		VerticalPanel newGroupPanel = new VerticalPanel();
-		panel.add(newGroupPanel);
-		inputNameField = new TextBox();
-		newGroupPanel.add(inputNameField);
-		HorizontalPanel buttonPanel = new HorizontalPanel();
-		buttonPanel.setSize("100%", "100%");
-		newGroupPanel.add(buttonPanel);
-		saveButton = new PushButton(constants.save());
-		buttonPanel.add(saveButton);
-		inputNameField.addKeyPressHandler(new EnterKeyPressHandler(saveButton));
-		buttonPanel.setCellWidth(saveButton, "75%");
-		cancelButton = new PushButton(constants.abort());
-		buttonPanel.add(cancelButton);
-		// inputNameField.addBlurHandler(new BlurToClickHandler(cancelButton));
-
-		inputTreeItem = new TreeItem(panel);
-		selectedGroup.addItem(inputTreeItem);
-
-		selectedGroup.setState(true, false);
-		inputNameField.setFocus(true);
-	}
-
-	public void showNewWhiteBoardInputField() {
-		if (inputTreeItem == null)
-			createNewInputFieldInTree(IconPool.Blank_Sheet.createImage());
-	}
-
-	public HasClickHandlers getCancelInputButton() {
-		return cancelButton;
-	}
-
-	public HasClickHandlers getSaveInputButton() {
-		return saveButton;
-	}
-
-	public String getNameOfInputField() {
-		return inputNameField.getValue();
-	}
-
-	public void addGroupToSelectedGroup(GroupDTO group) {
-		selectedGroup.addItem(createGroupTreeItem(group));
-	}
-
-	public void addWhiteBoardToSelectedGroup(WhiteBoardDTO whiteboard) {
-		selectedGroup.addItem(createWhiteBoardTreeItem(whiteboard));
-	}
-
-	public void hideInputField() {
-		if (inputTreeItem != null)
-			inputTreeItem.remove();
-		inputTreeItem = null;
-	}
-
-	public HasClickHandlers getRemoveButton() {
-		return trashIcon;
-	}
-
 	public void removeSelectedWhiteBoard() {
 		TreeItem selectedWhiteBoard = navigationTree.getSelectedItem();
 		selectedWhiteBoard.remove();
@@ -230,6 +197,34 @@ public class NavigationTreeViewImpl implements NavigationTreeView {
 	public WhiteBoardDTO getSelectedWhiteBoard() {
 		TreeItem selectedItem = navigationTree.getSelectedItem();
 		return (WhiteBoardDTO) selectedItem.getUserObject();
+	}
+
+	public void addGroupToSelectedGroup(GroupDTO group) {
+		// TODO Auto-generated method stub
+
+	}
+
+	public void addWhiteBoardToSelectedGroup(WhiteBoardDTO whiteboard) {
+		// TODO Auto-generated method stub
+
+	}
+
+	public void hideInputField() {
+		// TODO Auto-generated method stub
+
+	}
+
+	public HasClickHandlers getRemoveButton() {
+		return trashIcon;
+	}
+
+	public HasTreeDropHandler getDropHandler() {
+		return dropController;
+	}
+
+	public void addGroupToTree(TreeItem treeItem, GroupDTO group) {
+		treeItem.addItem(createGroupTreeItem(group));
+
 	}
 
 }
