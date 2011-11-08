@@ -2,8 +2,6 @@ package de.htwk.openNoteKeeper.client.note.presenter;
 
 import java.util.List;
 
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.TreeItem;
@@ -11,13 +9,11 @@ import com.google.inject.Inject;
 import com.mvp4g.client.annotation.Presenter;
 import com.mvp4g.client.presenter.BasePresenter;
 
-import de.htwk.openNoteKeeper.client.main.presenter.Session;
 import de.htwk.openNoteKeeper.client.note.NoteEventBus;
 import de.htwk.openNoteKeeper.client.note.presenter.HasTreeDropHandler.TreeDropHandler;
 import de.htwk.openNoteKeeper.client.note.service.NoteServiceAsync;
 import de.htwk.openNoteKeeper.client.note.view.NavigationInputWidget;
 import de.htwk.openNoteKeeper.client.note.view.NavigationTreeViewImpl;
-import de.htwk.openNoteKeeper.client.util.IconPool;
 import de.htwk.openNoteKeeper.client.util.LoadingScreenCallback;
 import de.htwk.openNoteKeeper.shared.GroupDTO;
 import de.htwk.openNoteKeeper.shared.UserDTO;
@@ -45,15 +41,16 @@ public class NavigationTreePresenter extends
 
 		public void addGroupToTree(TreeItem treeItem, GroupDTO group);
 
-		public void addWhiteBoardToSelectedGroup(WhiteBoardDTO whiteboard);
-
-		public void hideInputField();
+		public void addWhiteBoardToGroup(TreeItem treeItem,
+				WhiteBoardDTO whiteboard);
 
 		public HasClickHandlers getRemoveButton();
 
 		public void removeSelectedGroup();
 
 		public void removeSelectedWhiteBoard();
+
+		public DragableWidget getDragWidget();
 	}
 
 	public interface NavigationInputView {
@@ -73,48 +70,17 @@ public class NavigationTreePresenter extends
 		view.getDropHandler().addTreeDropHandler(new TreeDropHandler() {
 
 			public void onTreeDrop(final TreeItem dropTreeItem) {
+				final DragableWidget dragWidget = view.getDragWidget();
 				final NavigationInputView navigationInputView = new NavigationInputWidget(
-						IconPool.Folder.createImage());
+						dragWidget.getDragIcon());
 				navigationInputView.getSaveInputButton().addClickHandler(
-						new ClickHandler() {
-
-							public void onClick(ClickEvent event) {
-								String newGroupName = navigationInputView
-										.getNameOfInputField();
-
-								if (!newGroupName.isEmpty()) {
-									navigationInputView.hide();
-									GroupDTO group = (GroupDTO) dropTreeItem
-											.getUserObject();
-
-									UserDTO user = Session.getCurrentUser();
-									noteService.createGroupForUser(
-											user.getId(),
-											group.getKey(),
-											newGroupName,
-											new LoadingScreenCallback<GroupDTO>(
-													event) {
-
-												@Override
-												protected void success(
-														GroupDTO newGroup) {
-													view.addGroupToTree(
-															dropTreeItem,
-															newGroup);
-												}
-											});
-								}
-							}
-						});
+						new SaveInputClickHandler(noteService, view,
+								navigationInputView, dropTreeItem, dragWidget));
 				navigationInputView.getCancelInputButton().addClickHandler(
-						new ClickHandler() {
-
-							public void onClick(ClickEvent event) {
-								navigationInputView.hide();
-							}
-						});
+						new CancelInputClickHandler(navigationInputView));
 				navigationInputView.show(dropTreeItem);
 			}
+
 		});
 		view.getRemoveButton().addClickHandler(
 				new RemoveItemClickHandler(view, noteService));
@@ -131,4 +97,5 @@ public class NavigationTreePresenter extends
 					}
 				});
 	}
+
 }
