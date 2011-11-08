@@ -33,7 +33,7 @@ public class RemoveItemClickHandler implements ClickHandler {
 	private void removeWhiteBoard(ClickEvent event) {
 		WhiteBoardDTO whiteBoard = view.getSelectedWhiteBoard();
 		noteService.removeWhiteBoard(whiteBoard.getKey(),
-				new LoadingScreenCallback<Void>() {
+				new LoadingScreenCallback<Void>(event) {
 
 					@Override
 					protected void success(Void result) {
@@ -46,7 +46,7 @@ public class RemoveItemClickHandler implements ClickHandler {
 		GroupDTO group = view.getSelectedGroup();
 		UserDTO user = Session.getCurrentUser();
 		noteService.removeGroup(user.getId(), group.getKey(),
-				new LoadingScreenCallback<Void>() {
+				new LoadingScreenCallback<Void>(event) {
 
 					@Override
 					protected void success(Void result) {

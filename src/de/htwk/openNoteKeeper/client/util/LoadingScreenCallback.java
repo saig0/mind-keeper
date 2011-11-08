@@ -5,12 +5,13 @@ import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.FocusWidget;
 import com.google.gwt.user.client.ui.PopupPanel;
+import com.google.gwt.user.client.ui.UIObject;
 
 import de.htwk.openNoteKeeper.client.widget.ErrorPopup;
 
 public abstract class LoadingScreenCallback<T> implements AsyncCallback<T> {
 
-	private final FocusWidget widget;
+	private final UIObject widget;
 	private final PopupPanel loadingPanel;
 
 	public LoadingScreenCallback() {
@@ -20,20 +21,21 @@ public abstract class LoadingScreenCallback<T> implements AsyncCallback<T> {
 	}
 
 	public LoadingScreenCallback(GwtEvent<?> event) {
-		widget = (FocusWidget) event.getSource();
+		widget = (UIObject) event.getSource();
 		loadingPanel = addLoading(widget);
+		if (widget instanceof FocusWidget) {
+			((FocusWidget) widget).setEnabled(false);
+		}
 		loadingPanel.show();
 	}
 
-	private PopupPanel addLoading(FocusWidget widget) {
+	private PopupPanel addLoading(UIObject widget) {
 		PopupPanel loadingPanel = new PopupPanel(false, false);
 		loadingPanel.addStyleName("PopupPanelWithTransparentContent");
 		loadingPanel.setAnimationEnabled(true);
 		loadingPanel.add(IconPool.Loading.createImage());
 
 		if (widget != null) {
-			widget.setEnabled(false);
-
 			Element element = widget.getElement();
 			int x = calculatePosition(element.getAbsoluteLeft(),
 					element.getClientWidth());
@@ -50,8 +52,9 @@ public abstract class LoadingScreenCallback<T> implements AsyncCallback<T> {
 
 	private void removeLoading() {
 		loadingPanel.hide();
-		if (widget != null)
-			widget.setEnabled(true);
+		if (widget != null && widget instanceof FocusWidget) {
+			((FocusWidget) widget).setEnabled(true);
+		}
 	}
 
 	public void onFailure(Throwable caught) {

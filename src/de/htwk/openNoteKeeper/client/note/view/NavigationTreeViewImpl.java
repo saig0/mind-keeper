@@ -2,6 +2,7 @@ package de.htwk.openNoteKeeper.client.note.view;
 
 import java.util.List;
 
+import com.allen_sauer.gwt.dnd.client.DragContext;
 import com.allen_sauer.gwt.dnd.client.DragEndEvent;
 import com.allen_sauer.gwt.dnd.client.DragHandler;
 import com.allen_sauer.gwt.dnd.client.DragStartEvent;
@@ -20,8 +21,11 @@ import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Singleton;
 
 import de.htwk.openNoteKeeper.client.note.i18n.NoteConstants;
+import de.htwk.openNoteKeeper.client.note.presenter.DragableWidget;
+import de.htwk.openNoteKeeper.client.note.presenter.GroupDragWidget;
 import de.htwk.openNoteKeeper.client.note.presenter.HasTreeDropHandler;
 import de.htwk.openNoteKeeper.client.note.presenter.NavigationTreePresenter.NavigationTreeView;
+import de.htwk.openNoteKeeper.client.note.presenter.WhiteBoardDragWidget;
 import de.htwk.openNoteKeeper.client.util.IconPool;
 import de.htwk.openNoteKeeper.shared.GroupDTO;
 import de.htwk.openNoteKeeper.shared.WhiteBoardDTO;
@@ -30,16 +34,14 @@ import de.htwk.openNoteKeeper.shared.WhiteBoardDTO;
 public class NavigationTreeViewImpl implements NavigationTreeView {
 
 	private Tree navigationTree;
-	private Image groupIcon;
-	private Image whiteboardIcon;
 	private Image noteIcon;
 	private Image trashIcon;
+
+	private DragableWidget dragWidget;
 
 	private TreeDropController dropController;
 
 	private NoteConstants constants = GWT.create(NoteConstants.class);
-
-	private Widget dragWidget;
 
 	private final Widget widget;
 
@@ -57,14 +59,10 @@ public class NavigationTreeViewImpl implements NavigationTreeView {
 		controlPanel.setSize("100%", "100%");
 		navigationPanel.add(controlPanel);
 
-		groupIcon = IconPool.Folder_Big.createImage();
-		groupIcon.setTitle(constants.newGroup());
-		groupIcon.setStyleName("clickable");
+		Widget groupIcon = new GroupDragWidget();
 		controlPanel.add(groupIcon);
 
-		whiteboardIcon = IconPool.Blank_Sheet_Big.createImage();
-		whiteboardIcon.setTitle(constants.newWhiteBoard());
-		whiteboardIcon.setStyleName("clickable");
+		Widget whiteboardIcon = new WhiteBoardDragWidget();
 		controlPanel.add(whiteboardIcon);
 
 		noteIcon = IconPool.Notice_Big.createImage();
@@ -95,10 +93,12 @@ public class NavigationTreeViewImpl implements NavigationTreeView {
 
 			public void onPreviewDragStart(DragStartEvent event)
 					throws VetoDragException {
-				dragWidget = event.getContext().draggable;
+				Image dragWidget = (Image) event.getContext().draggable;
+				dragWidget.setSize("32px", "32px");
 				int i = controlPanel.getWidgetIndex(dragWidget);
 				if (i != -1) {
-					Widget clone = IconPool.Folder_Big.createImage();
+					Widget clone = cloneDragableWidget(event.getContext())
+							.asWidget();
 					dragController.makeDraggable(clone);
 					controlPanel.insert(clone, i);
 				}
@@ -106,9 +106,25 @@ public class NavigationTreeViewImpl implements NavigationTreeView {
 
 			public void onPreviewDragEnd(DragEndEvent event)
 					throws VetoDragException {
+				dragWidget = cloneDragableWidget(event.getContext());
+			}
+
+			private DragableWidget cloneDragableWidget(DragContext context)
+					throws VetoDragException {
+				if (context.draggable instanceof DragableWidget) {
+					Image draggable = (Image) context.draggable;
+					if (draggable instanceof GroupDragWidget)
+						return new GroupDragWidget();
+					else if (draggable instanceof WhiteBoardDragWidget)
+						return new WhiteBoardDragWidget();
+					else
+						throw new VetoDragException();
+				} else
+					throw new VetoDragException();
 			}
 
 			public void onDragStart(DragStartEvent event) {
+
 			}
 
 			public void onDragEnd(DragEndEvent event) {
@@ -119,6 +135,7 @@ public class NavigationTreeViewImpl implements NavigationTreeView {
 		dropController = new TreeDropController(navigationTree);
 		dragController.registerDropController(dropController);
 		dragController.makeDraggable(groupIcon);
+		dragController.makeDraggable(whiteboardIcon);
 
 		return p;
 	}
@@ -130,23 +147,22 @@ public class NavigationTreeViewImpl implements NavigationTreeView {
 	public void setGroups(List<GroupDTO> groups) {
 		navigationTree.clear();
 		for (GroupDTO group : groups) {
-			TreeItem groupItem = createGroupTreeItem(group);
-			createTreeItem(group.getSubGroups(), groupItem);
+			TreeItem groupItem = createTreeItem(group);
 			navigationTree.addItem(groupItem);
 		}
 	}
 
-	private void createTreeItem(List<GroupDTO> groups, TreeItem parent) {
-		for (GroupDTO group : groups) {
-			final TreeItem groupItem = createGroupTreeItem(group);
-			createTreeItem(group.getSubGroups(), groupItem);
+	private TreeItem createTreeItem(GroupDTO group) {
+		TreeItem parent = createGroupTreeItem(group);
+		for (GroupDTO childGroup : group.getSubGroups()) {
+			final TreeItem groupItem = createTreeItem(childGroup);
 			parent.addItem(groupItem);
-
-			for (WhiteBoardDTO whiteBoard : group.getWhiteBoards()) {
-				TreeItem whiteBoardItem = createWhiteBoardTreeItem(whiteBoard);
-				parent.addItem(whiteBoardItem);
-			}
 		}
+		for (WhiteBoardDTO whiteBoard : group.getWhiteBoards()) {
+			TreeItem whiteBoardItem = createWhiteBoardTreeItem(whiteBoard);
+			parent.addItem(whiteBoardItem);
+		}
+		return parent;
 	}
 
 	private TreeItem createGroupTreeItem(GroupDTO group) {
@@ -157,10 +173,6 @@ public class NavigationTreeViewImpl implements NavigationTreeView {
 	private TreeItem createWhiteBoardTreeItem(WhiteBoardDTO whiteBoard) {
 		return new NavigationTreeItem(IconPool.Blank_Sheet.createImage(),
 				whiteBoard.getTitle(), whiteBoard).asWidget();
-	}
-
-	public HasClickHandlers getCreateNewGroupButton() {
-		return groupIcon;
 	}
 
 	public boolean hasSelectedGroup() {
@@ -184,10 +196,6 @@ public class NavigationTreeViewImpl implements NavigationTreeView {
 		selectedWhiteBoard.remove();
 	}
 
-	public HasClickHandlers getCreateNewWhiteBoardButton() {
-		return whiteboardIcon;
-	}
-
 	public boolean hasSelectedWhiteBoard() {
 		TreeItem selectedItem = navigationTree.getSelectedItem();
 		return selectedItem != null
@@ -197,21 +205,6 @@ public class NavigationTreeViewImpl implements NavigationTreeView {
 	public WhiteBoardDTO getSelectedWhiteBoard() {
 		TreeItem selectedItem = navigationTree.getSelectedItem();
 		return (WhiteBoardDTO) selectedItem.getUserObject();
-	}
-
-	public void addGroupToSelectedGroup(GroupDTO group) {
-		// TODO Auto-generated method stub
-
-	}
-
-	public void addWhiteBoardToSelectedGroup(WhiteBoardDTO whiteboard) {
-		// TODO Auto-generated method stub
-
-	}
-
-	public void hideInputField() {
-		// TODO Auto-generated method stub
-
 	}
 
 	public HasClickHandlers getRemoveButton() {
@@ -224,7 +217,14 @@ public class NavigationTreeViewImpl implements NavigationTreeView {
 
 	public void addGroupToTree(TreeItem treeItem, GroupDTO group) {
 		treeItem.addItem(createGroupTreeItem(group));
+	}
 
+	public DragableWidget getDragWidget() {
+		return dragWidget;
+	}
+
+	public void addWhiteBoardToGroup(TreeItem treeItem, WhiteBoardDTO whiteboard) {
+		treeItem.addItem(createWhiteBoardTreeItem(whiteboard));
 	}
 
 }

@@ -9,12 +9,13 @@ import com.allen_sauer.gwt.dnd.client.drop.SimpleDropController;
 import com.allen_sauer.gwt.dnd.client.util.CoordinateLocation;
 import com.allen_sauer.gwt.dnd.client.util.Location;
 import com.allen_sauer.gwt.dnd.client.util.WidgetArea;
+import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Tree;
 import com.google.gwt.user.client.ui.TreeItem;
 import com.google.gwt.user.client.ui.Widget;
 
 import de.htwk.openNoteKeeper.client.note.presenter.HasTreeDropHandler;
-import de.htwk.openNoteKeeper.client.util.IconPool;
+import de.htwk.openNoteKeeper.shared.GroupDTO;
 
 public class TreeDropController extends SimpleDropController implements
 		HasTreeDropHandler {
@@ -47,10 +48,12 @@ public class TreeDropController extends SimpleDropController implements
 			dragTreeItem.remove();
 		}
 		TreeItem targetTreeItem = findDragTarget(tree.getItem(0), context);
-		if (targetTreeItem != null) {
-			Widget dragWidget = IconPool.Folder_Big.createImage();
-			dragWidget.setSize("24px", "24px");
-			dragTreeItem = new TreeItem(dragWidget);
+		if (targetTreeItem != null
+				&& targetTreeItem.getUserObject() instanceof GroupDTO) {
+			Image dragWidget = (Image) context.draggable;
+			Widget insertWidget = new Image(dragWidget.getUrl());
+			insertWidget.setSize("24px", "24px");
+			dragTreeItem = new TreeItem(insertWidget);
 			addDragWidgetToTree(targetTreeItem);
 		}
 		super.onMove(context);
@@ -114,7 +117,10 @@ public class TreeDropController extends SimpleDropController implements
 	@Override
 	public void onPreviewDrop(DragContext context) throws VetoDragException {
 		super.onPreviewDrop(context);
-		// TODO
+		TreeItem targetTreeItem = findDragTarget(tree.getItem(0), context);
+		if (targetTreeItem == null
+				|| !(targetTreeItem.getUserObject() instanceof GroupDTO))
+			throw new VetoDragException();
 	}
 
 	public void addTreeDropHandler(TreeDropHandler treeDropHandler) {
