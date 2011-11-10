@@ -1,5 +1,7 @@
 package de.htwk.openNoteKeeper.shared;
 
-public enum AccessRole {
+import com.google.gwt.user.client.rpc.IsSerializable;
+
+public enum AccessRole implements IsSerializable {
 	Owner, Write, Read
 }
