@@ -8,6 +8,7 @@ import com.allen_sauer.gwt.dnd.client.DragHandler;
 import com.allen_sauer.gwt.dnd.client.DragStartEvent;
 import com.allen_sauer.gwt.dnd.client.PickupDragController;
 import com.allen_sauer.gwt.dnd.client.VetoDragException;
+import com.allen_sauer.gwt.dnd.client.drop.SimpleDropController;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.user.client.ui.AbsolutePanel;
@@ -25,6 +26,8 @@ import de.htwk.openNoteKeeper.client.note.presenter.DragableWidget;
 import de.htwk.openNoteKeeper.client.note.presenter.GroupDragWidget;
 import de.htwk.openNoteKeeper.client.note.presenter.HasTreeDropHandler;
 import de.htwk.openNoteKeeper.client.note.presenter.NavigationTreePresenter.NavigationTreeView;
+import de.htwk.openNoteKeeper.client.note.presenter.TreeGroupDragWidget;
+import de.htwk.openNoteKeeper.client.note.presenter.TreeWhiteBoardDragWidget;
 import de.htwk.openNoteKeeper.client.note.presenter.WhiteBoardDragWidget;
 import de.htwk.openNoteKeeper.client.util.IconPool;
 import de.htwk.openNoteKeeper.shared.GroupDTO;
@@ -39,6 +42,7 @@ public class NavigationTreeViewImpl implements NavigationTreeView {
 
 	private DragableWidget dragWidget;
 
+	private PickupDragController dragController;
 	private TreeDropController dropController;
 
 	private NoteConstants constants = GWT.create(NoteConstants.class);
@@ -80,11 +84,10 @@ public class NavigationTreeViewImpl implements NavigationTreeView {
 		navigationTree.setAnimationEnabled(true);
 		navigationPanel.add(navigationTree);
 
-		AbsolutePanel p = new AbsolutePanel();
-		p.setSize("100%", "100%");
-		p.add(navigationPanel);
-		final PickupDragController dragController = new PickupDragController(p,
-				true);
+		AbsolutePanel boundaryPanel = new AbsolutePanel();
+		boundaryPanel.setSize("100%", "100%");
+		boundaryPanel.add(navigationPanel);
+		dragController = new PickupDragController(boundaryPanel, true);
 		dragController.setBehaviorMultipleSelection(false);
 		dragController.setBehaviorDragProxy(false);
 		dragController.setBehaviorConstrainedToBoundaryPanel(true);
@@ -101,6 +104,9 @@ public class NavigationTreeViewImpl implements NavigationTreeView {
 							.asWidget();
 					dragController.makeDraggable(clone);
 					controlPanel.insert(clone, i);
+				} else if (dragWidget instanceof TreeGroupDragWidget
+						|| dragWidget instanceof TreeWhiteBoardDragWidget) {
+					// TODO
 				}
 			}
 
@@ -112,13 +118,8 @@ public class NavigationTreeViewImpl implements NavigationTreeView {
 			private DragableWidget cloneDragableWidget(DragContext context)
 					throws VetoDragException {
 				if (context.draggable instanceof DragableWidget) {
-					Image draggable = (Image) context.draggable;
-					if (draggable instanceof GroupDragWidget)
-						return new GroupDragWidget();
-					else if (draggable instanceof WhiteBoardDragWidget)
-						return new WhiteBoardDragWidget();
-					else
-						throw new VetoDragException();
+					DragableWidget draggable = (DragableWidget) context.draggable;
+					return draggable.clone();
 				} else
 					throw new VetoDragException();
 			}
@@ -128,7 +129,9 @@ public class NavigationTreeViewImpl implements NavigationTreeView {
 			}
 
 			public void onDragEnd(DragEndEvent event) {
-				event.getContext().draggable.removeFromParent();
+				if (dragWidget != null) {
+					event.getContext().draggable.removeFromParent();
+				}
 			}
 		});
 
@@ -137,7 +140,30 @@ public class NavigationTreeViewImpl implements NavigationTreeView {
 		dragController.makeDraggable(groupIcon);
 		dragController.makeDraggable(whiteboardIcon);
 
-		return p;
+		dragController.registerDropController(new SimpleDropController(
+				trashIcon) {
+			@Override
+			public void onDrop(DragContext context) {
+				if (dragWidget instanceof TreeGroupDragWidget) {
+					System.out.println("drop group");
+				} else if (dragWidget instanceof TreeWhiteBoardDragWidget) {
+					System.out.println("drop whiteboard");
+				} else
+					System.out.println("drop unknown");
+			}
+
+			@Override
+			public void onEnter(DragContext context) {
+				trashIcon.setUrl(IconPool.Trash_Full_Big.getUrl());
+			}
+
+			@Override
+			public void onLeave(DragContext context) {
+				trashIcon.setUrl(IconPool.Trash_Big.getUrl());
+			}
+		});
+
+		return boundaryPanel;
 	}
 
 	public Widget asWidget() {
@@ -166,13 +192,18 @@ public class NavigationTreeViewImpl implements NavigationTreeView {
 	}
 
 	private TreeItem createGroupTreeItem(GroupDTO group) {
-		return new NavigationTreeItem(IconPool.Folder.createImage(),
-				group.getTitle(), group).asWidget();
+		NavigationTreeItem navigationTreeItem = new NavigationTreeItem(
+				new TreeGroupDragWidget(group), group.getTitle(), group);
+		dragController.makeDraggable(navigationTreeItem.asWidget());
+		return navigationTreeItem.asTreeItem();
 	}
 
 	private TreeItem createWhiteBoardTreeItem(WhiteBoardDTO whiteBoard) {
-		return new NavigationTreeItem(IconPool.Blank_Sheet.createImage(),
-				whiteBoard.getTitle(), whiteBoard).asWidget();
+		NavigationTreeItem navigationTreeItem = new NavigationTreeItem(
+				new TreeWhiteBoardDragWidget(whiteBoard),
+				whiteBoard.getTitle(), whiteBoard);
+		dragController.makeDraggable(navigationTreeItem.asWidget());
+		return navigationTreeItem.asTreeItem();
 	}
 
 	public boolean hasSelectedGroup() {
