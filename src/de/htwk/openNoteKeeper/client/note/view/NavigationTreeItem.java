@@ -8,13 +8,16 @@ import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.TreeItem;
+import com.google.gwt.user.client.ui.Widget;
 
 public class NavigationTreeItem {
 
 	private final TreeItem treeItem;
+	private Widget dragWidget;
 
 	public NavigationTreeItem(Image icon, final String title, Object userObject) {
 		treeItem = createLayout(icon, title, userObject);
+		dragWidget = icon;
 	}
 
 	private TreeItem createLayout(Image icon, final String title,
@@ -43,7 +46,11 @@ public class NavigationTreeItem {
 		return groupItem;
 	}
 
-	public TreeItem asWidget() {
+	public Widget asWidget() {
+		return dragWidget;
+	}
+
+	public TreeItem asTreeItem() {
 		return treeItem;
 	}
 }

@@ -21,4 +21,9 @@ public class GroupDragWidget extends Image implements DragableWidget {
 		return icon;
 	}
 
+	@Override
+	public GroupDragWidget clone() {
+		return new GroupDragWidget();
+	}
+
 }

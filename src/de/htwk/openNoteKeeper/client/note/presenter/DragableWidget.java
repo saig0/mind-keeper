@@ -7,4 +7,5 @@ public interface DragableWidget extends IsWidget {
 
 	public Image getDragIcon();
 
+	public DragableWidget clone();
 }

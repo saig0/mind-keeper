@@ -20,4 +20,9 @@ public class WhiteBoardDragWidget extends Image implements DragableWidget {
 	public Image getDragIcon() {
 		return icon;
 	}
+
+	@Override
+	public WhiteBoardDragWidget clone() {
+		return new WhiteBoardDragWidget();
+	}
 }
