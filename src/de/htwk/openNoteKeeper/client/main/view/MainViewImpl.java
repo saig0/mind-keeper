@@ -1,9 +1,9 @@
 package de.htwk.openNoteKeeper.client.main.view;
 
+import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Image;
-import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
@@ -18,7 +18,7 @@ public class MainViewImpl implements MainView {
 	@Inject
 	private LanguageChooserViewImpl languageChooser;
 
-	private ScrollPanel content = new ScrollPanel();
+	private FlowPanel content = new FlowPanel();
 
 	public Widget asWidget() {
 		VerticalPanel main = new VerticalPanel();
