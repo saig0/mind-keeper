@@ -32,12 +32,13 @@ public class MainViewImpl implements MainView {
 		header.add(logo);
 		header.setCellHorizontalAlignment(logo,
 				HasHorizontalAlignment.ALIGN_LEFT);
+		header.setCellWidth(logo, "250px");
 
 		header.add(languageChooser);
 		header.add(userView);
 
 		main.add(header);
-		main.setCellHeight(header, "15%");
+		main.setCellHeight(header, "10%");
 
 		content.setSize("100%", "100%");
 		main.add(content);

@@ -31,12 +31,22 @@ public class UserViewImpl implements UserView {
 	private Label userLabel = new Label();
 	private Button actionButton = new Button(constants.signIn());
 
-	public Widget asWidget() {
+	private final Widget widget;
+
+	public UserViewImpl() {
+		widget = createLayout();
+	}
+
+	private Widget createLayout() {
 		HorizontalPanel panel = new HorizontalPanel();
 		panel.setSpacing(10);
 		panel.add(userLabel);
 		panel.add(actionButton);
 		return panel;
+	}
+
+	public Widget asWidget() {
+		return widget;
 	}
 
 	public void showLoginForOpenIdProviders(
