@@ -1,7 +1,6 @@
-
 .PopupPanelWithTransparentContent {
-        border: none;
-        background-color: transparent;
+	border: none;
+	background-color: transparent;
 }
 
 .bold {
@@ -14,7 +13,7 @@
 }
 
 .clickable {
-	cursor: pointer;	
+	cursor: pointer;
 }
 
 .gwt-TreeItem-selected {
@@ -22,5 +21,26 @@
 }
 
 .dropTarget {
-	background-color:#FFFF66;
+	background-color: #FFFF66;
+}
+
+.whiteBoard {
+	border-width: 1px;
+	border-style: solid;
+	border-color: gray;
+	padding: 5px;
+}
+
+.navigation {
+	border-width: 1px;
+	border-style: solid;
+	border-color: gray;
+	padding: 5px;
+}
+
+.sidebar {
+	border-width: 1px;
+	border-style: solid;
+	border-color: gray;
+	padding: 5px;
 }

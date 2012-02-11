@@ -55,6 +55,7 @@ public class NavigationTreeViewImpl implements NavigationTreeView {
 
 	public Widget createLayout() {
 		VerticalPanel navigationPanel = new VerticalPanel();
+		navigationPanel.addStyleName("navigation");
 		navigationPanel.setSize("100%", "100%");
 		navigationPanel
 				.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_LEFT);
@@ -62,6 +63,7 @@ public class NavigationTreeViewImpl implements NavigationTreeView {
 		final HorizontalPanel controlPanel = new HorizontalPanel();
 		controlPanel.setSize("100%", "100%");
 		navigationPanel.add(controlPanel);
+		navigationPanel.setCellHeight(controlPanel, "10%");
 
 		Widget groupIcon = new GroupDragWidget();
 		controlPanel.add(groupIcon);
