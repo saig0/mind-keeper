@@ -11,6 +11,8 @@ import com.allen_sauer.gwt.dnd.client.VetoDragException;
 import com.allen_sauer.gwt.dnd.client.drop.SimpleDropController;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.event.logical.shared.SelectionEvent;
+import com.google.gwt.event.logical.shared.SelectionHandler;
 import com.google.gwt.user.client.ui.AbsolutePanel;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.HorizontalPanel;
@@ -39,6 +41,8 @@ public class NavigationTreeViewImpl implements NavigationTreeView {
 	private Image trashIcon;
 	private Image groupIcon;
 	private Image whiteBoardIcon;
+
+	private TreeItem selectedTreeItem;
 
 	private DragableWidget dragWidget;
 
@@ -89,6 +93,18 @@ public class NavigationTreeViewImpl implements NavigationTreeView {
 		navigationTree.setSize("100%", "100%");
 		navigationTree.setAnimationEnabled(true);
 		navigationPanel.add(navigationTree);
+
+		navigationTree.addSelectionHandler(new SelectionHandler<TreeItem>() {
+
+			public void onSelection(SelectionEvent<TreeItem> event) {
+				TreeItem selectedItem = event.getSelectedItem();
+				Object userObject = selectedItem.getUserObject();
+				if (selectedItem != null
+						&& (userObject instanceof GroupDTO || userObject instanceof WhiteBoardDTO)) {
+					selectedTreeItem = selectedItem;
+				}
+			}
+		});
 
 		AbsolutePanel boundaryPanel = new AbsolutePanel();
 		boundaryPanel.setSize("100%", "100%");
@@ -212,7 +228,6 @@ public class NavigationTreeViewImpl implements NavigationTreeView {
 
 	public boolean hasSelectedGroup() {
 		TreeItem selectedItem = getSelectedTreeItem();
-		;
 		return selectedItem != null
 				&& selectedItem.getUserObject() instanceof GroupDTO;
 	}
@@ -283,7 +298,9 @@ public class NavigationTreeViewImpl implements NavigationTreeView {
 	}
 
 	public TreeItem getSelectedTreeItem() {
-		return navigationTree.getSelectedItem();
+		if (navigationTree.getSelectedItem() != null)
+			return navigationTree.getSelectedItem();
+		else
+			return selectedTreeItem;
 	}
-
 }
