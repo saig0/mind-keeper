@@ -4,6 +4,7 @@ import com.google.gwt.event.shared.GwtEvent;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.FocusWidget;
+import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.UIObject;
 
@@ -11,14 +12,8 @@ import de.htwk.openNoteKeeper.client.widget.ErrorPopup;
 
 public abstract class LoadingScreenCallback<T> implements AsyncCallback<T> {
 
-	private final UIObject widget;
-	private final PopupPanel loadingPanel;
-
-	public LoadingScreenCallback() {
-		widget = null;
-		loadingPanel = addLoading(widget);
-		loadingPanel.show();
-	}
+	private UIObject widget;
+	private PopupPanel loadingPanel;
 
 	public LoadingScreenCallback(GwtEvent<?> event) {
 		widget = (UIObject) event.getSource();
@@ -33,16 +28,16 @@ public abstract class LoadingScreenCallback<T> implements AsyncCallback<T> {
 		PopupPanel loadingPanel = new PopupPanel(false, false);
 		loadingPanel.addStyleName("PopupPanelWithTransparentContent");
 		loadingPanel.setAnimationEnabled(true);
-		loadingPanel.add(IconPool.Loading.createImage());
+		Image icon = IconPool.Loading.createImage();
+		loadingPanel.add(icon);
 
-		if (widget != null) {
-			Element element = widget.getElement();
-			int x = calculatePosition(element.getAbsoluteLeft(),
-					element.getClientWidth());
-			int y = calculatePosition(element.getAbsoluteTop(),
-					element.getClientHeight());
-			loadingPanel.setPopupPosition(x, y);
-		}
+		Element element = widget.getElement();
+		int x = calculatePosition(element.getAbsoluteLeft(),
+				element.getClientWidth());
+		int y = calculatePosition(element.getAbsoluteTop(),
+				element.getClientHeight());
+		loadingPanel.setPopupPosition(x, y);
+
 		return loadingPanel;
 	}
 

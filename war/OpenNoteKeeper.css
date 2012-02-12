@@ -1,6 +1,19 @@
+
+<!-- Farbe: 
+ B4C8F0  
+ A0B4F0
+-->
+
 .PopupPanelWithTransparentContent {
 	border: none;
 	background-color: transparent;
+}
+
+.statusPanel {
+	border-radius: 10px;
+	background-color: #B4C8F0;
+	font-weight: bold;
+	color: black;
 }
 
 .bold {
@@ -10,6 +23,10 @@
 .big {
 	font-size: 16px;
 	font-weight: bold;
+}
+
+.white {
+	color: white;
 }
 
 .clickable {

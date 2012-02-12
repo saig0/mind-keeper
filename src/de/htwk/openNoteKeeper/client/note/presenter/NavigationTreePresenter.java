@@ -2,6 +2,8 @@ package de.htwk.openNoteKeeper.client.note.presenter;
 
 import java.util.List;
 
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.TreeItem;
@@ -10,11 +12,13 @@ import com.mvp4g.client.annotation.Presenter;
 import com.mvp4g.client.presenter.BasePresenter;
 
 import de.htwk.openNoteKeeper.client.note.NoteEventBus;
-import de.htwk.openNoteKeeper.client.note.presenter.HasTreeDropHandler.TreeDropHandler;
+import de.htwk.openNoteKeeper.client.note.presenter.SaveInputClickHandler.Type;
 import de.htwk.openNoteKeeper.client.note.service.NoteServiceAsync;
 import de.htwk.openNoteKeeper.client.note.view.NavigationInputWidget;
 import de.htwk.openNoteKeeper.client.note.view.NavigationTreeViewImpl;
-import de.htwk.openNoteKeeper.client.util.LoadingScreenCallback;
+import de.htwk.openNoteKeeper.client.util.IconPool;
+import de.htwk.openNoteKeeper.client.util.StatusScreenCallback;
+import de.htwk.openNoteKeeper.client.util.StatusScreenCallback.Status;
 import de.htwk.openNoteKeeper.shared.GroupDTO;
 import de.htwk.openNoteKeeper.shared.UserDTO;
 import de.htwk.openNoteKeeper.shared.WhiteBoardDTO;
@@ -39,18 +43,23 @@ public class NavigationTreePresenter extends
 
 		public WhiteBoardDTO getSelectedWhiteBoard();
 
-		public void addGroupToTree(TreeItem treeItem, GroupDTO group);
+		public void addGroupToTree(GroupDTO group);
 
-		public void addWhiteBoardToGroup(TreeItem treeItem,
-				WhiteBoardDTO whiteboard);
+		public void addWhiteBoardToGroup(WhiteBoardDTO whiteboard);
 
 		public HasClickHandlers getRemoveButton();
+
+		public HasClickHandlers getAddGroupButton();
+
+		public HasClickHandlers getAddWhiteBoardButton();
 
 		public void removeSelectedGroup();
 
 		public void removeSelectedWhiteBoard();
 
 		public DragableWidget getDragWidget();
+
+		public TreeItem getSelectedTreeItem();
 	}
 
 	public interface NavigationInputView {
@@ -67,21 +76,42 @@ public class NavigationTreePresenter extends
 
 	@Override
 	public void bind() {
-		view.getDropHandler().addTreeDropHandler(new TreeDropHandler() {
+		view.getAddGroupButton().addClickHandler(new ClickHandler() {
 
-			public void onTreeDrop(final TreeItem dropTreeItem) {
-				final DragableWidget dragWidget = view.getDragWidget();
-				final NavigationInputView navigationInputView = new NavigationInputWidget(
-						dragWidget.getDragIcon());
-				navigationInputView.getSaveInputButton().addClickHandler(
-						new SaveInputClickHandler(noteService, view,
-								navigationInputView, dropTreeItem, dragWidget));
-				navigationInputView.getCancelInputButton().addClickHandler(
-						new CancelInputClickHandler(navigationInputView));
-				navigationInputView.show(dropTreeItem);
+			public void onClick(ClickEvent event) {
+				if (view.hasSelectedGroup()) {
+					GroupDTO group = view.getSelectedGroup();
+					final NavigationInputView navigationInputView = new NavigationInputWidget(
+							IconPool.Folder_Big.createImage());
+					navigationInputView.getSaveInputButton().addClickHandler(
+							new SaveInputClickHandler(noteService, view,
+									navigationInputView, group, Type.Group));
+					navigationInputView.getCancelInputButton().addClickHandler(
+							new CancelInputClickHandler(navigationInputView));
+					navigationInputView.show(view.getSelectedTreeItem());
+				}
 			}
-
 		});
+
+		view.getAddWhiteBoardButton().addClickHandler(new ClickHandler() {
+
+			public void onClick(ClickEvent event) {
+				if (view.hasSelectedGroup()) {
+					GroupDTO group = view.getSelectedGroup();
+					final NavigationInputView navigationInputView = new NavigationInputWidget(
+							IconPool.Blank_Sheet_Big.createImage());
+					navigationInputView.getSaveInputButton()
+							.addClickHandler(
+									new SaveInputClickHandler(noteService,
+											view, navigationInputView, group,
+											Type.WhiteBoard));
+					navigationInputView.getCancelInputButton().addClickHandler(
+							new CancelInputClickHandler(navigationInputView));
+					navigationInputView.show(view.getSelectedTreeItem());
+				}
+			}
+		});
+
 		view.getRemoveButton().addClickHandler(
 				new RemoveItemClickHandler(view, noteService));
 	}
@@ -89,7 +119,7 @@ public class NavigationTreePresenter extends
 	public void onLoggedIn(UserDTO user) {
 
 		noteService.getAllGroupsForUser(user.getId(),
-				new LoadingScreenCallback<List<GroupDTO>>() {
+				new StatusScreenCallback<List<GroupDTO>>(Status.Load_Notes) {
 
 					@Override
 					protected void success(List<GroupDTO> groups) {
