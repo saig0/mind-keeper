@@ -10,7 +10,7 @@ import com.mvp4g.client.presenter.BasePresenter;
 import de.htwk.openNoteKeeper.client.main.MainEventBus;
 import de.htwk.openNoteKeeper.client.main.service.UserServiceAsync;
 import de.htwk.openNoteKeeper.client.main.view.UserViewImpl;
-import de.htwk.openNoteKeeper.client.util.NonBlockingCallback;
+import de.htwk.openNoteKeeper.client.util.StatusScreenCallback;
 import de.htwk.openNoteKeeper.shared.OpenIdProvider;
 import de.htwk.openNoteKeeper.shared.UserDTO;
 
@@ -30,7 +30,7 @@ public class UserPresenter extends BasePresenter<UserViewImpl, MainEventBus> {
 	private UserServiceAsync userService;
 
 	public void onStart() {
-		userService.isLoggedIn(new NonBlockingCallback<Boolean>() {
+		userService.isLoggedIn(new StatusScreenCallback<Boolean>("login") {
 
 			@Override
 			protected void success(Boolean isLoggedIn) {
@@ -45,7 +45,8 @@ public class UserPresenter extends BasePresenter<UserViewImpl, MainEventBus> {
 
 	private void showLogin() {
 		userService
-				.getLoginUrlsForOpenIdProviders(new NonBlockingCallback<Map<OpenIdProvider, String>>() {
+				.getLoginUrlsForOpenIdProviders(new StatusScreenCallback<Map<OpenIdProvider, String>>(
+						"login") {
 
 					@Override
 					protected void success(
@@ -56,7 +57,7 @@ public class UserPresenter extends BasePresenter<UserViewImpl, MainEventBus> {
 	}
 
 	private void showUser() {
-		userService.getUser(new NonBlockingCallback<UserDTO>() {
+		userService.getUser(new StatusScreenCallback<UserDTO>("login") {
 
 			@Override
 			protected void success(UserDTO user) {
@@ -70,7 +71,7 @@ public class UserPresenter extends BasePresenter<UserViewImpl, MainEventBus> {
 	}
 
 	private void showLogout() {
-		userService.getLogoutUrl(new NonBlockingCallback<String>() {
+		userService.getLogoutUrl(new StatusScreenCallback<String>("login") {
 
 			@Override
 			protected void success(String logoutUrl) {

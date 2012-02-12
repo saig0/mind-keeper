@@ -6,7 +6,9 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import de.htwk.openNoteKeeper.client.main.presenter.Session;
 import de.htwk.openNoteKeeper.client.note.presenter.NavigationTreePresenter.NavigationTreeView;
 import de.htwk.openNoteKeeper.client.note.service.NoteServiceAsync;
-import de.htwk.openNoteKeeper.client.util.LoadingScreenCallback;
+import de.htwk.openNoteKeeper.client.util.StatusScreenCallback;
+import de.htwk.openNoteKeeper.client.util.StatusScreenCallback.Status;
+import de.htwk.openNoteKeeper.client.widget.StatusPanel;
 import de.htwk.openNoteKeeper.shared.GroupDTO;
 import de.htwk.openNoteKeeper.shared.UserDTO;
 import de.htwk.openNoteKeeper.shared.WhiteBoardDTO;
@@ -24,33 +26,37 @@ public class RemoveItemClickHandler implements ClickHandler {
 
 	public void onClick(ClickEvent event) {
 		if (view.hasSelectedGroup()) {
-			removeGroup(event);
+			removeGroup();
 		} else if (view.hasSelectedWhiteBoard()) {
-			removeWhiteBoard(event);
+			removeWhiteBoard();
 		}
 	}
 
-	private void removeWhiteBoard(ClickEvent event) {
-		WhiteBoardDTO whiteBoard = view.getSelectedWhiteBoard();
+	private void removeWhiteBoard() {
+		final WhiteBoardDTO whiteBoard = view.getSelectedWhiteBoard();
 		noteService.removeWhiteBoard(whiteBoard.getKey(),
-				new LoadingScreenCallback<Void>(event) {
+				new StatusScreenCallback<Void>(Status.Remove_Whiteboard) {
 
 					@Override
 					protected void success(Void result) {
 						view.removeSelectedWhiteBoard();
+						new StatusPanel("Whiteboard: " + whiteBoard.getTitle()
+								+ " gelöscht", true, 5).show();
 					}
 				});
 	}
 
-	private void removeGroup(ClickEvent event) {
-		GroupDTO group = view.getSelectedGroup();
+	private void removeGroup() {
+		final GroupDTO group = view.getSelectedGroup();
 		UserDTO user = Session.getCurrentUser();
 		noteService.removeGroup(user.getId(), group.getKey(),
-				new LoadingScreenCallback<Void>(event) {
+				new StatusScreenCallback<Void>(Status.Remove_Group) {
 
 					@Override
 					protected void success(Void result) {
 						view.removeSelectedGroup();
+						new StatusPanel("Gruppe: " + group.getTitle()
+								+ " gelöscht", true, 5).show();
 					}
 				});
 	}

@@ -14,4 +14,6 @@ public interface CommonConstants extends Constants {
 	String signIn();
 
 	String signOut();
+
+	String loading();
 }
