@@ -12,6 +12,7 @@ import com.mvp4g.client.annotation.Presenter;
 import com.mvp4g.client.presenter.BasePresenter;
 
 import de.htwk.openNoteKeeper.client.note.NoteEventBus;
+import de.htwk.openNoteKeeper.client.note.presenter.HasTreeDropHandler.TreeDropHandler;
 import de.htwk.openNoteKeeper.client.note.presenter.SaveInputClickHandler.Type;
 import de.htwk.openNoteKeeper.client.note.service.NoteServiceAsync;
 import de.htwk.openNoteKeeper.client.note.view.NavigationInputWidget;
@@ -57,7 +58,7 @@ public class NavigationTreePresenter extends
 
 		public void removeSelectedWhiteBoard();
 
-		public DragableWidget getDragWidget();
+		public TreeItem getDragWidget();
 
 		public TreeItem getSelectedTreeItem();
 	}
@@ -114,6 +115,15 @@ public class NavigationTreePresenter extends
 
 		view.getRemoveButton().addClickHandler(
 				new RemoveItemClickHandler(view, noteService));
+
+		view.getDropHandler().addTreeDropHandler(new TreeDropHandler() {
+
+			public void onTreeDrop(TreeItem dropTarget, TreeItem sourceItem) {
+				// TODO service call
+
+			}
+
+		});
 	}
 
 	public void onLoggedIn(UserDTO user) {

@@ -9,11 +9,11 @@ import com.allen_sauer.gwt.dnd.client.drop.SimpleDropController;
 import com.allen_sauer.gwt.dnd.client.util.CoordinateLocation;
 import com.allen_sauer.gwt.dnd.client.util.Location;
 import com.allen_sauer.gwt.dnd.client.util.WidgetArea;
-import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Tree;
 import com.google.gwt.user.client.ui.TreeItem;
 import com.google.gwt.user.client.ui.Widget;
 
+import de.htwk.openNoteKeeper.client.note.presenter.DragAndDropTree;
 import de.htwk.openNoteKeeper.client.note.presenter.HasTreeDropHandler;
 import de.htwk.openNoteKeeper.shared.GroupDTO;
 
@@ -35,11 +35,57 @@ public class TreeDropController extends SimpleDropController implements
 	public void onDrop(DragContext context) {
 		TreeItem treeItem = findDragTarget(tree.getItem(0), context);
 		if (treeItem != null) {
+			TreeItem sourceItem = ((NavigationTreeItem) context.draggable)
+					.asTreeItem();
 			for (TreeDropHandler handler : treeDropHandlers) {
-				handler.onTreeDrop(treeItem);
+				handler.onTreeDrop(treeItem, sourceItem);
 			}
+
+			// TODO
+			int childIndex = treeItem.getParentItem().getChildIndex(treeItem);
+			System.out.println("insert item: " + childIndex);
+			treeItem.getParentItem().insertItem(childIndex, sourceItem);
+
+		} else {
+			System.out.println("drop without target");
 		}
 		super.onDrop(context);
+	}
+
+	private TreeItem cloneTreeItem(DragContext context) {
+		Widget dragWidget = context.draggable;
+		if (dragWidget instanceof NavigationTreeItem) {
+			TreeItem treeItem = ((NavigationTreeItem) dragWidget).asTreeItem();
+			TreeItem clone = new TreeItem(dragWidget);
+			clone.setUserObject(treeItem.getUserObject());
+			if (treeItem.getChildCount() > 0) {
+				for (int i = 0; i < treeItem.getChildCount(); i++) {
+					clone.addItem(treeItem.getChild(i));
+				}
+			}
+			return clone;
+		}
+
+		System.out.println("xxxxx");
+
+		TreeItem clone = new TreeItem(dragWidget);
+
+		if (tree instanceof DragAndDropTree) {
+			DragAndDropTree dndTree = (DragAndDropTree) tree;
+			TreeItem treeItem = dndTree.getTreeItemForIndex(dndTree
+					.getWidgetIndex(dragWidget));
+			if (treeItem != null) {
+				System.out.println("found tree item ");
+				// clone.setUserObject(treeItem.getUserObject());
+				clone = treeItem;
+				// if (treeItem.getChildCount() > 0) {
+				// for (int i = 0; i < treeItem.getChildCount(); i++) {
+				// clone.addItem(treeItem.getChild(i));
+				// }
+				// }
+			}
+		}
+		return clone;
 	}
 
 	@Override
@@ -48,13 +94,17 @@ public class TreeDropController extends SimpleDropController implements
 			dragTreeItem.remove();
 		}
 		TreeItem targetTreeItem = findDragTarget(tree.getItem(0), context);
-		if (targetTreeItem != null
-				&& targetTreeItem.getUserObject() instanceof GroupDTO) {
-			Image dragWidget = (Image) context.draggable;
-			Widget insertWidget = new Image(dragWidget.getUrl());
-			insertWidget.setSize("24px", "24px");
-			dragTreeItem = new TreeItem(insertWidget);
-			addDragWidgetToTree(targetTreeItem);
+
+		if (targetTreeItem != null) {
+			if (targetTreeItem.getChildCount() > 0
+					&& !targetTreeItem.getState()) {
+				targetTreeItem.setState(true);
+			}
+
+			if (targetTreeItem.getUserObject() instanceof GroupDTO) {
+				dragTreeItem = cloneTreeItem(context);
+				addDragWidgetToTree(targetTreeItem);
+			}
 		}
 		super.onMove(context);
 	}
@@ -119,8 +169,10 @@ public class TreeDropController extends SimpleDropController implements
 		super.onPreviewDrop(context);
 		TreeItem targetTreeItem = findDragTarget(tree.getItem(0), context);
 		if (targetTreeItem == null
-				|| !(targetTreeItem.getUserObject() instanceof GroupDTO))
+				|| !(targetTreeItem.getUserObject() instanceof GroupDTO)) {
+			System.out.println("drop canceled");
 			throw new VetoDragException();
+		}
 	}
 
 	public void addTreeDropHandler(TreeDropHandler treeDropHandler) {
