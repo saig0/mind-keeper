@@ -1,8 +1,8 @@
 
-<!-- Farbe: 
+/* Farbe: 
  B4C8F0  
  A0B4F0
--->
+*/
 
 .PopupPanelWithTransparentContent {
 	border: none;
@@ -60,4 +60,13 @@
 	border-style: solid;
 	border-color: gray;
 	padding: 5px;
+}
+
+.navigationItem {
+	background-color: transparent;	
+}
+
+.markedNavigationItem {
+	background-color: #C8DCFA;	
+	border-radius: 10px;
 }

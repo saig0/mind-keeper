@@ -4,53 +4,82 @@ import com.google.gwt.event.dom.client.MouseOutEvent;
 import com.google.gwt.event.dom.client.MouseOutHandler;
 import com.google.gwt.event.dom.client.MouseOverEvent;
 import com.google.gwt.event.dom.client.MouseOverHandler;
+import com.google.gwt.user.client.ui.FocusPanel;
+import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.TreeItem;
 import com.google.gwt.user.client.ui.Widget;
 
-public class NavigationTreeItem {
+import de.htwk.openNoteKeeper.client.util.IconPool;
 
-	private final TreeItem treeItem;
+public class NavigationTreeItem extends FocusPanel {
+
+	private TreeItem treeItem;
 	private Widget dragWidget;
+
+	private FocusPanel p;
 
 	public NavigationTreeItem(Image icon, final String title, Object userObject) {
 		treeItem = createLayout(icon, title, userObject);
-		dragWidget = icon;
 	}
 
 	private TreeItem createLayout(Image icon, final String title,
 			Object userObject) {
-		HorizontalPanel panel = new HorizontalPanel();
+		final HorizontalPanel panel = new HorizontalPanel();
 		panel.setSize("100%", "100%");
 		icon.setSize("24px", "24px");
 		panel.add(icon);
 		panel.setCellWidth(icon, "30px");
 		panel.add(new Label(title));
-		final TreeItem groupItem = new TreeItem(panel);
-		groupItem.setUserObject(userObject);
 
-		panel.addDomHandler(new MouseOverHandler() {
+		final Image dragIcon = IconPool.Up_And_Down.createImage();
+		dragIcon.setSize("24px", "24px");
+		dragIcon.setVisible(false);
+		panel.add(dragIcon);
+		panel.setCellHorizontalAlignment(dragIcon,
+				HasHorizontalAlignment.ALIGN_RIGHT);
+
+		dragWidget = dragIcon;
+
+		final TreeItem treeItem = new TreeItem();
+		treeItem.setUserObject(userObject);
+
+		p = new FocusPanel(panel);
+		p.setSize("100%", "100%");
+
+		p.addMouseOverHandler(new MouseOverHandler() {
 
 			public void onMouseOver(MouseOverEvent event) {
-			}
-		}, MouseOverEvent.getType());
+				panel.addStyleName("markedNavigationItem");
 
-		panel.addDomHandler(new MouseOutHandler() {
+				dragIcon.setVisible(true);
+			}
+		});
+
+		p.addMouseOutHandler(new MouseOutHandler() {
 
 			public void onMouseOut(MouseOutEvent event) {
-			}
-		}, MouseOutEvent.getType());
+				panel.removeStyleName("markedNavigationItem");
 
-		return groupItem;
+				dragIcon.setVisible(false);
+			}
+		});
+
+		add(p);
+
+		return treeItem;
 	}
 
-	public Widget asWidget() {
+	public Widget getDragHandle() {
 		return dragWidget;
 	}
 
 	public TreeItem asTreeItem() {
+		if (treeItem.getWidget() == null) {
+			treeItem.setWidget(this);
+		}
 		return treeItem;
 	}
 }

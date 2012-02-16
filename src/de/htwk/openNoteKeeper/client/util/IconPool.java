@@ -23,7 +23,8 @@ public enum IconPool {
 			"flag_german.png"), Flag_Us("flag_us.png"), Arrow_Right_Light(
 			"right_arrow_light.png"), Arrow_Down_Light("down_arrow_light.png"), Folder_Big(
 			"folder_big.png"), Folder("folder.png"), Blank_Sheet_Big(
-			"blank_sheet_big.png"), Blank_Sheet("blank_sheet.png");
+			"blank_sheet_big.png"), Blank_Sheet("blank_sheet.png"), Up_And_Down(
+			"up_and_down_arrows.png");
 
 	private final String dir = "images/";
 	private final String url;
