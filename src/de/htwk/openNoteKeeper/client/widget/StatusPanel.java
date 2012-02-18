@@ -12,7 +12,7 @@ import com.google.gwt.user.client.ui.Widget;
 public class StatusPanel implements IsWidget {
 
 	private final Widget widget;
-	private final StatusArea statusArea;
+	private StatusArea statusArea;
 
 	private final String message;
 	private int delayMillis = 500;
@@ -20,18 +20,25 @@ public class StatusPanel implements IsWidget {
 	private boolean canClose = false;
 	private boolean enable = true;
 
-	public StatusPanel(StatusArea statusArea, String message) {
-		this(statusArea, message, false, 0);
+	public StatusPanel(String message) {
+		this(message, false, 0);
 	}
 
-	public StatusPanel(StatusArea statusArea, String message, boolean canClose,
-			int autoHideInSeconds) {
+	public StatusPanel(String message, boolean canClose) {
+		this(message, canClose, 0);
+	}
+
+	public StatusPanel(String message, int autoHideInSeconds) {
+		this(message, false, autoHideInSeconds);
+	}
+
+	public StatusPanel(String message, boolean canClose, int autoHideInSeconds) {
 		this.message = message;
 		this.canClose = canClose;
 		this.autoHideInSeconds = autoHideInSeconds;
 
-		this.statusArea = statusArea;
 		this.widget = createLayout();
+		widget.setVisible(false);
 	}
 
 	private Widget createLayout() {
@@ -52,48 +59,56 @@ public class StatusPanel implements IsWidget {
 				HasHorizontalAlignment.ALIGN_LEFT);
 
 		if (canClose) {
-			Label closeButton = new Label("X");
-			closeButton.addStyleName("clickable");
-			closeButton.addStyleName("white");
-			closeButton.addClickHandler(new ClickHandler() {
-
-				public void onClick(ClickEvent event) {
-					hide();
-				}
-			});
-
-			layout.add(closeButton);
-			layout.setCellHorizontalAlignment(closeButton,
-					HasHorizontalAlignment.ALIGN_RIGHT);
+			addCloseButton(layout);
 		} else if (autoHideInSeconds < 1) {
-			new Timer() {
-
-				int step = 0;
-
-				@Override
-				public void run() {
-					switch (step) {
-					case 0:
-						loadingLabel.setText(".");
-						break;
-					case 1:
-						loadingLabel.setText("..");
-						break;
-					case 2:
-						loadingLabel.setText("...");
-						break;
-					case 3:
-						loadingLabel.setText("");
-						break;
-					}
-					if (step < 3)
-						step++;
-					else
-						step = 0;
-				}
-			}.scheduleRepeating(500);
+			addLoadingAnimation(loadingLabel);
 		}
 		return layout;
+	}
+
+	private void addCloseButton(HorizontalPanel layout) {
+		Label closeButton = new Label("X");
+		closeButton.addStyleName("clickable");
+		closeButton.addStyleName("white");
+		closeButton.addClickHandler(new ClickHandler() {
+
+			public void onClick(ClickEvent event) {
+				hide();
+			}
+		});
+
+		layout.add(closeButton);
+		layout.setCellHorizontalAlignment(closeButton,
+				HasHorizontalAlignment.ALIGN_RIGHT);
+	}
+
+	private void addLoadingAnimation(final Label loadingLabel) {
+		new Timer() {
+
+			int step = 0;
+
+			@Override
+			public void run() {
+				switch (step) {
+				case 0:
+					loadingLabel.setText(".");
+					break;
+				case 1:
+					loadingLabel.setText("..");
+					break;
+				case 2:
+					loadingLabel.setText("...");
+					break;
+				case 3:
+					loadingLabel.setText("");
+					break;
+				}
+				if (step < 3)
+					step++;
+				else
+					step = 0;
+			}
+		}.scheduleRepeating(500);
 	}
 
 	public Widget asWidget() {
@@ -111,6 +126,7 @@ public class StatusPanel implements IsWidget {
 
 	private void showAfterDelay() {
 		if (enable) {
+			widget.setVisible(true);
 			if (autoHideInSeconds > 0) {
 				new Timer() {
 
@@ -125,6 +141,7 @@ public class StatusPanel implements IsWidget {
 
 	public void hide() {
 		enable = false;
+		widget.setVisible(false);
 		statusArea.removeStatusPanel(this);
 	}
 
@@ -134,5 +151,9 @@ public class StatusPanel implements IsWidget {
 
 	public void setCanClose(boolean canClose) {
 		this.canClose = canClose;
+	}
+
+	public void setStatusArea(StatusArea statusArea) {
+		this.statusArea = statusArea;
 	}
 }
