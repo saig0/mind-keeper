@@ -32,4 +32,7 @@ public interface NoteServiceAsync {
 
 	void removeNote(String noteKey, AsyncCallback<Void> callback);
 
+	void moveGroup(String userKey, String groupKey, String targetGroupKey,
+			Integer index, AsyncCallback<Void> callback);
+
 }

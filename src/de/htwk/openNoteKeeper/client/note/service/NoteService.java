@@ -30,4 +30,7 @@ public interface NoteService extends RemoteService {
 	public void updateNote(NoteDTO note);
 
 	public void removeNote(String noteKey);
+
+	public void moveGroup(String userKey, String groupKey,
+			String targetGroupKey, Integer index);
 }

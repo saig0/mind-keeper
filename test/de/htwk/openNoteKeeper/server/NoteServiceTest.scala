@@ -274,4 +274,111 @@ class NoteServiceTest extends LocalTestService with Persistence {
     assertEquals(note_.getSize(), note.getSize())
   }
 
+  @Test
+  def moveGroupChangeOrder {
+    val groups_ = service.getAllGroupsForUser(user.key)
+    assertEquals(1, groups_.size)
+    val rootGroup_ = groups_.get(0)
+
+    val group1 = service.createGroupForUser(user.key, rootGroup_.getKey(), "group 1")
+    val group2 = service.createGroupForUser(user.key, rootGroup_.getKey(), "group 2")
+
+    service.moveGroup(user.key, group2.getKey(), rootGroup_.getKey(), 0)
+
+    val groups = service.getAllGroupsForUser(user.key)
+    assertEquals(1, groups.size)
+    val rootGroup = groups.get(0)
+
+    val subGroups = rootGroup.getSubGroups()
+    assertEquals(2, subGroups.size)
+
+    val newGroup1 = subGroups.get(0)
+    assertEquals("group 2", newGroup1.getTitle())
+
+    val newGroup2 = subGroups.get(1)
+    assertEquals("group 1", newGroup2.getTitle())
+  }
+
+  @Test
+  def moveGroup {
+    val groups_ = service.getAllGroupsForUser(user.key)
+    assertEquals(1, groups_.size)
+    val rootGroup_ = groups_.get(0)
+
+    val group1 = service.createGroupForUser(user.key, rootGroup_.getKey(), "group 1")
+    val group2 = service.createGroupForUser(user.key, rootGroup_.getKey(), "group 2")
+
+    service.moveGroup(user.key, group2.getKey(), group1.getKey(), 0)
+
+    val groups = service.getAllGroupsForUser(user.key)
+    assertEquals(1, groups.size)
+    val rootGroup = groups.get(0)
+
+    val subGroups = rootGroup.getSubGroups()
+    assertEquals(1, subGroups.size)
+
+    val newGroup1 = subGroups.get(0)
+    assertEquals("group 1", newGroup1.getTitle())
+
+    assertEquals(1, newGroup1.getSubGroups().size)
+    val newGroup2 = newGroup1.getSubGroups().get(0)
+    assertEquals("group 2", newGroup2.getTitle())
+  }
+
+  @Test
+  def moveGroupWithSubGroups {
+    val groups_ = service.getAllGroupsForUser(user.key)
+    assertEquals(1, groups_.size)
+    val rootGroup_ = groups_.get(0)
+
+    val group1 = service.createGroupForUser(user.key, rootGroup_.getKey(), "group 1")
+    val subGroup = service.createGroupForUser(user.key, group1.getKey(), "sub group")
+
+    val group2 = service.createGroupForUser(user.key, rootGroup_.getKey(), "group 2")
+
+    service.moveGroup(user.key, group2.getKey(), rootGroup_.getKey(), 0)
+
+    val groups = service.getAllGroupsForUser(user.key)
+    assertEquals(1, groups.size)
+    val rootGroup = groups.get(0)
+
+    val subGroups = rootGroup.getSubGroups()
+    assertEquals(2, subGroups.size)
+
+    val newGroup1 = subGroups.get(0)
+    assertEquals("group 2", newGroup1.getTitle())
+
+    val newGroup2 = subGroups.get(1)
+    assertEquals("group 1", newGroup2.getTitle())
+
+    assertEquals(1, newGroup2.getSubGroups().size)
+    val subGroup_ = newGroup2.getSubGroups().get(0)
+    assertEquals("sub group", subGroup_.getTitle())
+  }
+
+  @Test
+  def moveGroupWithIllegalIndex {
+    val groups_ = service.getAllGroupsForUser(user.key)
+    assertEquals(1, groups_.size)
+    val rootGroup_ = groups_.get(0)
+
+    val group1 = service.createGroupForUser(user.key, rootGroup_.getKey(), "group 1")
+    val group2 = service.createGroupForUser(user.key, rootGroup_.getKey(), "group 2")
+
+    service.moveGroup(user.key, group1.getKey(), rootGroup_.getKey(), 2)
+
+    val groups = service.getAllGroupsForUser(user.key)
+    assertEquals(1, groups.size)
+    val rootGroup = groups.get(0)
+
+    val subGroups = rootGroup.getSubGroups()
+    assertEquals(2, subGroups.size)
+
+    val newGroup1 = subGroups.get(0)
+    assertEquals("group 2", newGroup1.getTitle())
+
+    val newGroup2 = subGroups.get(1)
+    assertEquals("group 1", newGroup2.getTitle())
+  }
+
 }

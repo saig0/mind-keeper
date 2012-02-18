@@ -15,7 +15,7 @@ import de.htwk.openNoteKeeper.client.main.view.MainViewImpl;
 import de.htwk.openNoteKeeper.client.note.NoteModule;
 import de.htwk.openNoteKeeper.shared.UserDTO;
 
-@Events(startView = MainViewImpl.class)
+@Events(startView = MainViewImpl.class, ginModules = MainModule.class)
 @ChildModules(value = @ChildModule(autoDisplay = false, moduleClass = NoteModule.class))
 public interface MainEventBus extends EventBus {
 

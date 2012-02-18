@@ -40,14 +40,6 @@ public class TreeDropController extends SimpleDropController implements
 			for (TreeDropHandler handler : treeDropHandlers) {
 				handler.onTreeDrop(treeItem, sourceItem);
 			}
-
-			// TODO
-			int childIndex = treeItem.getParentItem().getChildIndex(treeItem);
-			System.out.println("insert item: " + childIndex);
-			treeItem.getParentItem().insertItem(childIndex, sourceItem);
-
-		} else {
-			System.out.println("drop without target");
 		}
 		super.onDrop(context);
 	}
@@ -66,8 +58,6 @@ public class TreeDropController extends SimpleDropController implements
 			return clone;
 		}
 
-		System.out.println("xxxxx");
-
 		TreeItem clone = new TreeItem(dragWidget);
 
 		if (tree instanceof DragAndDropTree) {
@@ -75,7 +65,6 @@ public class TreeDropController extends SimpleDropController implements
 			TreeItem treeItem = dndTree.getTreeItemForIndex(dndTree
 					.getWidgetIndex(dragWidget));
 			if (treeItem != null) {
-				System.out.println("found tree item ");
 				// clone.setUserObject(treeItem.getUserObject());
 				clone = treeItem;
 				// if (treeItem.getChildCount() > 0) {
@@ -170,7 +159,6 @@ public class TreeDropController extends SimpleDropController implements
 		TreeItem targetTreeItem = findDragTarget(tree.getItem(0), context);
 		if (targetTreeItem == null
 				|| !(targetTreeItem.getUserObject() instanceof GroupDTO)) {
-			System.out.println("drop canceled");
 			throw new VetoDragException();
 		}
 	}

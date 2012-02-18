@@ -154,4 +154,27 @@ class NoteServiceImpl extends RemoteServiceServlet with NoteService with Persist
     delete(note.key, classOf[Note])
   }
 
+  def moveGroup(userKey: String, groupKey: String, targetGroupKey: String, index: Integer) {
+    val group = findGroupByKey(groupKey)
+
+    update[Group](group.parentGroup, classOf[Group], { parentGroup =>
+      val groupKey: Key = group.key
+      parentGroup.subGroups.remove(groupKey)
+    })
+
+    update[Group](targetGroupKey, classOf[Group], { parentGroup =>
+      if (index > parentGroup.subGroups.size) {
+        val endOfList = parentGroup.subGroups.size
+        parentGroup.subGroups.add(endOfList, group.key)
+      } else if (index < 0) {
+        val beginOfList = 0
+        parentGroup.subGroups.add(beginOfList, group.key)
+      } else {
+        parentGroup.subGroups.add(index, group.key)
+      }
+    })
+
+    update[Group](group.key, classOf[Group], group => group.parentGroup = targetGroupKey)
+  }
+
 }
