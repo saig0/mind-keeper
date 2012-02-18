@@ -2,12 +2,20 @@ package de.htwk.openNoteKeeper.client.util;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.inject.Inject;
 
 import de.htwk.openNoteKeeper.client.i18n.StatusConstants;
+import de.htwk.openNoteKeeper.client.main.MainModule;
 import de.htwk.openNoteKeeper.client.widget.ErrorPopup;
+import de.htwk.openNoteKeeper.client.widget.StatusArea;
 import de.htwk.openNoteKeeper.client.widget.StatusPanel;
 
 public abstract class StatusScreenCallback<T> implements AsyncCallback<T> {
+
+	@Inject
+	private StatusArea statusArea;
+
+	private MainModule mainModule = GWT.create(MainModule.class);
 
 	private StatusPanel statusPanel;
 
@@ -43,8 +51,8 @@ public abstract class StatusScreenCallback<T> implements AsyncCallback<T> {
 	}
 
 	public StatusScreenCallback(String message) {
-		statusPanel = new StatusPanel(message + "...");
-		statusPanel.show();
+		statusArea = mainModule.getStatusArea();
+		statusPanel = statusArea.addStatusMessage(message, false, 0);
 	}
 
 	private void removeStatus() {

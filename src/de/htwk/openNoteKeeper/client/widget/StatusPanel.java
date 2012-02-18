@@ -3,13 +3,16 @@ package de.htwk.openNoteKeeper.client.widget;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.Timer;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.HorizontalPanel;
+import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.Label;
-import com.google.gwt.user.client.ui.PopupPanel;
+import com.google.gwt.user.client.ui.Widget;
 
-public class StatusPanel {
+public class StatusPanel implements IsWidget {
+
+	private final Widget widget;
+	private final StatusArea statusArea;
 
 	private final String message;
 	private int delayMillis = 500;
@@ -17,33 +20,36 @@ public class StatusPanel {
 	private boolean canClose = false;
 	private boolean enable = true;
 
-	private PopupPanel statusPanel;
-
-	public StatusPanel(String message) {
-		this(message, false, 0);
+	public StatusPanel(StatusArea statusArea, String message) {
+		this(statusArea, message, false, 0);
 	}
 
-	public StatusPanel(String message, boolean canClose, int autoHideInSeconds) {
+	public StatusPanel(StatusArea statusArea, String message, boolean canClose,
+			int autoHideInSeconds) {
 		this.message = message;
 		this.canClose = canClose;
 		this.autoHideInSeconds = autoHideInSeconds;
+
+		this.statusArea = statusArea;
+		this.widget = createLayout();
 	}
 
-	public void show() {
-		statusPanel = new PopupPanel(false, false);
-		statusPanel.addStyleName("statusPanel");
-		statusPanel.setAnimationEnabled(true);
-		int width = calculateWidth(message.length());
-		statusPanel.setWidth(width + "px");
-
+	private Widget createLayout() {
 		HorizontalPanel layout = new HorizontalPanel();
 		layout.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
 		layout.setSpacing(5);
 		layout.addStyleName("statusPanel");
-		statusPanel.add(layout);
+		layout.setSize("100%", "100%");
 
-		Label messagelabel = new Label(message);
+		final Label messagelabel = new Label(message);
 		layout.add(messagelabel);
+
+		final Label loadingLabel = new Label();
+		loadingLabel.addStyleName("white");
+		layout.add(loadingLabel);
+		layout.setCellWidth(loadingLabel, "15px");
+		layout.setCellHorizontalAlignment(loadingLabel,
+				HasHorizontalAlignment.ALIGN_LEFT);
 
 		if (canClose) {
 			Label closeButton = new Label("X");
@@ -59,12 +65,42 @@ public class StatusPanel {
 			layout.add(closeButton);
 			layout.setCellHorizontalAlignment(closeButton,
 					HasHorizontalAlignment.ALIGN_RIGHT);
+		} else if (autoHideInSeconds < 1) {
+			new Timer() {
+
+				int step = 0;
+
+				@Override
+				public void run() {
+					switch (step) {
+					case 0:
+						loadingLabel.setText(".");
+						break;
+					case 1:
+						loadingLabel.setText("..");
+						break;
+					case 2:
+						loadingLabel.setText("...");
+						break;
+					case 3:
+						loadingLabel.setText("");
+						break;
+					}
+					if (step < 3)
+						step++;
+					else
+						step = 0;
+				}
+			}.scheduleRepeating(500);
 		}
+		return layout;
+	}
 
-		int x = calculatePosition(Window.getClientWidth() / 2, width);
-		int y = calculatePosition(50, messagelabel.getOffsetHeight());
-		statusPanel.setPopupPosition(x, y);
+	public Widget asWidget() {
+		return widget;
+	}
 
+	public void show() {
 		new Timer() {
 			@Override
 			public void run() {
@@ -75,8 +111,6 @@ public class StatusPanel {
 
 	private void showAfterDelay() {
 		if (enable) {
-			statusPanel.show();
-
 			if (autoHideInSeconds > 0) {
 				new Timer() {
 
@@ -89,22 +123,9 @@ public class StatusPanel {
 		}
 	}
 
-	private int calculateWidth(int length) {
-		int max = 300;
-		int pixelForLetter = 20;
-		int width = length * pixelForLetter;
-		return width < max ? width : max;
-	}
-
-	private int calculatePosition(int absolute, int dimension) {
-		return absolute - dimension / 2;
-	}
-
 	public void hide() {
-		if (statusPanel != null) {
-			enable = false;
-			statusPanel.hide();
-		}
+		enable = false;
+		statusArea.removeStatusPanel(this);
 	}
 
 	public void setAutoHide(int seconds) {
