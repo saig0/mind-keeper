@@ -1,5 +1,8 @@
 package de.htwk.openNoteKeeper.client.note.presenter;
 
+import java.util.Map;
+
+import com.google.gwt.dev.util.collect.HashMap;
 import com.google.gwt.user.client.ui.InsertPanel;
 import com.google.gwt.user.client.ui.Tree;
 import com.google.gwt.user.client.ui.TreeItem;
@@ -7,9 +10,13 @@ import com.google.gwt.user.client.ui.Widget;
 
 public class DragAndDropTree extends Tree implements InsertPanel {
 
+	private Map<Integer, Widget> indexedWidgets = new HashMap<Integer, Widget>();
+
 	@Override
 	public void add(Widget w) {
 		super.add(w);
+
+		indexedWidgets.put(getWidgetIndex(w), w);
 	}
 
 	public void insert(Widget w, int beforeIndex) {
@@ -17,10 +24,7 @@ public class DragAndDropTree extends Tree implements InsertPanel {
 		if (item != null) {
 			int childIndex = item.getParentItem().getChildIndex(item);
 			item.getParentItem().insertItem(childIndex, w);
-
-			System.out.println("insert " + childIndex);
 		} else {
-			System.out.println("insert somewhere");
 
 			// TODO insert as last tree item
 			item = getTreeItemForIndex(getWidgetCount() - 2);

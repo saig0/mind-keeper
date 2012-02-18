@@ -169,7 +169,12 @@ public class NavigationTreeViewImpl implements NavigationTreeView {
 	}
 
 	private void addTreeItemAndSetStyle(TreeItem parent, TreeItem child) {
-		parent.addItem(child);
+		if (parent.getUserObject() instanceof GroupDTO) {
+			int index = getIndexOfLastGroupItem(parent);
+			parent.insertItem(index, child);
+		} else {
+			parent.addItem(child);
+		}
 
 		// TODO bugfix to set full width in tree item parent
 		Element div = parent.getElement();
@@ -178,6 +183,15 @@ public class NavigationTreeViewImpl implements NavigationTreeView {
 		Element tr = DOM.getFirstChild(tbody);
 		Element td = DOM.getChild(tr, 1);
 		td.getStyle().setWidth(100, Unit.PCT);
+	}
+
+	private int getIndexOfLastGroupItem(TreeItem item) {
+		for (int i = 0; i < item.getChildCount(); i++) {
+			if (!(item.getChild(i).getUserObject() instanceof GroupDTO)) {
+				return i + 1;
+			}
+		}
+		return item.getChildCount();
 	}
 
 	private TreeItem createGroupTreeItem(GroupDTO group) {
@@ -270,5 +284,9 @@ public class NavigationTreeViewImpl implements NavigationTreeView {
 			return navigationTree.getSelectedItem();
 		else
 			return selectedTreeItem;
+	}
+
+	public void addTreeItemToParent(TreeItem parent, TreeItem child) {
+		addTreeItemAndSetStyle(parent, child);
 	}
 }

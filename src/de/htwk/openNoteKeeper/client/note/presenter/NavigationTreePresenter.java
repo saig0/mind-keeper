@@ -11,6 +11,7 @@ import com.google.inject.Inject;
 import com.mvp4g.client.annotation.Presenter;
 import com.mvp4g.client.presenter.BasePresenter;
 
+import de.htwk.openNoteKeeper.client.main.presenter.Session;
 import de.htwk.openNoteKeeper.client.note.NoteEventBus;
 import de.htwk.openNoteKeeper.client.note.presenter.HasTreeDropHandler.TreeDropHandler;
 import de.htwk.openNoteKeeper.client.note.presenter.SaveInputClickHandler.Type;
@@ -61,6 +62,8 @@ public class NavigationTreePresenter extends
 		public TreeItem getDragWidget();
 
 		public TreeItem getSelectedTreeItem();
+
+		public void addTreeItemToParent(TreeItem parent, TreeItem child);
 	}
 
 	public interface NavigationInputView {
@@ -118,11 +121,34 @@ public class NavigationTreePresenter extends
 
 		view.getDropHandler().addTreeDropHandler(new TreeDropHandler() {
 
-			public void onTreeDrop(TreeItem dropTarget, TreeItem sourceItem) {
-				// TODO service call
+			public void onTreeDrop(final TreeItem dropTarget,
+					final TreeItem sourceItem) {
+				if (sourceItem.getUserObject() instanceof GroupDTO) {
+					GroupDTO group = (GroupDTO) sourceItem.getUserObject();
 
+					final TreeItem targetItem = dropTarget.getParentItem();
+					GroupDTO targetGroup = (GroupDTO) targetItem
+							.getUserObject();
+					final int index = targetItem.getChildIndex(dropTarget);
+
+					noteService.moveGroup(
+							Session.getCurrentUser().getId(),
+							group.getKey(),
+							targetGroup.getKey(),
+							index + 1,
+							new StatusScreenCallback<Void>("verschiebe Gruppe") {
+
+								@Override
+								protected void success(Void result) {
+									// sourceItem.remove();
+									// targetItem.insertItem(index, sourceItem);
+
+									// TODO dynamisches Ändern
+									onLoggedIn(Session.getCurrentUser());
+								}
+							});
+				}
 			}
-
 		});
 	}
 
