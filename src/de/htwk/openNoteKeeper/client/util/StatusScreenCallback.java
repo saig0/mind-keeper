@@ -52,7 +52,7 @@ public abstract class StatusScreenCallback<T> implements AsyncCallback<T> {
 
 	public StatusScreenCallback(String message) {
 		statusArea = mainModule.getStatusArea();
-		statusPanel = statusArea.addStatusMessage(message, false, 0);
+		statusPanel = statusArea.addStatusMessage(new StatusPanel(message));
 	}
 
 	private void removeStatus() {

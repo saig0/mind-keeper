@@ -43,10 +43,8 @@ public class StatusArea {
 		return panel;
 	}
 
-	public StatusPanel addStatusMessage(String message, boolean canClose,
-			int autoHideInSeconds) {
-		StatusPanel statusPanel = new StatusPanel(this, message, canClose,
-				autoHideInSeconds);
+	public StatusPanel addStatusMessage(StatusPanel statusPanel) {
+		statusPanel.setStatusArea(this);
 		mainPanel.add(statusPanel);
 		if (mainPanel.getWidgetCount() > 0) {
 			popupPanel.setVisible(true);
