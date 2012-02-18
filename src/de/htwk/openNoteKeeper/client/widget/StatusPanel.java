@@ -15,7 +15,7 @@ public class StatusPanel implements IsWidget {
 	private StatusArea statusArea;
 
 	private final String message;
-	private int delayMillis = 500;
+	private static final int delayMillis = 500;
 	private int autoHideInSeconds = 0;
 	private boolean canClose = false;
 	private boolean enable = true;
