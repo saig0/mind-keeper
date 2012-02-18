@@ -45,6 +45,7 @@ public class StatusArea {
 
 	public StatusPanel addStatusMessage(StatusPanel statusPanel) {
 		statusPanel.setStatusArea(this);
+		statusPanel.show();
 		mainPanel.add(statusPanel);
 		if (mainPanel.getWidgetCount() > 0) {
 			popupPanel.setVisible(true);
