@@ -70,3 +70,7 @@
 	background-color: #C8DCFA;	
 	border-radius: 10px;
 }
+
+.top {
+	z-index: 1;
+}
