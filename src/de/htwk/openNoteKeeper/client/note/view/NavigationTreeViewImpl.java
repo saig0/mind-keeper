@@ -2,11 +2,7 @@ package de.htwk.openNoteKeeper.client.note.view;
 
 import java.util.List;
 
-import com.allen_sauer.gwt.dnd.client.DragEndEvent;
-import com.allen_sauer.gwt.dnd.client.DragHandler;
-import com.allen_sauer.gwt.dnd.client.DragStartEvent;
 import com.allen_sauer.gwt.dnd.client.PickupDragController;
-import com.allen_sauer.gwt.dnd.client.VetoDragException;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.HasClickHandlers;
@@ -25,11 +21,8 @@ import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Singleton;
 
 import de.htwk.openNoteKeeper.client.note.i18n.NoteConstants;
-import de.htwk.openNoteKeeper.client.note.presenter.DragAndDropTree;
 import de.htwk.openNoteKeeper.client.note.presenter.HasTreeDropHandler;
 import de.htwk.openNoteKeeper.client.note.presenter.NavigationTreePresenter.NavigationTreeView;
-import de.htwk.openNoteKeeper.client.note.presenter.TreeGroupDragWidget;
-import de.htwk.openNoteKeeper.client.note.presenter.TreeWhiteBoardDragWidget;
 import de.htwk.openNoteKeeper.client.util.IconPool;
 import de.htwk.openNoteKeeper.shared.GroupDTO;
 import de.htwk.openNoteKeeper.shared.WhiteBoardDTO;
@@ -44,8 +37,6 @@ public class NavigationTreeViewImpl implements NavigationTreeView {
 	private Image whiteBoardIcon;
 
 	private TreeItem selectedTreeItem;
-
-	private TreeItem dragWidget;
 
 	private PickupDragController dragController;
 	private TreeDropController dropController;
@@ -90,7 +81,7 @@ public class NavigationTreeViewImpl implements NavigationTreeView {
 		trashIcon.setStyleName("clickable");
 		controlPanel.add(trashIcon);
 
-		navigationTree = new DragAndDropTree();
+		navigationTree = new DragAndDropTreeAdapter();
 		navigationTree.setSize("100%", "100%");
 		navigationTree.setAnimationEnabled(true);
 		navigationPanel.add(navigationTree);
@@ -101,9 +92,16 @@ public class NavigationTreeViewImpl implements NavigationTreeView {
 				TreeItem selectedItem = event.getSelectedItem();
 
 				Object userObject = selectedItem.getUserObject();
-				if (selectedItem != null
-						&& (userObject instanceof GroupDTO || userObject instanceof WhiteBoardDTO)) {
-					selectedTreeItem = selectedItem;
+				if (selectedItem != null && userObject != null) {
+					if (userObject instanceof GroupDTO
+							&& !((GroupDTO) userObject).getKey().contains(
+									"dummy")) {
+						selectedTreeItem = selectedItem;
+					} else if (userObject instanceof WhiteBoardDTO
+							&& !((WhiteBoardDTO) userObject).getKey().contains(
+									"dummy")) {
+						selectedTreeItem = selectedItem;
+					}
 				}
 			}
 		});
@@ -116,26 +114,6 @@ public class NavigationTreeViewImpl implements NavigationTreeView {
 		dragController.setBehaviorDragProxy(false);
 		dragController.setBehaviorConstrainedToBoundaryPanel(true);
 		dragController.setConstrainWidgetToBoundaryPanel(true);
-
-		dragController.addDragHandler(new DragHandler() {
-
-			public void onPreviewDragStart(DragStartEvent event)
-					throws VetoDragException {
-
-			}
-
-			public void onPreviewDragEnd(DragEndEvent event)
-					throws VetoDragException {
-
-			}
-
-			public void onDragStart(DragStartEvent event) {
-			}
-
-			public void onDragEnd(DragEndEvent event) {
-
-			}
-		});
 
 		dropController = new TreeDropController(navigationTree);
 		dragController.registerDropController(dropController);
@@ -169,13 +147,7 @@ public class NavigationTreeViewImpl implements NavigationTreeView {
 	}
 
 	private void addTreeItemAndSetStyle(TreeItem parent, TreeItem child) {
-		if (parent.getUserObject() instanceof GroupDTO) {
-			int index = getIndexOfLastGroupItem(parent);
-			parent.insertItem(index, child);
-		} else {
-			parent.addItem(child);
-		}
-
+		addTreeItemToParent(parent, child);
 		// TODO bugfix to set full width in tree item parent
 		Element div = parent.getElement();
 		Element table = DOM.getFirstChild(div);
@@ -185,10 +157,20 @@ public class NavigationTreeViewImpl implements NavigationTreeView {
 		td.getStyle().setWidth(100, Unit.PCT);
 	}
 
+	public void addTreeItemToParent(TreeItem parent, TreeItem child) {
+		if (child.getUserObject() instanceof GroupDTO) {
+			int index = getIndexOfLastGroupItem(parent);
+			parent.insertItem(index, child);
+		} else {
+			parent.addItem(child);
+		}
+		parent.setState(true, false);
+	}
+
 	private int getIndexOfLastGroupItem(TreeItem item) {
 		for (int i = 0; i < item.getChildCount(); i++) {
 			if (!(item.getChild(i).getUserObject() instanceof GroupDTO)) {
-				return i + 1;
+				return i;
 			}
 		}
 		return item.getChildCount();
@@ -196,7 +178,7 @@ public class NavigationTreeViewImpl implements NavigationTreeView {
 
 	private TreeItem createGroupTreeItem(GroupDTO group) {
 		NavigationTreeItem navigationTreeItem = new NavigationTreeItem(
-				new TreeGroupDragWidget(group), group.getTitle(), group);
+				IconPool.Folder_Big.createImage(), group.getTitle(), group);
 		TreeItem item = navigationTreeItem.asTreeItem();
 		dragController.makeDraggable(navigationTreeItem.asWidget(),
 				navigationTreeItem.getDragHandle());
@@ -205,8 +187,8 @@ public class NavigationTreeViewImpl implements NavigationTreeView {
 
 	private TreeItem createWhiteBoardTreeItem(WhiteBoardDTO whiteBoard) {
 		NavigationTreeItem navigationTreeItem = new NavigationTreeItem(
-				new TreeWhiteBoardDragWidget(whiteBoard),
-				whiteBoard.getTitle(), whiteBoard);
+				IconPool.Blank_Sheet_Big.createImage(), whiteBoard.getTitle(),
+				whiteBoard);
 		dragController.makeDraggable(navigationTreeItem.asWidget(),
 				navigationTreeItem.getDragHandle());
 		return navigationTreeItem.asTreeItem();
@@ -259,10 +241,6 @@ public class NavigationTreeViewImpl implements NavigationTreeView {
 		}
 	}
 
-	public TreeItem getDragWidget() {
-		return dragWidget;
-	}
-
 	public void addWhiteBoardToGroup(WhiteBoardDTO whiteboard) {
 		if (hasSelectedGroup()) {
 			TreeItem selectedGroup = getSelectedTreeItem();
@@ -284,9 +262,5 @@ public class NavigationTreeViewImpl implements NavigationTreeView {
 			return navigationTree.getSelectedItem();
 		else
 			return selectedTreeItem;
-	}
-
-	public void addTreeItemToParent(TreeItem parent, TreeItem child) {
-		addTreeItemAndSetStyle(parent, child);
 	}
 }

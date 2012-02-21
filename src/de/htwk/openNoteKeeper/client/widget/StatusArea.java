@@ -20,6 +20,7 @@ public class StatusArea {
 		popupPanel.addStyleName("statusPanel");
 		popupPanel.addStyleName("top");
 		popupPanel.setAnimationEnabled(true);
+		popupPanel.setVisible(false);
 		int width = 300;
 		popupPanel.setWidth(width + "px");
 

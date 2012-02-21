@@ -116,12 +116,16 @@ public class StatusPanel implements IsWidget {
 	}
 
 	public void show() {
-		new Timer() {
-			@Override
-			public void run() {
-				showAfterDelay();
-			}
-		}.schedule(delayMillis);
+		if (autoHideInSeconds > 0 || canClose) {
+			showAfterDelay();
+		} else {
+			new Timer() {
+				@Override
+				public void run() {
+					showAfterDelay();
+				}
+			}.schedule(delayMillis);
+		}
 	}
 
 	private void showAfterDelay() {

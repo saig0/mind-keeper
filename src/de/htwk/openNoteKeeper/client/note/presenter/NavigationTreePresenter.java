@@ -14,13 +14,12 @@ import com.mvp4g.client.presenter.BasePresenter;
 import de.htwk.openNoteKeeper.client.main.presenter.Session;
 import de.htwk.openNoteKeeper.client.note.NoteEventBus;
 import de.htwk.openNoteKeeper.client.note.presenter.HasTreeDropHandler.TreeDropHandler;
-import de.htwk.openNoteKeeper.client.note.presenter.SaveInputClickHandler.Type;
 import de.htwk.openNoteKeeper.client.note.service.NoteServiceAsync;
-import de.htwk.openNoteKeeper.client.note.view.NavigationInputWidget;
 import de.htwk.openNoteKeeper.client.note.view.NavigationTreeViewImpl;
-import de.htwk.openNoteKeeper.client.util.IconPool;
 import de.htwk.openNoteKeeper.client.util.StatusScreenCallback;
 import de.htwk.openNoteKeeper.client.util.StatusScreenCallback.Status;
+import de.htwk.openNoteKeeper.client.widget.StatusArea;
+import de.htwk.openNoteKeeper.client.widget.StatusPanel;
 import de.htwk.openNoteKeeper.shared.GroupDTO;
 import de.htwk.openNoteKeeper.shared.UserDTO;
 import de.htwk.openNoteKeeper.shared.WhiteBoardDTO;
@@ -31,6 +30,9 @@ public class NavigationTreePresenter extends
 
 	@Inject
 	private NoteServiceAsync noteService;
+
+	@Inject
+	private StatusArea statusArea;
 
 	public interface NavigationTreeView extends IsWidget {
 		public void setGroups(List<GroupDTO> groups);
@@ -59,23 +61,9 @@ public class NavigationTreePresenter extends
 
 		public void removeSelectedWhiteBoard();
 
-		public TreeItem getDragWidget();
-
 		public TreeItem getSelectedTreeItem();
 
 		public void addTreeItemToParent(TreeItem parent, TreeItem child);
-	}
-
-	public interface NavigationInputView {
-		public HasClickHandlers getCancelInputButton();
-
-		public HasClickHandlers getSaveInputButton();
-
-		public String getNameOfInputField();
-
-		public void show(TreeItem selectedGroup);
-
-		public void hide();
 	}
 
 	@Override
@@ -85,14 +73,7 @@ public class NavigationTreePresenter extends
 			public void onClick(ClickEvent event) {
 				if (view.hasSelectedGroup()) {
 					GroupDTO group = view.getSelectedGroup();
-					final NavigationInputView navigationInputView = new NavigationInputWidget(
-							IconPool.Folder_Big.createImage());
-					navigationInputView.getSaveInputButton().addClickHandler(
-							new SaveInputClickHandler(noteService, view,
-									navigationInputView, group, Type.Group));
-					navigationInputView.getCancelInputButton().addClickHandler(
-							new CancelInputClickHandler(navigationInputView));
-					navigationInputView.show(view.getSelectedTreeItem());
+					eventBus.showInputFieldForNewGroup(view, group);
 				}
 			}
 		});
@@ -102,22 +83,57 @@ public class NavigationTreePresenter extends
 			public void onClick(ClickEvent event) {
 				if (view.hasSelectedGroup()) {
 					GroupDTO group = view.getSelectedGroup();
-					final NavigationInputView navigationInputView = new NavigationInputWidget(
-							IconPool.Blank_Sheet_Big.createImage());
-					navigationInputView.getSaveInputButton()
-							.addClickHandler(
-									new SaveInputClickHandler(noteService,
-											view, navigationInputView, group,
-											Type.WhiteBoard));
-					navigationInputView.getCancelInputButton().addClickHandler(
-							new CancelInputClickHandler(navigationInputView));
-					navigationInputView.show(view.getSelectedTreeItem());
+					eventBus.showInputFieldForNewWhiteBoard(view, group);
 				}
 			}
 		});
 
-		view.getRemoveButton().addClickHandler(
-				new RemoveItemClickHandler(view, noteService));
+		view.getRemoveButton().addClickHandler(new ClickHandler() {
+
+			public void onClick(ClickEvent event) {
+				if (view.hasSelectedGroup()) {
+					final GroupDTO group = view.getSelectedGroup();
+					UserDTO user = Session.getCurrentUser();
+					noteService.removeGroup(
+							user.getId(),
+							group.getKey(),
+							new StatusScreenCallback<Void>(Status.Remove_Group) {
+
+								@Override
+								protected void success(Void result) {
+									view.removeSelectedGroup();
+
+									statusArea
+											.addStatusMessage(new StatusPanel(
+													"Gruppe: "
+															+ group.getTitle()
+															+ " gelöscht",
+													true, 5));
+								}
+							});
+				} else if (view.hasSelectedWhiteBoard()) {
+					final WhiteBoardDTO whiteBoard = view
+							.getSelectedWhiteBoard();
+					noteService.removeWhiteBoard(whiteBoard.getKey(),
+							new StatusScreenCallback<Void>(
+									Status.Remove_Whiteboard) {
+
+								@Override
+								protected void success(Void result) {
+									view.removeSelectedWhiteBoard();
+
+									statusArea
+											.addStatusMessage(new StatusPanel(
+													"Whiteboard: "
+															+ whiteBoard
+																	.getTitle()
+															+ " gelöscht",
+													true, 5));
+								}
+							});
+				}
+			}
+		});
 
 		view.getDropHandler().addTreeDropHandler(new TreeDropHandler() {
 
