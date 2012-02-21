@@ -13,7 +13,6 @@ import com.google.gwt.user.client.ui.Tree;
 import com.google.gwt.user.client.ui.TreeItem;
 import com.google.gwt.user.client.ui.Widget;
 
-import de.htwk.openNoteKeeper.client.note.presenter.DragAndDropTree;
 import de.htwk.openNoteKeeper.client.note.presenter.HasTreeDropHandler;
 import de.htwk.openNoteKeeper.shared.GroupDTO;
 
@@ -37,6 +36,7 @@ public class TreeDropController extends SimpleDropController implements
 		if (treeItem != null) {
 			TreeItem sourceItem = ((NavigationTreeItem) context.draggable)
 					.asTreeItem();
+			sourceItem.remove();
 			for (TreeDropHandler handler : treeDropHandlers) {
 				handler.onTreeDrop(treeItem, sourceItem);
 			}
@@ -57,45 +57,35 @@ public class TreeDropController extends SimpleDropController implements
 			}
 			return clone;
 		}
-
-		TreeItem clone = new TreeItem(dragWidget);
-
-		if (tree instanceof DragAndDropTree) {
-			DragAndDropTree dndTree = (DragAndDropTree) tree;
-			TreeItem treeItem = dndTree.getTreeItemForIndex(dndTree
-					.getWidgetIndex(dragWidget));
-			if (treeItem != null) {
-				// clone.setUserObject(treeItem.getUserObject());
-				clone = treeItem;
-				// if (treeItem.getChildCount() > 0) {
-				// for (int i = 0; i < treeItem.getChildCount(); i++) {
-				// clone.addItem(treeItem.getChild(i));
-				// }
-				// }
-			}
-		}
-		return clone;
+		throw new IllegalArgumentException("unknown drag widget found: "
+				+ dragWidget);
 	}
 
 	@Override
 	public void onMove(DragContext context) {
-		if (dragTreeItem != null) {
-			dragTreeItem.remove();
-		}
+		removeDragWidget();
+
 		TreeItem targetTreeItem = findDragTarget(tree.getItem(0), context);
-
 		if (targetTreeItem != null) {
-			if (targetTreeItem.getChildCount() > 0
-					&& !targetTreeItem.getState()) {
-				targetTreeItem.setState(true);
-			}
-
+			openTreeItem(targetTreeItem);
 			if (targetTreeItem.getUserObject() instanceof GroupDTO) {
 				dragTreeItem = cloneTreeItem(context);
 				addDragWidgetToTree(targetTreeItem);
 			}
 		}
 		super.onMove(context);
+	}
+
+	private void openTreeItem(TreeItem targetTreeItem) {
+		if (targetTreeItem.getChildCount() > 0 && !targetTreeItem.getState()) {
+			targetTreeItem.setState(true);
+		}
+	}
+
+	private void removeDragWidget() {
+		if (dragTreeItem != null) {
+			dragTreeItem.remove();
+		}
 	}
 
 	private void addDragWidgetToTree(TreeItem targetTreeItem) {
@@ -147,9 +137,7 @@ public class TreeDropController extends SimpleDropController implements
 
 	@Override
 	public void onLeave(DragContext context) {
-		if (dragTreeItem != null) {
-			dragTreeItem.remove();
-		}
+		removeDragWidget();
 		super.onLeave(context);
 	}
 
@@ -159,6 +147,9 @@ public class TreeDropController extends SimpleDropController implements
 		TreeItem targetTreeItem = findDragTarget(tree.getItem(0), context);
 		if (targetTreeItem == null
 				|| !(targetTreeItem.getUserObject() instanceof GroupDTO)) {
+			throw new VetoDragException();
+		} else if (targetTreeItem.getParentItem() == null
+				|| !(targetTreeItem.getParentItem().getUserObject() instanceof GroupDTO)) {
 			throw new VetoDragException();
 		}
 	}
