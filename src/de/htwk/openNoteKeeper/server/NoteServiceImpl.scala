@@ -154,7 +154,7 @@ class NoteServiceImpl extends RemoteServiceServlet with NoteService with Persist
     delete(note.key, classOf[Note])
   }
 
-  def moveGroup(userKey: String, groupKey: String, targetGroupKey: String, index: Integer) {
+  def moveGroup(groupKey: String, targetGroupKey: String, index: Integer) {
     val group = findGroupByKey(groupKey)
 
     update[Group](group.parentGroup, classOf[Group], { parentGroup =>
@@ -175,6 +175,29 @@ class NoteServiceImpl extends RemoteServiceServlet with NoteService with Persist
     })
 
     update[Group](group.key, classOf[Group], group => group.parentGroup = targetGroupKey)
+  }
+
+  def moveWhiteBoard(whiteBoardKey: String, targetGroupKey: String, index: Integer) {
+    val whiteboard = findWhiteBoardByKey(whiteBoardKey)
+
+    update[Group](whiteboard.group, classOf[Group], { group =>
+      val whiteboardKey: Key = whiteboard.key
+      group.whiteBoards.remove(whiteboardKey)
+    })
+
+    update[Group](targetGroupKey, classOf[Group], { group =>
+      if (index > group.whiteBoards.size) {
+        val endOfList = group.whiteBoards.size
+        group.whiteBoards.add(endOfList, whiteboard.key)
+      } else if (index < 0) {
+        val beginOfList = 0
+        group.whiteBoards.add(beginOfList, whiteboard.key)
+      } else {
+        group.whiteBoards.add(index, whiteboard.key)
+      }
+    })
+
+    update[WhiteBoard](whiteboard.key, classOf[WhiteBoard], whiteboard => whiteboard.group = targetGroupKey)
   }
 
 }

@@ -148,7 +148,8 @@ public class TreeDropController extends SimpleDropController implements
 		super.onPreviewDrop(context);
 		TreeItem targetTreeItem = findDragTarget(tree.getItem(0), context);
 		if (targetTreeItem == null
-				|| !(targetTreeItem.getUserObject() instanceof GroupDTO)) {
+				|| !(targetTreeItem.getUserObject() instanceof GroupDTO || targetTreeItem
+						.getUserObject() instanceof WhiteBoardDTO)) {
 			throw new VetoDragException();
 		} else if (targetTreeItem.getParentItem() == null
 				|| !(targetTreeItem.getParentItem().getUserObject() instanceof GroupDTO)) {

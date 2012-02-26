@@ -126,12 +126,6 @@ public class NavigationTreeViewImpl implements NavigationTreeView {
 	}
 
 	public void setGroups(List<GroupDTO> groups) {
-		// navigationTree.clear();
-		// for (GroupDTO group : groups) {
-		// TreeItem groupItem = createTreeItem(group);
-		// navigationTree.addItem(groupItem);
-		// }
-
 		for (GroupDTO group : groups) {
 			TreeItem groupItem = createTreeItem(group);
 
@@ -212,9 +206,14 @@ public class NavigationTreeViewImpl implements NavigationTreeView {
 					}
 				}
 			} else {
-				oldItem.addItem(newChildItem);
+				addTreeItemAndSetStyle(oldItem, newChildItem);
 			}
 			j += 1;
+		}
+		while (j > i) {
+			TreeItem oldChildItem = oldItem.getChild(j);
+			oldItem.removeItem(oldChildItem);
+			i += 1;
 		}
 	}
 

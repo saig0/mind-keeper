@@ -283,7 +283,7 @@ class NoteServiceTest extends LocalTestService with Persistence {
     val group1 = service.createGroupForUser(user.key, rootGroup_.getKey(), "group 1")
     val group2 = service.createGroupForUser(user.key, rootGroup_.getKey(), "group 2")
 
-    service.moveGroup(user.key, group2.getKey(), rootGroup_.getKey(), 0)
+    service.moveGroup(group2.getKey(), rootGroup_.getKey(), 0)
 
     val groups = service.getAllGroupsForUser(user.key)
     assertEquals(1, groups.size)
@@ -308,7 +308,7 @@ class NoteServiceTest extends LocalTestService with Persistence {
     val group1 = service.createGroupForUser(user.key, rootGroup_.getKey(), "group 1")
     val group2 = service.createGroupForUser(user.key, rootGroup_.getKey(), "group 2")
 
-    service.moveGroup(user.key, group2.getKey(), group1.getKey(), 0)
+    service.moveGroup(group2.getKey(), group1.getKey(), 0)
 
     val groups = service.getAllGroupsForUser(user.key)
     assertEquals(1, groups.size)
@@ -336,7 +336,7 @@ class NoteServiceTest extends LocalTestService with Persistence {
 
     val group2 = service.createGroupForUser(user.key, rootGroup_.getKey(), "group 2")
 
-    service.moveGroup(user.key, group2.getKey(), rootGroup_.getKey(), 0)
+    service.moveGroup(group2.getKey(), rootGroup_.getKey(), 0)
 
     val groups = service.getAllGroupsForUser(user.key)
     assertEquals(1, groups.size)
@@ -365,7 +365,7 @@ class NoteServiceTest extends LocalTestService with Persistence {
     val group1 = service.createGroupForUser(user.key, rootGroup_.getKey(), "group 1")
     val group2 = service.createGroupForUser(user.key, rootGroup_.getKey(), "group 2")
 
-    service.moveGroup(user.key, group1.getKey(), rootGroup_.getKey(), 2)
+    service.moveGroup(group1.getKey(), rootGroup_.getKey(), 2)
 
     val groups = service.getAllGroupsForUser(user.key)
     assertEquals(1, groups.size)
@@ -381,4 +381,64 @@ class NoteServiceTest extends LocalTestService with Persistence {
     assertEquals("group 1", newGroup2.getTitle())
   }
 
+  @Test
+  def moveWhiteBoardChangeOrder {
+    val groups_ = service.getAllGroupsForUser(user.key)
+    assertEquals(1, groups_.size)
+    val rootGroup_ = groups_.get(0)
+
+    val whiteboard1 = service.createWhiteBoard(rootGroup_.getKey(), "whiteboard 1")
+    val whiteboard2 = service.createWhiteBoard(rootGroup_.getKey(), "whiteboard 2")
+
+    service.moveWhiteBoard(whiteboard1.getKey(), rootGroup_.getKey(), 1)
+
+    val groups = service.getAllGroupsForUser(user.key)
+    assertEquals(1, groups.size)
+    val rootGroup = groups.get(0)
+
+    val whiteboards = rootGroup.getWhiteBoards()
+    assertEquals(2, whiteboards.size)
+
+    val newWhiteboard1 = whiteboards.get(0)
+    assertEquals("whiteboard 2", newWhiteboard1.getTitle())
+
+    val newWhiteBoard2 = whiteboards.get(1)
+    assertEquals("whiteboard 1", newWhiteBoard2.getTitle())
+  }
+
+  @Test
+  def moveWhiteBoard {
+    val groups_ = service.getAllGroupsForUser(user.key)
+    assertEquals(1, groups_.size)
+    val rootGroup_ = groups_.get(0)
+
+    val whiteboard1 = service.createWhiteBoard(rootGroup_.getKey(), "whiteboard 1")
+    val whiteboard2 = service.createWhiteBoard(rootGroup_.getKey(), "whiteboard 2")
+
+    val group = service.createGroupForUser(user.key, rootGroup_.getKey(), "group 1")
+
+    service.moveWhiteBoard(whiteboard1.getKey(), group.getKey(), 0)
+
+    val groups = service.getAllGroupsForUser(user.key)
+    assertEquals(1, groups.size)
+    val rootGroup = groups.get(0)
+
+    val whiteboards = rootGroup.getWhiteBoards()
+    assertEquals(1, whiteboards.size)
+
+    val newWhiteboard1 = whiteboards.get(0)
+    assertEquals("whiteboard 2", newWhiteboard1.getTitle())
+
+    val subGroups = rootGroup.getSubGroups()
+    assertEquals(1, subGroups.size)
+
+    val subgroup = subGroups.get(0)
+    assertEquals("group 1", subgroup.getTitle())
+
+    val whiteboardsOfSubGroup = subgroup.getWhiteBoards()
+    assertEquals(1, whiteboardsOfSubGroup.size)
+
+    val newWhiteboard2 = whiteboardsOfSubGroup.get(0)
+    assertEquals("whiteboard 1", newWhiteboard2.getTitle())
+  }
 }
