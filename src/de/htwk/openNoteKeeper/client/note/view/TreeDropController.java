@@ -15,6 +15,7 @@ import com.google.gwt.user.client.ui.Widget;
 
 import de.htwk.openNoteKeeper.client.note.presenter.HasTreeDropHandler;
 import de.htwk.openNoteKeeper.shared.GroupDTO;
+import de.htwk.openNoteKeeper.shared.WhiteBoardDTO;
 
 public class TreeDropController extends SimpleDropController implements
 		HasTreeDropHandler {
@@ -68,7 +69,8 @@ public class TreeDropController extends SimpleDropController implements
 		TreeItem targetTreeItem = findDragTarget(tree.getItem(0), context);
 		if (targetTreeItem != null) {
 			openTreeItem(targetTreeItem);
-			if (targetTreeItem.getUserObject() instanceof GroupDTO) {
+			if (targetTreeItem.getUserObject() instanceof GroupDTO
+					|| targetTreeItem.getUserObject() instanceof WhiteBoardDTO) {
 				dragTreeItem = cloneTreeItem(context);
 				addDragWidgetToTree(targetTreeItem);
 			}

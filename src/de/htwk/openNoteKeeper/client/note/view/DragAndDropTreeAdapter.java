@@ -51,10 +51,15 @@ public class DragAndDropTreeAdapter extends Tree implements InsertPanel {
 			TreeItem newItem = item.getParentItem().insertItem(childIndex, w);
 			insertTreeItem(newItem, beforeIndex);
 		} else {
-			throw new IllegalArgumentException("no tree item found for index: "
-					+ beforeIndex);
+			int lastIndex = getWidgetCount() - 2;
+			item = getTreeItemForIndex(lastIndex);
+			if (item != null) {
+				insert(w, lastIndex);
+			} else {
+				throw new IllegalArgumentException(
+						"no tree item found for index: " + beforeIndex);
+			}
 		}
-
 	}
 
 	public TreeItem getTreeItemForIndex(int index) {
