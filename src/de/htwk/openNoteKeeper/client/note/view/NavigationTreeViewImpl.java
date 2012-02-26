@@ -126,10 +126,72 @@ public class NavigationTreeViewImpl implements NavigationTreeView {
 	}
 
 	public void setGroups(List<GroupDTO> groups) {
-		navigationTree.clear();
+		// navigationTree.clear();
+		// for (GroupDTO group : groups) {
+		// TreeItem groupItem = createTreeItem(group);
+		// navigationTree.addItem(groupItem);
+		// }
+
 		for (GroupDTO group : groups) {
 			TreeItem groupItem = createTreeItem(group);
-			navigationTree.addItem(groupItem);
+
+			TreeItem oldItem = getExistingTreeItem(groupItem);
+			if (oldItem != null) {
+				mergeTreeItems(oldItem, groupItem);
+			} else {
+				navigationTree.addItem(groupItem);
+			}
+		}
+	}
+
+	private TreeItem getExistingTreeItem(TreeItem groupItem) {
+		GroupDTO group = getGroupOfTreeItem(groupItem);
+		if (group != null) {
+			String key = group.getKey();
+			for (int i = 0; i < navigationTree.getItemCount(); i++) {
+				TreeItem treeItem = navigationTree.getItem(i);
+				GroupDTO groupOfItem = getGroupOfTreeItem(treeItem);
+				if (groupOfItem != null && key.equals(groupOfItem.getKey())) {
+					return treeItem;
+				}
+			}
+		}
+		return null;
+	}
+
+	private GroupDTO getGroupOfTreeItem(TreeItem item) {
+		if (item.getWidget() instanceof NavigationTreeItem) {
+			NavigationTreeItem navigationTreeItem = (NavigationTreeItem) item
+					.getWidget();
+			Object userObject = navigationTreeItem.asTreeItem().getUserObject();
+			if (userObject instanceof GroupDTO) {
+				GroupDTO group = (GroupDTO) userObject;
+				return group;
+			}
+		}
+		return null;
+	}
+
+	private void mergeTreeItems(TreeItem oldItem, TreeItem newItem) {
+		int i = 0;
+		int j = 0;
+		while (i < newItem.getChildCount()) {
+			TreeItem newChildItem = newItem.getChild(i);
+			TreeItem oldChildItem = oldItem.getChild(j);
+			if (oldChildItem != null) {
+				GroupDTO newGroup = getGroupOfTreeItem(newChildItem);
+				GroupDTO oldGroup = getGroupOfTreeItem(oldChildItem);
+				if (oldGroup != null
+						&& newGroup.getKey().equals(oldGroup.getKey())) {
+					mergeTreeItems(oldChildItem, newChildItem);
+					i += 1;
+				} else {
+					oldItem.insertItem(i, newChildItem);
+				}
+			} else {
+				oldItem.addItem(newChildItem);
+			}
+			j += 1;
 		}
 	}
 
@@ -164,7 +226,7 @@ public class NavigationTreeViewImpl implements NavigationTreeView {
 		} else {
 			parent.addItem(child);
 		}
-		parent.setState(true, false);
+		// parent.setState(true, false);
 	}
 
 	private int getIndexOfLastGroupItem(TreeItem item) {
