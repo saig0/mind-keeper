@@ -83,8 +83,8 @@ public class NavigationInputPresenter extends
 
 										@Override
 										protected void success(GroupDTO newGroup) {
-											navigationTreeView
-													.addGroupToTree(newGroup);
+											eventBus.loggedIn(Session
+													.getCurrentUser());
 										}
 									});
 						}
@@ -129,8 +129,8 @@ public class NavigationInputPresenter extends
 										@Override
 										protected void success(
 												WhiteBoardDTO whiteboard) {
-											navigationTreeView
-													.addWhiteBoardToGroup(whiteboard);
+											eventBus.loggedIn(Session
+													.getCurrentUser());
 										}
 									});
 						}
