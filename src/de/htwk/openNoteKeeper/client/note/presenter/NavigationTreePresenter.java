@@ -145,22 +145,53 @@ public class NavigationTreePresenter extends
 					final TreeItem targetItem = dropTarget.getParentItem();
 					GroupDTO targetGroup = (GroupDTO) targetItem
 							.getUserObject();
-					final int index = targetItem.getChildIndex(dropTarget);
+					final int index = targetItem.getChildIndex(dropTarget) + 1;
 
-					noteService.moveGroup(
-							Session.getCurrentUser().getId(),
-							group.getKey(),
-							targetGroup.getKey(),
-							index + 1,
-							new StatusScreenCallback<Void>("verschiebe Gruppe") {
+					noteService.moveGroup(group.getKey(), targetGroup.getKey(),
+							index, new StatusScreenCallback<Void>(
+									"verschiebe Gruppe") {
 
 								@Override
 								protected void success(Void result) {
 									eventBus.loggedIn(Session.getCurrentUser());
 								}
 							});
+				} else if (sourceItem.getUserObject() instanceof WhiteBoardDTO) {
+					WhiteBoardDTO whiteBoard = (WhiteBoardDTO) sourceItem
+							.getUserObject();
+					GroupDTO targetGroup = getTargetGroup(dropTarget);
+					int index = getIndex(dropTarget);
+
+					noteService.moveWhiteBoard(whiteBoard.getKey(), targetGroup
+							.getKey(), index, new StatusScreenCallback<Void>(
+							"verschiebe WhiteBoard") {
+
+						@Override
+						protected void success(Void result) {
+							eventBus.loggedIn(Session.getCurrentUser());
+						}
+					});
 				}
 			}
+
+			private GroupDTO getTargetGroup(TreeItem dropTarget) {
+				if (dropTarget.getUserObject() instanceof WhiteBoardDTO) {
+					final TreeItem targetItem = dropTarget.getParentItem();
+					return (GroupDTO) targetItem.getUserObject();
+				} else {
+					return (GroupDTO) dropTarget.getUserObject();
+				}
+			}
+
+			private int getIndex(TreeItem dropTarget) {
+				if (dropTarget.getUserObject() instanceof WhiteBoardDTO) {
+					final TreeItem targetItem = dropTarget.getParentItem();
+					return targetItem.getChildIndex(dropTarget) + 1;
+				} else {
+					return dropTarget.getChildCount();
+				}
+			}
+
 		});
 	}
 

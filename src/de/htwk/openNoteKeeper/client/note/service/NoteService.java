@@ -31,6 +31,9 @@ public interface NoteService extends RemoteService {
 
 	public void removeNote(String noteKey);
 
-	public void moveGroup(String userKey, String groupKey,
-			String targetGroupKey, Integer index);
+	public void moveGroup(String groupKey, String targetGroupKey, Integer index);
+
+	public void moveWhiteBoard(String whiteBoardKey, String targetGroupKey,
+			Integer index);
+
 }
