@@ -172,6 +172,20 @@ public class NavigationTreeViewImpl implements NavigationTreeView {
 		return null;
 	}
 
+	private WhiteBoardDTO getWhiteBoardOfTreeItem(TreeItem item) {
+		if (item.getWidget() instanceof NavigationTreeItem) {
+			NavigationTreeItem navigationTreeItem = (NavigationTreeItem) item
+					.getWidget();
+			Object userObject = navigationTreeItem.asTreeItem().getUserObject();
+			if (userObject instanceof WhiteBoardDTO) {
+				WhiteBoardDTO whiteboard = (WhiteBoardDTO) userObject;
+				return whiteboard;
+			}
+		}
+		return null;
+	}
+
+	// TODO Refactoring
 	private void mergeTreeItems(TreeItem oldItem, TreeItem newItem) {
 		int i = 0;
 		int j = 0;
@@ -186,7 +200,16 @@ public class NavigationTreeViewImpl implements NavigationTreeView {
 					mergeTreeItems(oldChildItem, newChildItem);
 					i += 1;
 				} else {
-					oldItem.insertItem(i, newChildItem);
+					WhiteBoardDTO newWhiteboard = getWhiteBoardOfTreeItem(newChildItem);
+					WhiteBoardDTO oldWhiteboard = getWhiteBoardOfTreeItem(oldChildItem);
+					if (newWhiteboard != null
+							&& oldWhiteboard != null
+							&& newWhiteboard.getKey().equals(
+									oldWhiteboard.getKey())) {
+						i += 1;
+					} else {
+						oldItem.insertItem(j, newChildItem);
+					}
 				}
 			} else {
 				oldItem.addItem(newChildItem);
@@ -226,7 +249,6 @@ public class NavigationTreeViewImpl implements NavigationTreeView {
 		} else {
 			parent.addItem(child);
 		}
-		// parent.setState(true, false);
 	}
 
 	private int getIndexOfLastGroupItem(TreeItem item) {

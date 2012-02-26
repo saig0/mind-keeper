@@ -156,11 +156,7 @@ public class NavigationTreePresenter extends
 
 								@Override
 								protected void success(Void result) {
-									// sourceItem.remove();
-									// targetItem.insertItem(index, sourceItem);
-
-									// TODO dynamisches Ändern
-									onLoggedIn(Session.getCurrentUser());
+									eventBus.loggedIn(Session.getCurrentUser());
 								}
 							});
 				}
@@ -169,7 +165,6 @@ public class NavigationTreePresenter extends
 	}
 
 	public void onLoggedIn(UserDTO user) {
-
 		noteService.getAllGroupsForUser(user.getId(),
 				new StatusScreenCallback<List<GroupDTO>>(Status.Load_Notes) {
 
