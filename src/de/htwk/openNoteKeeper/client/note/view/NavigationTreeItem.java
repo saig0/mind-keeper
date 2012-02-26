@@ -4,11 +4,14 @@ import com.google.gwt.event.dom.client.MouseOutEvent;
 import com.google.gwt.event.dom.client.MouseOutHandler;
 import com.google.gwt.event.dom.client.MouseOverEvent;
 import com.google.gwt.event.dom.client.MouseOverHandler;
+import com.google.gwt.user.client.DOM;
+import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.FocusPanel;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.TreeItem;
 import com.google.gwt.user.client.ui.Widget;
 
@@ -22,6 +25,8 @@ public class NavigationTreeItem extends FocusPanel {
 	private FocusPanel p;
 
 	public NavigationTreeItem(Image icon, final String title, Object userObject) {
+		sinkEvents(Event.ONCONTEXTMENU);
+
 		treeItem = createLayout(icon, title, userObject);
 	}
 
@@ -81,5 +86,26 @@ public class NavigationTreeItem extends FocusPanel {
 			treeItem.setWidget(this);
 		}
 		return treeItem;
+	}
+
+	public void showContextMenu(int x, int y) {
+		PopupPanel popup = new PopupPanel(true, false);
+		popup.setWidget(new Label("context menu coming soon..."));
+		popup.setPopupPosition(x, y);
+		popup.show();
+	}
+
+	@Override
+	public void onBrowserEvent(Event event) {
+		event.stopPropagation();
+		event.preventDefault();
+		switch (DOM.eventGetType(event)) {
+		case Event.ONCONTEXTMENU:
+			showContextMenu(event.getClientX(), event.getClientY());
+			break;
+		default:
+			super.onBrowserEvent(event);
+			break;
+		}
 	}
 }
