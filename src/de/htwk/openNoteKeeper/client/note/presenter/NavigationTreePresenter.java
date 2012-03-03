@@ -186,7 +186,16 @@ public class NavigationTreePresenter extends
 			private int getIndex(TreeItem dropTarget) {
 				if (dropTarget.getUserObject() instanceof WhiteBoardDTO) {
 					final TreeItem targetItem = dropTarget.getParentItem();
-					return targetItem.getChildIndex(dropTarget) + 1;
+					int index = 0;
+					for (int i = 0; i < targetItem.getChildCount(); i++) {
+						TreeItem item = targetItem.getChild(i);
+						if (item.equals(dropTarget)) {
+							return index + 1;
+						} else if (item.getUserObject() instanceof WhiteBoardDTO) {
+							index += 1;
+						}
+					}
+					return index;
 				} else {
 					return dropTarget.getChildCount();
 				}
