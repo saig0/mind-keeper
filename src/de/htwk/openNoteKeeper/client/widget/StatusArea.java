@@ -47,12 +47,14 @@ public class StatusArea {
 	public StatusPanel addStatusMessage(StatusPanel statusPanel) {
 		statusPanel.setStatusArea(this);
 		statusPanel.show();
+		return statusPanel;
+	}
+
+	public void showStatusPanel(StatusPanel statusPanel) {
 		mainPanel.add(statusPanel);
 		if (mainPanel.getWidgetCount() > 0) {
 			popupPanel.setVisible(true);
 		}
-
-		return statusPanel;
 	}
 
 	public void removeStatusPanel(StatusPanel statusPanel) {

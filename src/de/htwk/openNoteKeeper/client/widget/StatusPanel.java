@@ -131,6 +131,7 @@ public class StatusPanel implements IsWidget {
 	private void showAfterDelay() {
 		if (enable) {
 			widget.setVisible(true);
+			statusArea.showStatusPanel(this);
 			if (autoHideInSeconds > 0) {
 				new Timer() {
 
