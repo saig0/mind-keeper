@@ -14,12 +14,17 @@ public class SingleNotePresenter extends
 		BasePresenter<SingleNoteViewImpl, NoteEventBus> {
 
 	public interface SingleNoteView extends IsWidget {
+		public void setTitle(String title);
+
+		public void setContent(String content);
 
 		public void setSize(int width, int height);
 	}
 
 	public Widget showNote(NoteDTO note) {
 		// TODO set data
+		view.setTitle(note.getTitle());
+		view.setContent(note.getContent());
 		view.setSize(note.getSize().getX(), note.getSize().getY());
 		return view.asWidget();
 	}

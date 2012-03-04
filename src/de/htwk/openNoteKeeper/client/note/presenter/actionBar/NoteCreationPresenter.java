@@ -45,8 +45,9 @@ public class NoteCreationPresenter extends
 				String nodeName = view.getName();
 				if (!nodeName.isEmpty()) {
 					// TODO position bestimmen
-					CoordinateDTO position = new CoordinateDTO(100 + (int) Math
-							.random() * 100, 100 + (int) Math.random() * 100);
+					CoordinateDTO position = new CoordinateDTO(
+							100 + (int) (Math.random() * 100),
+							100 + (int) (Math.random() * 100));
 					CoordinateDTO size = new CoordinateDTO(200, 200);
 
 					noteService.createNote(activeWhiteBoard.getKey(), nodeName,
