@@ -1,9 +1,7 @@
-
 /* Farbe: 
  B4C8F0  
  A0B4F0
 */
-
 .PopupPanelWithTransparentContent {
 	border: none;
 	background-color: transparent;
@@ -64,11 +62,11 @@
 }
 
 .navigationItem {
-	background-color: transparent;	
+	background-color: transparent;
 }
 
 .markedNavigationItem {
-	background-color: #C8DCFA;	
+	background-color: #C8DCFA;
 	border-radius: 10px;
 }
 
@@ -83,4 +81,17 @@
 	border-color: gray;
 	font-weight: bold;
 	color: black;
+}
+
+.note {
+	border-radius: 5px;
+	border-width: 1px;
+	border-style: solid;
+	border-color: gray;
+}
+
+.noteHeader {
+	font-weight: bold;
+	color: black;
+	border-bottom: 1px solid gray;
 }
