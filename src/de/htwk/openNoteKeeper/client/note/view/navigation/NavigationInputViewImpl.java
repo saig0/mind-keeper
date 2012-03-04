@@ -1,4 +1,4 @@
-package de.htwk.openNoteKeeper.client.note.view;
+package de.htwk.openNoteKeeper.client.note.view.navigation;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.HasClickHandlers;
@@ -10,7 +10,7 @@ import com.google.gwt.user.client.ui.TreeItem;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
 import de.htwk.openNoteKeeper.client.note.i18n.NoteConstants;
-import de.htwk.openNoteKeeper.client.note.presenter.NavigationInputPresenter.NavigationInputView;
+import de.htwk.openNoteKeeper.client.note.presenter.navigation.NavigationInputPresenter.NavigationInputView;
 import de.htwk.openNoteKeeper.client.util.EnterKeyPressHandler;
 
 public class NavigationInputViewImpl implements NavigationInputView {

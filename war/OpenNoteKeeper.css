@@ -75,3 +75,12 @@
 .top {
 	z-index: 1;
 }
+
+.actionBar {
+	border-radius: 10px;
+	border-width: 1px;
+	border-style: solid;
+	border-color: gray;
+	font-weight: bold;
+	color: black;
+}

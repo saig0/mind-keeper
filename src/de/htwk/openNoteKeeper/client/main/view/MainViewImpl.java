@@ -19,6 +19,7 @@ public class MainViewImpl implements MainView {
 	private LanguageChooserViewImpl languageChooser;
 
 	private FlowPanel content = new FlowPanel();
+	private FlowPanel actionBar = new FlowPanel();
 
 	public Widget asWidget() {
 		VerticalPanel main = new VerticalPanel();
@@ -26,13 +27,18 @@ public class MainViewImpl implements MainView {
 
 		HorizontalPanel header = new HorizontalPanel();
 		header.setSize("100%", "100%");
+		header.setSpacing(5);
 		header.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_RIGHT);
 
 		Image logo = IconPool.Logo.createImage();
 		header.add(logo);
 		header.setCellHorizontalAlignment(logo,
 				HasHorizontalAlignment.ALIGN_LEFT);
-		header.setCellWidth(logo, "250px");
+		header.setCellWidth(logo, "300px");
+
+		header.add(actionBar);
+		header.setCellHorizontalAlignment(actionBar,
+				HasHorizontalAlignment.ALIGN_LEFT);
 
 		header.add(languageChooser);
 		header.add(userView);
@@ -51,4 +57,8 @@ public class MainViewImpl implements MainView {
 		content.add(widget);
 	}
 
+	public void setActionBar(Widget actionWidget) {
+		actionBar.clear();
+		actionBar.add(actionWidget);
+	}
 }

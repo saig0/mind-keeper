@@ -1,4 +1,4 @@
-package de.htwk.openNoteKeeper.client.note.presenter;
+package de.htwk.openNoteKeeper.client.note.presenter.navigation;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -12,9 +12,9 @@ import com.mvp4g.client.presenter.BasePresenter;
 
 import de.htwk.openNoteKeeper.client.main.presenter.Session;
 import de.htwk.openNoteKeeper.client.note.NoteEventBus;
-import de.htwk.openNoteKeeper.client.note.presenter.NavigationTreePresenter.NavigationTreeView;
+import de.htwk.openNoteKeeper.client.note.presenter.navigation.NavigationTreePresenter.NavigationTreeView;
 import de.htwk.openNoteKeeper.client.note.service.NoteServiceAsync;
-import de.htwk.openNoteKeeper.client.note.view.NavigationInputViewImpl;
+import de.htwk.openNoteKeeper.client.note.view.navigation.NavigationInputViewImpl;
 import de.htwk.openNoteKeeper.client.util.IconPool;
 import de.htwk.openNoteKeeper.client.util.StatusScreenCallback;
 import de.htwk.openNoteKeeper.client.util.StatusScreenCallback.Status;

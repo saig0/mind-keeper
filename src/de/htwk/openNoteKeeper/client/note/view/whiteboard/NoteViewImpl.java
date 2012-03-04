@@ -1,11 +1,12 @@
-package de.htwk.openNoteKeeper.client.note.view;
+package de.htwk.openNoteKeeper.client.note.view.whiteboard;
 
 import com.google.gwt.user.client.ui.AbsolutePanel;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 
-import de.htwk.openNoteKeeper.client.note.presenter.NotePresenter.NoteView;
+import de.htwk.openNoteKeeper.client.note.presenter.whiteboard.NotePresenter.NoteView;
+import de.htwk.openNoteKeeper.client.note.view.navigation.NavigationTreeViewImpl;
 import de.htwk.openNoteKeeper.client.widget.HideablePanel;
 
 public class NoteViewImpl implements NoteView {

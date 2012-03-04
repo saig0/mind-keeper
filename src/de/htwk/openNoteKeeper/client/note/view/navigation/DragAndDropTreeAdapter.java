@@ -1,4 +1,4 @@
-package de.htwk.openNoteKeeper.client.note.view;
+package de.htwk.openNoteKeeper.client.note.view.navigation;
 
 import java.util.HashMap;
 import java.util.HashSet;
