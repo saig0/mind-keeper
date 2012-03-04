@@ -196,6 +196,7 @@ public class NavigationTreeViewImpl implements NavigationTreeView {
 							&& oldWhiteboard != null
 							&& newWhiteboard.getKey().equals(
 									oldWhiteboard.getKey())) {
+						oldChildItem.setUserObject(newWhiteboard);
 						i += 1;
 					} else {
 						oldItem.insertItem(j, newChildItem);
