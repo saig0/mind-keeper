@@ -26,6 +26,7 @@ public abstract class LoadingScreenCallback<T> implements AsyncCallback<T> {
 
 	private PopupPanel addLoading(UIObject widget) {
 		PopupPanel loadingPanel = new PopupPanel(false, false);
+		loadingPanel.removeStyleName("gwt-PopupPanel");
 		loadingPanel.addStyleName("PopupPanelWithTransparentContent");
 		loadingPanel.setAnimationEnabled(true);
 		Image icon = IconPool.Loading.createImage();
