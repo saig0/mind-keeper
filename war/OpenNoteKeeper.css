@@ -103,3 +103,9 @@
 	color: black;
 	border-bottom: 1px solid gray;
 }
+
+.resizePanel {
+	background-image: url(images/resize.png);
+	background-repeat: no-repeat;
+	background-position: bottom right;
+}
