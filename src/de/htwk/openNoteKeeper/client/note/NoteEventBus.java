@@ -7,12 +7,15 @@ import com.mvp4g.client.event.EventBus;
 import com.mvp4g.client.view.NoStartView;
 
 import de.htwk.openNoteKeeper.client.note.presenter.actionBar.NoteActionBarPresenter;
+import de.htwk.openNoteKeeper.client.note.presenter.actionBar.NoteCreationPresenter;
 import de.htwk.openNoteKeeper.client.note.presenter.navigation.NavigationInputPresenter;
 import de.htwk.openNoteKeeper.client.note.presenter.navigation.NavigationTreePresenter;
 import de.htwk.openNoteKeeper.client.note.presenter.navigation.NavigationTreePresenter.NavigationTreeView;
 import de.htwk.openNoteKeeper.client.note.presenter.whiteboard.NotePresenter;
 import de.htwk.openNoteKeeper.shared.GroupDTO;
+import de.htwk.openNoteKeeper.shared.NoteDTO;
 import de.htwk.openNoteKeeper.shared.UserDTO;
+import de.htwk.openNoteKeeper.shared.WhiteBoardDTO;
 
 @Events(startView = NoStartView.class, module = NoteModule.class)
 public interface NoteEventBus extends EventBus {
@@ -34,4 +37,13 @@ public interface NoteEventBus extends EventBus {
 	@Event(handlers = NavigationInputPresenter.class)
 	public void showInputFieldForNewWhiteBoard(
 			NavigationTreeView navigationTreeView, GroupDTO selectedGroup);
+
+	@Event(handlers = NoteCreationPresenter.class)
+	public void selectWhiteBoard(WhiteBoardDTO selectedWhiteBoard);
+
+	@Event(handlers = NoteCreationPresenter.class)
+	public void showNoteCreationView();
+
+	@Event(handlers = NotePresenter.class)
+	public void showNote(NoteDTO note);
 }

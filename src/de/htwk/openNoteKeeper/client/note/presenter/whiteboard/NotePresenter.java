@@ -8,6 +8,7 @@ import com.mvp4g.client.presenter.BasePresenter;
 import de.htwk.openNoteKeeper.client.note.NoteEventBus;
 import de.htwk.openNoteKeeper.client.note.service.NoteServiceAsync;
 import de.htwk.openNoteKeeper.client.note.view.whiteboard.NoteViewImpl;
+import de.htwk.openNoteKeeper.shared.NoteDTO;
 import de.htwk.openNoteKeeper.shared.UserDTO;
 
 @Presenter(view = NoteViewImpl.class)
@@ -22,5 +23,9 @@ public class NotePresenter extends BasePresenter<NoteViewImpl, NoteEventBus> {
 
 	public void onLoggedIn(UserDTO user) {
 		eventBus.setContent(view.asWidget());
+	}
+
+	public void onShowNote(NoteDTO note) {
+		// TODO unimplementet methode
 	}
 }
