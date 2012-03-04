@@ -1,5 +1,14 @@
 package de.htwk.openNoteKeeper.client.note.view.whiteboard;
 
+import com.google.gwt.event.dom.client.BlurEvent;
+import com.google.gwt.event.dom.client.BlurHandler;
+import com.google.gwt.event.dom.client.FocusEvent;
+import com.google.gwt.event.dom.client.FocusHandler;
+import com.google.gwt.event.dom.client.MouseOutEvent;
+import com.google.gwt.event.dom.client.MouseOutHandler;
+import com.google.gwt.event.dom.client.MouseOverEvent;
+import com.google.gwt.event.dom.client.MouseOverHandler;
+import com.google.gwt.user.client.ui.FocusPanel;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
@@ -12,15 +21,19 @@ public class SingleNoteViewImpl implements SingleNoteView {
 	private final Widget main;
 	private Image backgroundImage;
 	private Label titleLabel;
+	private boolean isSelected = false;
 
 	public SingleNoteViewImpl() {
 		main = createLayout();
 	}
 
 	private Widget createLayout() {
+		final FocusPanel main = new FocusPanel();
+		main.addStyleName("note");
+
 		HorizontalPanel panel = new HorizontalPanel();
+		panel.setSize("100%", "100%");
 		panel.setSpacing(5);
-		panel.addStyleName("note");
 
 		// backgroundImage = IconPool.PostIt.createImage();
 		// panel.add(backgroundImage);
@@ -28,8 +41,41 @@ public class SingleNoteViewImpl implements SingleNoteView {
 		titleLabel = new Label("");
 		titleLabel.addStyleName("noteHeader");
 		panel.add(titleLabel);
+		main.setWidget(panel);
 
-		return panel;
+		main.addMouseOverHandler(new MouseOverHandler() {
+
+			public void onMouseOver(MouseOverEvent event) {
+				main.addStyleName("activeNote");
+			}
+		});
+
+		main.addMouseOutHandler(new MouseOutHandler() {
+
+			public void onMouseOut(MouseOutEvent event) {
+				if (!isSelected) {
+					main.removeStyleName("activeNote");
+				}
+			}
+		});
+
+		main.addFocusHandler(new FocusHandler() {
+
+			public void onFocus(FocusEvent event) {
+				main.addStyleName("activeNote");
+				isSelected = true;
+			}
+		});
+
+		main.addBlurHandler(new BlurHandler() {
+
+			public void onBlur(BlurEvent event) {
+				main.removeStyleName("activeNote");
+				isSelected = false;
+			}
+		});
+
+		return main;
 	}
 
 	public Widget asWidget() {
