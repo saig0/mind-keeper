@@ -13,6 +13,8 @@ import de.htwk.openNoteKeeper.shared.UserDTO;
 public class MainPresenter extends BasePresenter<MainViewImpl, MainEventBus> {
 	public interface MainView extends IsWidget {
 		public void setContent(Widget content);
+
+		public void setActionBar(Widget actionWidget);
 	}
 
 	@Override
@@ -29,5 +31,9 @@ public class MainPresenter extends BasePresenter<MainViewImpl, MainEventBus> {
 
 	public void onSetContent(Widget content) {
 		view.setContent(content);
+	}
+
+	public void onSetActionBar(Widget actionWidget) {
+		view.setActionBar(actionWidget);
 	}
 }

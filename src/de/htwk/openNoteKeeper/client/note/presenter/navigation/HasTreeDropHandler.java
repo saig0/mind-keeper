@@ -1,4 +1,4 @@
-package de.htwk.openNoteKeeper.client.note.presenter;
+package de.htwk.openNoteKeeper.client.note.presenter.navigation;
 
 import com.google.gwt.user.client.ui.TreeItem;
 

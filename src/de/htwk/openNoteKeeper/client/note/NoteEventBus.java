@@ -6,10 +6,11 @@ import com.mvp4g.client.annotation.Events;
 import com.mvp4g.client.event.EventBus;
 import com.mvp4g.client.view.NoStartView;
 
-import de.htwk.openNoteKeeper.client.note.presenter.NavigationInputPresenter;
-import de.htwk.openNoteKeeper.client.note.presenter.NavigationTreePresenter;
-import de.htwk.openNoteKeeper.client.note.presenter.NavigationTreePresenter.NavigationTreeView;
-import de.htwk.openNoteKeeper.client.note.presenter.NotePresenter;
+import de.htwk.openNoteKeeper.client.note.presenter.actionBar.NoteActionBarPresenter;
+import de.htwk.openNoteKeeper.client.note.presenter.navigation.NavigationInputPresenter;
+import de.htwk.openNoteKeeper.client.note.presenter.navigation.NavigationTreePresenter;
+import de.htwk.openNoteKeeper.client.note.presenter.navigation.NavigationTreePresenter.NavigationTreeView;
+import de.htwk.openNoteKeeper.client.note.presenter.whiteboard.NotePresenter;
 import de.htwk.openNoteKeeper.shared.GroupDTO;
 import de.htwk.openNoteKeeper.shared.UserDTO;
 
@@ -19,7 +20,11 @@ public interface NoteEventBus extends EventBus {
 	@Event(forwardToParent = true)
 	public void setContent(Widget content);
 
-	@Event(handlers = { NotePresenter.class, NavigationTreePresenter.class })
+	@Event(forwardToParent = true)
+	public void setActionBar(Widget actionWidget);
+
+	@Event(handlers = { NotePresenter.class, NavigationTreePresenter.class,
+			NoteActionBarPresenter.class })
 	public void loggedIn(UserDTO user);
 
 	@Event(handlers = NavigationInputPresenter.class)

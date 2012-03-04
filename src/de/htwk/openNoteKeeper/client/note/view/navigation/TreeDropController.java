@@ -1,4 +1,4 @@
-package de.htwk.openNoteKeeper.client.note.view;
+package de.htwk.openNoteKeeper.client.note.view.navigation;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -13,7 +13,7 @@ import com.google.gwt.user.client.ui.Tree;
 import com.google.gwt.user.client.ui.TreeItem;
 import com.google.gwt.user.client.ui.Widget;
 
-import de.htwk.openNoteKeeper.client.note.presenter.HasTreeDropHandler;
+import de.htwk.openNoteKeeper.client.note.presenter.navigation.HasTreeDropHandler;
 import de.htwk.openNoteKeeper.shared.GroupDTO;
 import de.htwk.openNoteKeeper.shared.WhiteBoardDTO;
 

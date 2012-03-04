@@ -1,4 +1,4 @@
-package de.htwk.openNoteKeeper.client.note.presenter;
+package de.htwk.openNoteKeeper.client.note.presenter.navigation;
 
 import java.util.List;
 
@@ -13,9 +13,9 @@ import com.mvp4g.client.presenter.BasePresenter;
 
 import de.htwk.openNoteKeeper.client.main.presenter.Session;
 import de.htwk.openNoteKeeper.client.note.NoteEventBus;
-import de.htwk.openNoteKeeper.client.note.presenter.HasTreeDropHandler.TreeDropHandler;
+import de.htwk.openNoteKeeper.client.note.presenter.navigation.HasTreeDropHandler.TreeDropHandler;
 import de.htwk.openNoteKeeper.client.note.service.NoteServiceAsync;
-import de.htwk.openNoteKeeper.client.note.view.NavigationTreeViewImpl;
+import de.htwk.openNoteKeeper.client.note.view.navigation.NavigationTreeViewImpl;
 import de.htwk.openNoteKeeper.client.util.StatusScreenCallback;
 import de.htwk.openNoteKeeper.client.util.StatusScreenCallback.Status;
 import de.htwk.openNoteKeeper.client.widget.StatusArea;

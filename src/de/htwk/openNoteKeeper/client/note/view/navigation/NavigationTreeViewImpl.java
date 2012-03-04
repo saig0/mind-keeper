@@ -1,4 +1,4 @@
-package de.htwk.openNoteKeeper.client.note.view;
+package de.htwk.openNoteKeeper.client.note.view.navigation;
 
 import java.util.List;
 
@@ -21,8 +21,8 @@ import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Singleton;
 
 import de.htwk.openNoteKeeper.client.note.i18n.NoteConstants;
-import de.htwk.openNoteKeeper.client.note.presenter.HasTreeDropHandler;
-import de.htwk.openNoteKeeper.client.note.presenter.NavigationTreePresenter.NavigationTreeView;
+import de.htwk.openNoteKeeper.client.note.presenter.navigation.HasTreeDropHandler;
+import de.htwk.openNoteKeeper.client.note.presenter.navigation.NavigationTreePresenter.NavigationTreeView;
 import de.htwk.openNoteKeeper.client.util.IconPool;
 import de.htwk.openNoteKeeper.shared.GroupDTO;
 import de.htwk.openNoteKeeper.shared.WhiteBoardDTO;
@@ -31,7 +31,7 @@ import de.htwk.openNoteKeeper.shared.WhiteBoardDTO;
 public class NavigationTreeViewImpl implements NavigationTreeView {
 
 	private Tree navigationTree;
-	private Image noteIcon;
+
 	private Image trashIcon;
 	private Image groupIcon;
 	private Image whiteBoardIcon;
@@ -70,11 +70,6 @@ public class NavigationTreeViewImpl implements NavigationTreeView {
 		whiteBoardIcon.setTitle(constants.newWhiteBoard());
 		whiteBoardIcon.setStyleName("clickable");
 		controlPanel.add(whiteBoardIcon);
-
-		noteIcon = IconPool.Notice_Big.createImage();
-		noteIcon.setTitle(constants.newNote());
-		noteIcon.setStyleName("clickable");
-		controlPanel.add(noteIcon);
 
 		trashIcon = IconPool.Trash_Big.createImage();
 		trashIcon.setTitle(constants.delete());

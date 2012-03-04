@@ -1,4 +1,4 @@
-package de.htwk.openNoteKeeper.client.note.view;
+package de.htwk.openNoteKeeper.client.note.view.navigation;
 
 import com.google.gwt.event.dom.client.MouseOutEvent;
 import com.google.gwt.event.dom.client.MouseOutHandler;
