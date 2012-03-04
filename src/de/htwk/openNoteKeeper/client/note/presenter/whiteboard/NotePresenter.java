@@ -1,5 +1,8 @@
 package de.htwk.openNoteKeeper.client.note.presenter.whiteboard;
 
+import java.util.LinkedList;
+import java.util.List;
+
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
@@ -22,8 +25,12 @@ public class NotePresenter extends BasePresenter<NoteViewImpl, NoteEventBus> {
 
 	private final PresenterFactory<SingleNotePresenter, NoteEventBus> presenterFactory;
 
+	private List<Widget> noteWidgets = new LinkedList<Widget>();
+
 	public interface NoteView extends IsWidget {
 		public void showNoteWidget(Widget noteWidget, int left, int top);
+
+		public void removeNoteWidget(Widget noteWidget);
 	}
 
 	public NotePresenter() {
@@ -36,6 +43,10 @@ public class NotePresenter extends BasePresenter<NoteViewImpl, NoteEventBus> {
 	}
 
 	public void onSelectWhiteBoard(WhiteBoardDTO selectedWhiteBoard) {
+		for (Widget noteWidget : noteWidgets) {
+			view.removeNoteWidget(noteWidget);
+		}
+
 		for (NoteDTO note : selectedWhiteBoard.getNotes()) {
 			onShowNote(note);
 		}
@@ -47,5 +58,6 @@ public class NotePresenter extends BasePresenter<NoteViewImpl, NoteEventBus> {
 		Widget noteWidget = presenter.showNote(note);
 		view.showNoteWidget(noteWidget, note.getPosition().getX(), note
 				.getPosition().getY());
+		noteWidgets.add(noteWidget);
 	}
 }

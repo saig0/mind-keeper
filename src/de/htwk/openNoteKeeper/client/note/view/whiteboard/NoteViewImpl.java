@@ -34,4 +34,8 @@ public class NoteViewImpl implements NoteView {
 	public void showNoteWidget(Widget noteWidget, int left, int top) {
 		whiteboardPanel.add(noteWidget, left, top);
 	}
+
+	public void removeNoteWidget(Widget noteWidget) {
+		whiteboardPanel.remove(noteWidget);
+	}
 }
