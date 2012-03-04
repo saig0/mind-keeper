@@ -10,7 +10,6 @@ import com.google.gwt.event.dom.client.MouseOutEvent;
 import com.google.gwt.event.dom.client.MouseOutHandler;
 import com.google.gwt.event.dom.client.MouseOverEvent;
 import com.google.gwt.event.dom.client.MouseOverHandler;
-import com.google.gwt.user.client.ui.FocusPanel;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Image;
@@ -21,6 +20,7 @@ import com.google.gwt.user.client.ui.Widget;
 
 import de.htwk.openNoteKeeper.client.note.presenter.whiteboard.SingleNotePresenter.SingleNoteView;
 import de.htwk.openNoteKeeper.client.util.IconPool;
+import de.htwk.openNoteKeeper.client.widget.ResizePanel;
 
 public class SingleNoteViewImpl implements SingleNoteView {
 
@@ -33,7 +33,8 @@ public class SingleNoteViewImpl implements SingleNoteView {
 	}
 
 	private Widget createLayout() {
-		final FocusPanel main = new FocusPanel();
+		// final FocusPanel main = new FocusPanel();
+		final ResizePanel main = new ResizePanel();
 		main.addStyleName("note");
 
 		VerticalPanel panel = new VerticalPanel();
@@ -68,6 +69,7 @@ public class SingleNoteViewImpl implements SingleNoteView {
 		header.add(contextImage);
 		header.setCellHorizontalAlignment(contextImage,
 				HasHorizontalAlignment.ALIGN_RIGHT);
+		header.setCellWidth(contextImage, "25px");
 
 		panel.add(header);
 		main.setWidget(panel);
