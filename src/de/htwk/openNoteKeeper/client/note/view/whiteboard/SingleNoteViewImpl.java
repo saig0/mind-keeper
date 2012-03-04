@@ -123,4 +123,8 @@ public class SingleNoteViewImpl implements SingleNoteView {
 		// TODO Auto-generated method stub
 
 	}
+
+	public Widget getDragHandle() {
+		return titleLabel;
+	}
 }
