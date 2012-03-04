@@ -1,6 +1,7 @@
 package de.htwk.openNoteKeeper.client.note.view.actionBar;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Widget;
@@ -13,9 +14,14 @@ public class NoteActionBarViewImpl implements NoteActionBarView {
 
 	private NoteConstants constants = GWT.create(NoteConstants.class);
 
+	private final HorizontalPanel main;
 	private Image noteIcon;
 
-	public Widget asWidget() {
+	public NoteActionBarViewImpl() {
+		main = createLayout();
+	}
+
+	private HorizontalPanel createLayout() {
 		HorizontalPanel main = new HorizontalPanel();
 		main.setSize("100%", "100%");
 		main.addStyleName("actionBar");
@@ -26,5 +32,13 @@ public class NoteActionBarViewImpl implements NoteActionBarView {
 		main.add(noteIcon);
 
 		return main;
+	}
+
+	public Widget asWidget() {
+		return main;
+	}
+
+	public HasClickHandlers getAddButton() {
+		return noteIcon;
 	}
 }

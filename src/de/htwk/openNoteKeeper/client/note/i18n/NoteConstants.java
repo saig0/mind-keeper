@@ -14,4 +14,6 @@ public interface NoteConstants extends Constants {
 	String newNote();
 
 	String delete();
+
+	String noteName();
 }

@@ -5,6 +5,9 @@ import java.util.List;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.event.logical.shared.HasSelectionHandlers;
+import com.google.gwt.event.logical.shared.SelectionEvent;
+import com.google.gwt.event.logical.shared.SelectionHandler;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.TreeItem;
 import com.google.inject.Inject;
@@ -64,6 +67,8 @@ public class NavigationTreePresenter extends
 		public TreeItem getSelectedTreeItem();
 
 		public void addTreeItemToParent(TreeItem parent, TreeItem child);
+
+		public HasSelectionHandlers<TreeItem> getNavigationTree();
 	}
 
 	@Override
@@ -202,6 +207,26 @@ public class NavigationTreePresenter extends
 			}
 
 		});
+
+		view.getNavigationTree().addSelectionHandler(
+				new SelectionHandler<TreeItem>() {
+
+					public void onSelection(SelectionEvent<TreeItem> event) {
+						TreeItem selectedItem = event.getSelectedItem();
+						Object userObject = selectedItem.getUserObject();
+						if (selectedItem != null && userObject != null) {
+							if (userObject instanceof GroupDTO
+									&& !((GroupDTO) userObject).getKey()
+											.contains("dummy")) {
+								// ignore
+							} else if (userObject instanceof WhiteBoardDTO
+									&& !((WhiteBoardDTO) userObject).getKey()
+											.contains("dummy")) {
+								eventBus.selectWhiteBoard((WhiteBoardDTO) userObject);
+							}
+						}
+					}
+				});
 	}
 
 	public void onLoggedIn(UserDTO user) {
@@ -214,5 +239,4 @@ public class NavigationTreePresenter extends
 					}
 				});
 	}
-
 }

@@ -1,5 +1,8 @@
 package de.htwk.openNoteKeeper.client.note.presenter.actionBar;
 
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.mvp4g.client.annotation.Presenter;
 import com.mvp4g.client.presenter.BasePresenter;
@@ -14,6 +17,17 @@ public class NoteActionBarPresenter extends
 
 	public interface NoteActionBarView extends IsWidget {
 
+		public HasClickHandlers getAddButton();
+	}
+
+	@Override
+	public void bind() {
+		view.getAddButton().addClickHandler(new ClickHandler() {
+
+			public void onClick(ClickEvent event) {
+				eventBus.showNoteCreationView();
+			}
+		});
 	}
 
 	public void onLoggedIn(UserDTO user) {

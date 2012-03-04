@@ -6,6 +6,7 @@ import com.allen_sauer.gwt.dnd.client.PickupDragController;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.event.logical.shared.HasSelectionHandlers;
 import com.google.gwt.event.logical.shared.SelectionEvent;
 import com.google.gwt.event.logical.shared.SelectionHandler;
 import com.google.gwt.user.client.DOM;
@@ -340,5 +341,9 @@ public class NavigationTreeViewImpl implements NavigationTreeView {
 			return navigationTree.getSelectedItem();
 		else
 			return selectedTreeItem;
+	}
+
+	public HasSelectionHandlers<TreeItem> getNavigationTree() {
+		return navigationTree;
 	}
 }
