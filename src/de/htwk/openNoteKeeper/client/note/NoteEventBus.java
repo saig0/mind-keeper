@@ -38,7 +38,7 @@ public interface NoteEventBus extends EventBus {
 	public void showInputFieldForNewWhiteBoard(
 			NavigationTreeView navigationTreeView, GroupDTO selectedGroup);
 
-	@Event(handlers = NoteCreationPresenter.class)
+	@Event(handlers = { NotePresenter.class, NoteCreationPresenter.class })
 	public void selectWhiteBoard(WhiteBoardDTO selectedWhiteBoard);
 
 	@Event(handlers = NoteCreationPresenter.class)

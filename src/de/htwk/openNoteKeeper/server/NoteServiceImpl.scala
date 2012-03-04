@@ -131,7 +131,7 @@ class NoteServiceImpl extends RemoteServiceServlet with NoteService with Persist
     persist(note)
     update[WhiteBoard](whiteboard.key, classOf[WhiteBoard], whiteBoard => whiteBoard.notes.add(note.key))
 
-    new NoteDTO(note.key, title, "", new CoordinateDTO(0, 0), new CoordinateDTO(0, 0))
+    new NoteDTO(note.key, title, "", position, size)
   }
 
   def updateNote(noteDto: NoteDTO) {

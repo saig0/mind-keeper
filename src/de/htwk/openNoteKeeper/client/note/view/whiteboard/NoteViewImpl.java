@@ -14,18 +14,24 @@ public class NoteViewImpl implements NoteView {
 	@Inject
 	private NavigationTreeViewImpl navigationTreeView;
 
+	private AbsolutePanel whiteboardPanel;
+
 	public Widget asWidget() {
 		HorizontalPanel main = new HorizontalPanel();
 		main.setSize("100%", "100%");
 
-		AbsolutePanel panel = new AbsolutePanel();
-		panel.setHeight("100%");
-		panel.addStyleName("whiteBoard");
+		whiteboardPanel = new AbsolutePanel();
+		whiteboardPanel.setHeight("100%");
+		whiteboardPanel.addStyleName("whiteBoard");
 
 		HideablePanel hideableNavigation = new HideablePanel(
-				navigationTreeView.asWidget(), panel, 25);
+				navigationTreeView.asWidget(), whiteboardPanel, 25);
 		main.add(hideableNavigation);
 
 		return main;
+	}
+
+	public void showNoteWidget(Widget noteWidget, int left, int top) {
+		whiteboardPanel.add(noteWidget, left, top);
 	}
 }
