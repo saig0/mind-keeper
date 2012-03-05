@@ -6,31 +6,26 @@ import java.util.List;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Event;
-import com.google.gwt.user.client.ui.FocusPanel;
 import com.google.gwt.user.client.ui.RootPanel;
+import com.google.gwt.user.client.ui.SimplePanel;
+import com.google.gwt.user.client.ui.Widget;
 
-/**
- * @author Vince Vice - www.electrosound.tv This is licensed under Apache
- *         License Version 2.0 http://www.apache.org/licenses/LICENSE-2.0.html
- * 
- *         GWT Widget - ResizePanel allows resizing on dragging the bottom right
- *         corner
- * 
- *         emits the signal onResized(width,height)
- */
-public class ResizePanel extends FocusPanel {
+public class ResizeableWidget extends SimplePanel {
+
 	private boolean bDragDrop = false;
 	private boolean move = false;
 	private Element movingPanelElement;
 	private List<PanelResizeListener> panelResizedListeners = new ArrayList<PanelResizeListener>();
 
-	public ResizePanel() {
+	public ResizeableWidget(Widget widget) {
 		super();
-		addStyleName("resizePanel");
+		widget.addStyleName("resizePanel");
 
 		// listen to mouse-events
 		DOM.sinkEvents(this.getElement(), Event.ONMOUSEDOWN | Event.ONMOUSEMOVE
 				| Event.ONMOUSEUP | Event.ONMOUSEOVER);
+
+		setWidget(widget);
 	}
 
 	/**
@@ -40,12 +35,15 @@ public class ResizePanel extends FocusPanel {
 	@Override
 	public void onBrowserEvent(Event event) {
 		final int eventType = DOM.eventGetType(event);
+		event.preventDefault();
 		if (Event.ONMOUSEOVER == eventType) {
 			// show different cursors
 			if (isCursorResize(event)) {
 				DOM.setStyleAttribute(this.getElement(), "cursor", "se-resize");
 			} else if (isCursorMove(event)) {
-				DOM.setStyleAttribute(this.getElement(), "cursor", "se-resize");
+				// DOM.setStyleAttribute(this.getElement(), "cursor",
+				// "se-resize");
+				DOM.setStyleAttribute(this.getElement(), "cursor", "move");
 			} else {
 				DOM.setStyleAttribute(this.getElement(), "cursor", "default");
 			}
@@ -117,8 +115,8 @@ public class ResizePanel extends FocusPanel {
 		int width = this.getOffsetWidth();
 
 		// only in bottom right corner (area of 10 pixels in square)
-		if (((initialX + width - 10) < cursorX && cursorX <= (initialX + width))
-				&& ((initialY + height - 10) < cursorY && cursorY <= (initialY + height)))
+		if (((initialX + width - 15) < cursorX && cursorX <= (initialX + width))
+				&& ((initialY + height - 15) < cursorY && cursorY <= (initialY + height)))
 			return true;
 		else
 			return false;
