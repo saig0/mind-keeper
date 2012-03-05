@@ -1,4 +1,4 @@
-package de.htwk.openNoteKeeper.client.widget;
+package de.htwk.openNoteKeeper.client.widget.resize;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,12 +10,12 @@ import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
 
-public class ResizeableWidget extends SimplePanel {
+public class ResizeableWidget extends SimplePanel implements HasResizeListener {
 
 	private boolean bDragDrop = false;
 	private boolean move = false;
 	private Element movingPanelElement;
-	private List<PanelResizeListener> panelResizedListeners = new ArrayList<PanelResizeListener>();
+	private List<ResizeListener> panelResizedListeners = new ArrayList<ResizeListener>();
 
 	public ResizeableWidget(Widget widget) {
 		super();
@@ -95,6 +95,28 @@ public class ResizeableWidget extends SimplePanel {
 			if (bDragDrop == true) {
 				bDragDrop = false;
 				DOM.releaseCapture(this.getElement());
+
+				notifyListenerAfterResizeFinished(event);
+			}
+		}
+	}
+
+	private void notifyListenerAfterResizeFinished(Event event) {
+		int absX = DOM.eventGetClientX(event);
+		int absY = DOM.eventGetClientY(event);
+		int originalX = DOM.getAbsoluteLeft(this.getElement());
+		int originalY = DOM.getAbsoluteTop(this.getElement());
+
+		// do not allow mirror-functionality
+		if (absY > originalY && absX > originalX) {
+			Integer height = absY - originalY + 2;
+			this.setHeight(height + "px");
+
+			Integer width = absX - originalX + 2;
+			this.setWidth(width + "px");
+
+			for (ResizeListener listener : panelResizedListeners) {
+				listener.onReleasedResized(width, height);
 			}
 		}
 	}
@@ -158,7 +180,7 @@ public class ResizeableWidget extends SimplePanel {
 	 * 
 	 * @param listener
 	 */
-	public void addPanelResizedListener(PanelResizeListener listener) {
+	public void addResizedListener(ResizeListener listener) {
 		panelResizedListeners.add(listener);
 	}
 
@@ -166,7 +188,7 @@ public class ResizeableWidget extends SimplePanel {
 	 * Interface function to emit signal
 	 */
 	private void notifyPanelResizedListeners(Integer width, Integer height) {
-		for (PanelResizeListener listener : panelResizedListeners) {
+		for (ResizeListener listener : panelResizedListeners) {
 			listener.onResized(width, height);
 		}
 	}

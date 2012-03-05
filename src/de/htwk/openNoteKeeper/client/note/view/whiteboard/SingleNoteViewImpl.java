@@ -21,11 +21,12 @@ import com.google.gwt.user.client.ui.Widget;
 
 import de.htwk.openNoteKeeper.client.note.presenter.whiteboard.SingleNotePresenter.SingleNoteView;
 import de.htwk.openNoteKeeper.client.util.IconPool;
-import de.htwk.openNoteKeeper.client.widget.ResizeableWidget;
+import de.htwk.openNoteKeeper.client.widget.resize.HasResizeListener;
+import de.htwk.openNoteKeeper.client.widget.resize.ResizeableWidget;
 
 public class SingleNoteViewImpl implements SingleNoteView {
 
-	private final Widget main;
+	private final ResizeableWidget main;
 	private Label titleLabel;
 	private boolean isSelected = false;
 
@@ -33,7 +34,7 @@ public class SingleNoteViewImpl implements SingleNoteView {
 		main = createLayout();
 	}
 
-	private Widget createLayout() {
+	private ResizeableWidget createLayout() {
 		final FocusPanel main = new FocusPanel();
 		main.setSize("100%", "100%");
 		main.addStyleName("note");
@@ -130,5 +131,9 @@ public class SingleNoteViewImpl implements SingleNoteView {
 
 	public Widget getDragHandle() {
 		return titleLabel;
+	}
+
+	public HasResizeListener getResizableWidget() {
+		return main;
 	}
 }
