@@ -48,9 +48,9 @@ public class SingleNoteViewImpl implements SingleNoteView {
 
 		HorizontalPanel header = new HorizontalPanel();
 		header.setSize("100%", "100%");
+		header.addStyleName("noteHeader");
 
 		titleLabel = new Label("");
-		titleLabel.addStyleName("noteHeader");
 		header.add(titleLabel);
 
 		Image contextImage = IconPool.Settings_Small.createImage();
@@ -71,6 +71,11 @@ public class SingleNoteViewImpl implements SingleNoteView {
 		header.setCellWidth(contextImage, "25px");
 
 		panel.add(header);
+		panel.setCellHeight(header, "25px");
+
+		// dummy
+		panel.add(new Label());
+
 		main.setWidget(panel);
 
 		main.addMouseOverHandler(new MouseOverHandler() {
