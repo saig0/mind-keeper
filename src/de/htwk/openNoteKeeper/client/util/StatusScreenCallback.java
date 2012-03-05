@@ -6,9 +6,9 @@ import com.google.inject.Inject;
 
 import de.htwk.openNoteKeeper.client.i18n.StatusConstants;
 import de.htwk.openNoteKeeper.client.main.MainModule;
-import de.htwk.openNoteKeeper.client.widget.ErrorPopup;
 import de.htwk.openNoteKeeper.client.widget.StatusArea;
 import de.htwk.openNoteKeeper.client.widget.StatusPanel;
+import de.htwk.openNoteKeeper.client.widget.popup.ErrorPopup;
 
 public abstract class StatusScreenCallback<T> implements AsyncCallback<T> {
 

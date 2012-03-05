@@ -32,8 +32,6 @@ public class NotePresenter extends BasePresenter<NoteViewImpl, NoteEventBus> {
 	@Inject
 	private NoteServiceAsync noteService;
 
-	private final PresenterFactory<SingleNotePresenter, NoteEventBus> presenterFactory;
-
 	private Map<Widget, NoteDTO> noteWidgets = new HashMap<Widget, NoteDTO>();
 
 	public interface NoteView extends IsWidget {
@@ -46,11 +44,6 @@ public class NotePresenter extends BasePresenter<NoteViewImpl, NoteEventBus> {
 		public int getWhiteBoardAbsoluteLeft();
 
 		public int getWhiteBoardAbsoluteTop();
-	}
-
-	public NotePresenter() {
-		presenterFactory = new PresenterFactory<SingleNotePresenter, NoteEventBus>(
-				SingleNotePresenter.class);
 	}
 
 	@Override
@@ -114,11 +107,20 @@ public class NotePresenter extends BasePresenter<NoteViewImpl, NoteEventBus> {
 	}
 
 	public void onShowNote(NoteDTO note) {
-		SingleNotePresenter presenter = presenterFactory
-				.createPresenter(eventBus);
+		SingleNotePresenter presenter = PresenterFactory.createPresenter(
+				eventBus, SingleNotePresenter.class);
 		DragableWidget noteWidget = presenter.showNote(note);
 		view.showNoteWidget(noteWidget, note.getPosition().getX(), note
 				.getPosition().getY());
 		noteWidgets.put(noteWidget.asWidget(), note);
+	}
+
+	public void onRemoveNote(NoteDTO note) {
+		for (Widget noteWidget : noteWidgets.keySet()) {
+			if (noteWidgets.get(noteWidget).equals(note)) {
+				view.removeNoteWidget(noteWidget);
+				return;
+			}
+		}
 	}
 }

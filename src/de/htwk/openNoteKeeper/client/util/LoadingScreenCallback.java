@@ -8,7 +8,7 @@ import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.UIObject;
 
-import de.htwk.openNoteKeeper.client.widget.ErrorPopup;
+import de.htwk.openNoteKeeper.client.widget.popup.ErrorPopup;
 
 public abstract class LoadingScreenCallback<T> implements AsyncCallback<T> {
 
