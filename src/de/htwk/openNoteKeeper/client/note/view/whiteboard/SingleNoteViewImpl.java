@@ -10,6 +10,7 @@ import com.google.gwt.event.dom.client.MouseOutEvent;
 import com.google.gwt.event.dom.client.MouseOutHandler;
 import com.google.gwt.event.dom.client.MouseOverEvent;
 import com.google.gwt.event.dom.client.MouseOverHandler;
+import com.google.gwt.user.client.ui.FocusPanel;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Image;
@@ -20,7 +21,7 @@ import com.google.gwt.user.client.ui.Widget;
 
 import de.htwk.openNoteKeeper.client.note.presenter.whiteboard.SingleNotePresenter.SingleNoteView;
 import de.htwk.openNoteKeeper.client.util.IconPool;
-import de.htwk.openNoteKeeper.client.widget.ResizePanel;
+import de.htwk.openNoteKeeper.client.widget.ResizeableWidget;
 
 public class SingleNoteViewImpl implements SingleNoteView {
 
@@ -33,9 +34,10 @@ public class SingleNoteViewImpl implements SingleNoteView {
 	}
 
 	private Widget createLayout() {
-		// final FocusPanel main = new FocusPanel();
-		final ResizePanel main = new ResizePanel();
+		final FocusPanel main = new FocusPanel();
+		main.setSize("100%", "100%");
 		main.addStyleName("note");
+		ResizeableWidget resizeableWidget = new ResizeableWidget(main);
 
 		VerticalPanel panel = new VerticalPanel();
 		panel.setSize("100%", "100%");
@@ -106,7 +108,7 @@ public class SingleNoteViewImpl implements SingleNoteView {
 			}
 		});
 
-		return main;
+		return resizeableWidget;
 	}
 
 	public Widget asWidget() {
