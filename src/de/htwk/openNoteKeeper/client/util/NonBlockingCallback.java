@@ -4,7 +4,7 @@ import com.google.gwt.event.shared.GwtEvent;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.FocusWidget;
 
-import de.htwk.openNoteKeeper.client.widget.ErrorPopup;
+import de.htwk.openNoteKeeper.client.widget.popup.ErrorPopup;
 
 public abstract class NonBlockingCallback<T> implements AsyncCallback<T> {
 

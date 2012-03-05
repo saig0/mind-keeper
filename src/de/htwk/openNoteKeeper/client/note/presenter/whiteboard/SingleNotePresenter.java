@@ -1,13 +1,18 @@
 package de.htwk.openNoteKeeper.client.note.presenter.whiteboard;
 
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.inject.Inject;
 import com.mvp4g.client.annotation.Presenter;
 import com.mvp4g.client.presenter.BasePresenter;
 
+import de.htwk.openNoteKeeper.client.main.presenter.Session;
 import de.htwk.openNoteKeeper.client.note.NoteEventBus;
 import de.htwk.openNoteKeeper.client.note.service.NoteServiceAsync;
 import de.htwk.openNoteKeeper.client.note.view.whiteboard.SingleNoteViewImpl;
 import de.htwk.openNoteKeeper.client.util.DragableWidget;
+import de.htwk.openNoteKeeper.client.util.PresenterFactory;
 import de.htwk.openNoteKeeper.client.util.StatusScreenCallback;
 import de.htwk.openNoteKeeper.client.widget.resize.HasResizeListener;
 import de.htwk.openNoteKeeper.client.widget.resize.ResizeListener;
@@ -26,6 +31,10 @@ public class SingleNotePresenter extends
 		public void setSize(int width, int height);
 
 		public HasResizeListener getResizableWidget();
+
+		public HasClickHandlers getDeleteButton();
+
+		public void hide();
 	}
 
 	@Inject
@@ -52,6 +61,24 @@ public class SingleNotePresenter extends
 				});
 			}
 		});
+
+		view.getDeleteButton().addClickHandler(new ClickHandler() {
+
+			public void onClick(ClickEvent event) {
+				noteService.removeNote(note.getKey(),
+						new StatusScreenCallback<Void>("lösche Notiz") {
+
+							@Override
+							protected void success(Void result) {
+								view.hide();
+								eventBus.removeNote(note);
+								// TODO Modell auf Client aktualliesieren
+								eventBus.loggedIn(Session.getCurrentUser());
+								destroy();
+							}
+						});
+			}
+		});
 	}
 
 	public DragableWidget showNote(NoteDTO note) {
@@ -61,5 +88,9 @@ public class SingleNotePresenter extends
 		view.setContent(note.getContent());
 		view.setSize(note.getSize().getX(), note.getSize().getY());
 		return view;
+	}
+
+	private void destroy() {
+		PresenterFactory.destroyPresenter(eventBus, this);
 	}
 }

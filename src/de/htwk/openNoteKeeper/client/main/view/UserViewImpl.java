@@ -17,8 +17,8 @@ import com.google.inject.Singleton;
 import de.htwk.openNoteKeeper.client.i18n.CommonConstants;
 import de.htwk.openNoteKeeper.client.main.presenter.UserPresenter.UserView;
 import de.htwk.openNoteKeeper.client.util.RedirectClickHandler;
-import de.htwk.openNoteKeeper.client.widget.PopupPanel;
-import de.htwk.openNoteKeeper.client.widget.PopupPanel.AnimationType;
+import de.htwk.openNoteKeeper.client.widget.popup.PopupPanel;
+import de.htwk.openNoteKeeper.client.widget.popup.PopupPanel.AnimationType;
 import de.htwk.openNoteKeeper.shared.OpenIdProvider;
 import de.htwk.openNoteKeeper.shared.UserDTO;
 

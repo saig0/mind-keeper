@@ -46,4 +46,7 @@ public interface NoteEventBus extends EventBus {
 
 	@Event(handlers = NotePresenter.class)
 	public void showNote(NoteDTO note);
+
+	@Event(handlers = NotePresenter.class)
+	public void removeNote(NoteDTO note);
 }

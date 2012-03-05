@@ -6,6 +6,7 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.FocusEvent;
 import com.google.gwt.event.dom.client.FocusHandler;
+import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.dom.client.MouseOutEvent;
 import com.google.gwt.event.dom.client.MouseOutHandler;
 import com.google.gwt.event.dom.client.MouseOverEvent;
@@ -15,7 +16,6 @@ import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
-import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
@@ -25,6 +25,8 @@ import de.htwk.openNoteKeeper.client.widget.resize.HasResizeListener;
 import de.htwk.openNoteKeeper.client.widget.resize.ResizeableWidget;
 
 public class SingleNoteViewImpl implements SingleNoteView {
+
+	private NoteContextMenu contextMenu;
 
 	private final ResizeableWidget main;
 	private Label titleLabel;
@@ -54,18 +56,12 @@ public class SingleNoteViewImpl implements SingleNoteView {
 		Image contextImage = IconPool.Settings_Small.createImage();
 		contextImage.addStyleName("clickable");
 
+		contextMenu = new NoteContextMenu();
+
 		contextImage.addClickHandler(new ClickHandler() {
 
 			public void onClick(ClickEvent event) {
-				PopupPanel popup = new PopupPanel(true, false);
-				popup.addStyleName("top");
-
-				HorizontalPanel content = new HorizontalPanel();
-				content.add(new Label("context menu coming soon..."));
-				popup.setWidget(content);
-
-				popup.setPopupPosition(event.getClientX(), event.getClientY());
-				popup.show();
+				contextMenu.show(event.getClientX(), event.getClientY());
 			}
 		});
 
@@ -135,5 +131,13 @@ public class SingleNoteViewImpl implements SingleNoteView {
 
 	public HasResizeListener getResizableWidget() {
 		return main;
+	}
+
+	public HasClickHandlers getDeleteButton() {
+		return contextMenu.getDeleteButton();
+	}
+
+	public void hide() {
+		contextMenu.hide();
 	}
 }

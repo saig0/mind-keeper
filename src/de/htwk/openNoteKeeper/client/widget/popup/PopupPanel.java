@@ -1,4 +1,4 @@
-package de.htwk.openNoteKeeper.client.widget;
+package de.htwk.openNoteKeeper.client.widget.popup;
 
 /*
  * Copyright 2009 Google Inc.

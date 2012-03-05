@@ -11,7 +11,7 @@ import com.google.inject.Inject;
 import de.htwk.openNoteKeeper.client.note.presenter.whiteboard.NotePresenter.NoteView;
 import de.htwk.openNoteKeeper.client.note.view.navigation.NavigationTreeViewImpl;
 import de.htwk.openNoteKeeper.client.util.DragableWidget;
-import de.htwk.openNoteKeeper.client.widget.HideablePanel;
+import de.htwk.openNoteKeeper.client.widget.panel.HideablePanel;
 
 public class NoteViewImpl implements NoteView {
 
