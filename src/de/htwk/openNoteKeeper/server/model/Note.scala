@@ -20,6 +20,7 @@ object Note {
 class Note(
     @Persistent var title: String,
     @Persistent var content: Text,
+    @Persistent var color: String,
     @Persistent var whiteboard: Key,
     @Persistent var width: Int,
     @Persistent var height: Int,

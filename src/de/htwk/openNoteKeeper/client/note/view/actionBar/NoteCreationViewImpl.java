@@ -14,6 +14,7 @@ import de.htwk.openNoteKeeper.client.i18n.CommonConstants;
 import de.htwk.openNoteKeeper.client.note.i18n.NoteConstants;
 import de.htwk.openNoteKeeper.client.note.presenter.actionBar.NoteCreationPresenter.NoteCreationView;
 import de.htwk.openNoteKeeper.client.util.EnterKeyPressHandler;
+import de.htwk.openNoteKeeper.client.widget.ColorPicker;
 
 public class NoteCreationViewImpl implements NoteCreationView {
 
@@ -21,6 +22,10 @@ public class NoteCreationViewImpl implements NoteCreationView {
 	private Button createButton;
 	private Button abortButton;
 	private TextBox noteNameTextBox;
+	private ColorPicker colorPicker;
+
+	// TODO benutzerdefinitiert
+	private final String defaultColor = "#F3F781";
 
 	private NoteConstants noteConstants = GWT.create(NoteConstants.class);
 	private CommonConstants commonConstants = GWT.create(CommonConstants.class);
@@ -42,15 +47,26 @@ public class NoteCreationViewImpl implements NoteCreationView {
 		// layout.setSpacing(5);
 		layout.setSize("100%", "100%");
 
-		HorizontalPanel content = new HorizontalPanel();
-		content.setSpacing(5);
-		content.setSize("100%", "100%");
-		content.add(new Label(noteConstants.noteName()));
+		HorizontalPanel namePanel = new HorizontalPanel();
+		namePanel.setSpacing(5);
+		namePanel.setSize("100%", "100%");
+		namePanel.add(new Label(noteConstants.noteName()));
 		noteNameTextBox = new TextBox();
 		// TODO width fix
 		noteNameTextBox.setWidth("95%");
-		content.add(noteNameTextBox);
-		content.setCellWidth(noteNameTextBox, "65%");
+		namePanel.add(noteNameTextBox);
+		namePanel.setCellWidth(noteNameTextBox, "65%");
+		layout.add(namePanel);
+
+		HorizontalPanel colorPanel = new HorizontalPanel();
+		colorPanel.setSpacing(5);
+		colorPanel.setSize("100%", "100%");
+		colorPanel.add(new Label(noteConstants.noteColor()));
+
+		colorPicker = new ColorPicker(defaultColor);
+		colorPanel.add(colorPicker);
+		colorPanel.setCellWidth(colorPicker, "65%");
+		layout.add(colorPanel);
 
 		HorizontalPanel control = new HorizontalPanel();
 		control.setSpacing(5);
@@ -66,7 +82,6 @@ public class NoteCreationViewImpl implements NoteCreationView {
 		noteNameTextBox.addKeyPressHandler(new EnterKeyPressHandler(
 				createButton));
 
-		layout.add(content);
 		layout.add(control);
 		popup.setWidget(layout);
 		return popup;
@@ -96,6 +111,10 @@ public class NoteCreationViewImpl implements NoteCreationView {
 
 	public HasClickHandlers getAbortButton() {
 		return abortButton;
+	}
+
+	public String getColor() {
+		return colorPicker.getColor();
 	}
 
 }

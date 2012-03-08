@@ -9,11 +9,12 @@
 
 	<!-- <inherits name='com.google.gwt.user.theme.standard.Standard' /> -->
 	<inherits name='com.google.gwt.user.theme.chrome.Chrome' />
-	
+
 	<!-- Other module inherits -->
 	<inherits name='com.mvp4g.Mvp4gModule' />
 	<inherits name='com.allen_sauer.gwt.dnd.gwt-dnd' />
-	<inherits name='com.axeiya.gwtckeditor.Gwtckeditor'/>
+	<inherits name='com.axeiya.gwtckeditor.Gwtckeditor' />
+	<inherits name='org.skrat.gwt.ColorBox' />
 
 	<!-- Specify the paths for translatable code -->
 	<source path='client' />

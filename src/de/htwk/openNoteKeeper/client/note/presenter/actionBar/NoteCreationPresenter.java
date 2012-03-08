@@ -34,6 +34,8 @@ public class NoteCreationPresenter extends
 
 		public String getName();
 
+		public String getColor();
+
 		public HasClickHandlers getCreateButton();
 
 		public HasClickHandlers getAbortButton();
@@ -46,6 +48,7 @@ public class NoteCreationPresenter extends
 			public void onClick(ClickEvent event) {
 				String nodeName = view.getName();
 				if (!nodeName.isEmpty()) {
+					String color = view.getColor();
 					// TODO position bestimmen
 					int left = (Window.getClientWidth() / 2)
 							+ -(int) (Math.random() * 100);
@@ -54,9 +57,12 @@ public class NoteCreationPresenter extends
 					CoordinateDTO position = new CoordinateDTO(left, top);
 					CoordinateDTO size = new CoordinateDTO(200, 200);
 
-					noteService.createNote(activeWhiteBoard.getKey(), nodeName,
-							position, size, new LoadingScreenCallback<NoteDTO>(
-									event) {
+					System.out.println("color: " + color);
+
+					noteService.createNote(
+							activeWhiteBoard.getKey(),
+							new NoteDTO("", nodeName, "", color, position, size),
+							new LoadingScreenCallback<NoteDTO>(event) {
 
 								@Override
 								protected void success(NoteDTO note) {

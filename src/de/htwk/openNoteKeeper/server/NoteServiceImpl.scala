@@ -85,7 +85,7 @@ class NoteServiceImpl extends RemoteServiceServlet with NoteService with Persist
 
   private def createNoteDtoForKey(noteKey: String) = {
     val note = findNoteByKey(noteKey)
-    new NoteDTO(note.key, note.title, note.content, new CoordinateDTO(note.width, note.height), new CoordinateDTO(note.left, note.top))
+    new NoteDTO(note.key, note.title, note.content, note.color, new CoordinateDTO(note.width, note.height), new CoordinateDTO(note.left, note.top))
   }
 
   private def findNoteByKey(noteKey: String) = findObjectByKey(noteKey, classOf[Note]) match {
@@ -124,20 +124,25 @@ class NoteServiceImpl extends RemoteServiceServlet with NoteService with Persist
     delete(whiteboard.key, classOf[WhiteBoard])
   }
 
-  def createNote(whiteBoardKey: String, title: String,
-                 position: CoordinateDTO, size: CoordinateDTO) = {
+  def createNote(whiteBoardKey: String, dto: NoteDTO) = {
     val whiteboard = findWhiteBoardByKey(whiteBoardKey)
-    val note = new Note(title, "", whiteboard.key, size.getY, size.getY, position.getX, position.getY)
+    val title = dto.getTitle
+    val color = dto.getColor
+    val size = dto.getSize
+    val position = dto.getPosition
+
+    val note = new Note(title, "", color, whiteboard.key, size.getY, size.getY, position.getX, position.getY)
     persist(note)
     update[WhiteBoard](whiteboard.key, classOf[WhiteBoard], whiteBoard => whiteBoard.notes.add(note.key))
 
-    new NoteDTO(note.key, title, "", position, size)
+    new NoteDTO(note.key, title, "", color, position, size)
   }
 
   def updateNote(noteDto: NoteDTO) {
     update[Note](noteDto.getKey(), classOf[Note], { note =>
       note.title = noteDto.getTitle()
       note.content = noteDto.getContent()
+      note.color = noteDto.getColor()
       note.width = noteDto.getPosition().getX
       note.height = noteDto.getPosition().getY
       note.left = noteDto.getSize().getX

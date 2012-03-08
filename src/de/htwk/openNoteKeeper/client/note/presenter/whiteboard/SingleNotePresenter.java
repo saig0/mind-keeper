@@ -42,6 +42,8 @@ public class SingleNotePresenter extends
 		public HasBlurHandlers getEditor();
 
 		public String getContentOfEditor();
+
+		public void setColor(String color);
 	}
 
 	@Inject
@@ -108,6 +110,7 @@ public class SingleNotePresenter extends
 		this.note = note;
 		view.setTitle(note.getTitle());
 		view.setContent(note.getContent());
+		view.setColor(note.getColor());
 		view.setSize(note.getSize().getX(), note.getSize().getY());
 		return view;
 	}
