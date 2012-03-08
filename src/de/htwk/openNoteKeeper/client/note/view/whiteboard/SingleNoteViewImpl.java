@@ -1,11 +1,15 @@
 package de.htwk.openNoteKeeper.client.note.view.whiteboard;
 
+import com.axeiya.gwtckeditor.client.CKConfig;
+import com.axeiya.gwtckeditor.client.CKConfig.PRESET_TOOLBAR;
+import com.axeiya.gwtckeditor.client.CKEditor;
 import com.google.gwt.event.dom.client.BlurEvent;
 import com.google.gwt.event.dom.client.BlurHandler;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.FocusEvent;
 import com.google.gwt.event.dom.client.FocusHandler;
+import com.google.gwt.event.dom.client.HasBlurHandlers;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.dom.client.MouseOutEvent;
 import com.google.gwt.event.dom.client.MouseOutHandler;
@@ -16,6 +20,7 @@ import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.RichTextArea;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
@@ -29,7 +34,10 @@ public class SingleNoteViewImpl implements SingleNoteView {
 	private NoteContextMenu contextMenu;
 
 	private final ResizeableWidget main;
+	private VerticalPanel contentPanel;
 	private Label titleLabel;
+	private RichTextArea contentLabel;
+
 	private boolean isSelected = false;
 
 	public SingleNoteViewImpl() {
@@ -40,11 +48,11 @@ public class SingleNoteViewImpl implements SingleNoteView {
 		final FocusPanel main = new FocusPanel();
 		main.setSize("100%", "100%");
 		main.addStyleName("note");
-		ResizeableWidget resizeableWidget = new ResizeableWidget(main);
+		final ResizeableWidget resizeableWidget = new ResizeableWidget(main);
 
-		VerticalPanel panel = new VerticalPanel();
-		panel.setSize("100%", "100%");
-		panel.setSpacing(5);
+		contentPanel = new VerticalPanel();
+		contentPanel.setSize("100%", "100%");
+		contentPanel.setSpacing(5);
 
 		HorizontalPanel header = new HorizontalPanel();
 		header.setSize("100%", "100%");
@@ -57,7 +65,6 @@ public class SingleNoteViewImpl implements SingleNoteView {
 		contextImage.addStyleName("clickable");
 
 		contextMenu = new NoteContextMenu();
-
 		contextImage.addClickHandler(new ClickHandler() {
 
 			public void onClick(ClickEvent event) {
@@ -70,13 +77,15 @@ public class SingleNoteViewImpl implements SingleNoteView {
 				HasHorizontalAlignment.ALIGN_RIGHT);
 		header.setCellWidth(contextImage, "25px");
 
-		panel.add(header);
-		panel.setCellHeight(header, "25px");
+		contentPanel.add(header);
+		contentPanel.setCellHeight(header, "25px");
 
-		// dummy
-		panel.add(new Label());
+		contentLabel = new RichTextArea();
+		contentLabel.addStyleName("noteEditor");
+		contentLabel.setSize("100%", "100%");
+		contentPanel.add(contentLabel);
 
-		main.setWidget(panel);
+		main.setWidget(contentPanel);
 
 		main.addMouseOverHandler(new MouseOverHandler() {
 
@@ -94,6 +103,14 @@ public class SingleNoteViewImpl implements SingleNoteView {
 			}
 		});
 
+		contentLabel.addClickHandler(new ClickHandler() {
+
+			public void onClick(ClickEvent event) {
+				main.addStyleName("activeNote");
+				isSelected = true;
+			}
+		});
+
 		main.addFocusHandler(new FocusHandler() {
 
 			public void onFocus(FocusEvent event) {
@@ -102,7 +119,7 @@ public class SingleNoteViewImpl implements SingleNoteView {
 			}
 		});
 
-		main.addBlurHandler(new BlurHandler() {
+		contentLabel.addBlurHandler(new BlurHandler() {
 
 			public void onBlur(BlurEvent event) {
 				main.removeStyleName("activeNote");
@@ -111,6 +128,19 @@ public class SingleNoteViewImpl implements SingleNoteView {
 		});
 
 		return resizeableWidget;
+	}
+
+	private CKEditor createEditor() {
+		CKConfig ckConfig = new CKConfig(PRESET_TOOLBAR.BASIC);
+		ckConfig.setUiColor("#F3F781");
+		ckConfig.setWidth("100%");
+		ckConfig.setHeight("100%");
+
+		ckConfig.setResizeEnabled(false);
+		ckConfig.setFocusOnStartup(true);
+
+		CKEditor ckEditor = new CKEditor(ckConfig);
+		return ckEditor;
 	}
 
 	public Widget asWidget() {
@@ -126,8 +156,7 @@ public class SingleNoteViewImpl implements SingleNoteView {
 	}
 
 	public void setContent(String content) {
-		// TODO Auto-generated method stub
-
+		contentLabel.setHTML(content);
 	}
 
 	public Widget getDragHandle() {
@@ -144,5 +173,13 @@ public class SingleNoteViewImpl implements SingleNoteView {
 
 	public void hide() {
 		contextMenu.hide();
+	}
+
+	public HasBlurHandlers getEditor() {
+		return contentLabel;
+	}
+
+	public String getContentOfEditor() {
+		return contentLabel.getHTML();
 	}
 }
