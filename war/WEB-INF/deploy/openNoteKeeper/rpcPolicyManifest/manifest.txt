@@ -1,2 +1,4 @@
 # Module openNoteKeeper
 # RPC service class, partial path of RPC policy file
+de.htwk.openNoteKeeper.client.note.service.NoteService, 28CE1562A70F15593F59D300BEA09517.gwt.rpc
+de.htwk.openNoteKeeper.client.main.service.UserService, 89AA0AB5ACB76FDEAB1764690FCDB686.gwt.rpc
