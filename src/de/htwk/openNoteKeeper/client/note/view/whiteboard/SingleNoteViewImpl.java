@@ -184,4 +184,8 @@ public class SingleNoteViewImpl implements SingleNoteView {
 	public String getContentOfEditor() {
 		return contentLabel.getHTML();
 	}
+
+	public void setColor(String color) {
+		main.getElement().getStyle().setBackgroundColor(color);
+	}
 }

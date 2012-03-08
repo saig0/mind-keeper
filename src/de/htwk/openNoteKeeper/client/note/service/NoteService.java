@@ -5,7 +5,6 @@ import java.util.List;
 import com.google.gwt.user.client.rpc.RemoteService;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 
-import de.htwk.openNoteKeeper.shared.CoordinateDTO;
 import de.htwk.openNoteKeeper.shared.GroupDTO;
 import de.htwk.openNoteKeeper.shared.NoteDTO;
 import de.htwk.openNoteKeeper.shared.WhiteBoardDTO;
@@ -24,8 +23,7 @@ public interface NoteService extends RemoteService {
 
 	public void removeWhiteBoard(String whiteBoardKey);
 
-	public NoteDTO createNote(String whiteBoardKey, String title,
-			CoordinateDTO position, CoordinateDTO size);
+	public NoteDTO createNote(String whiteBoardKey, NoteDTO note);
 
 	public void updateNote(NoteDTO note);
 

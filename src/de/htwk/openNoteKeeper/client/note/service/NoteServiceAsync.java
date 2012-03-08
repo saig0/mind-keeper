@@ -4,7 +4,6 @@ import java.util.List;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
-import de.htwk.openNoteKeeper.shared.CoordinateDTO;
 import de.htwk.openNoteKeeper.shared.GroupDTO;
 import de.htwk.openNoteKeeper.shared.NoteDTO;
 import de.htwk.openNoteKeeper.shared.WhiteBoardDTO;
@@ -25,8 +24,8 @@ public interface NoteServiceAsync {
 
 	void removeWhiteBoard(String whiteBoardKey, AsyncCallback<Void> callback);
 
-	void createNote(String whiteBoardKey, String title, CoordinateDTO position,
-			CoordinateDTO size, AsyncCallback<NoteDTO> callback);
+	void createNote(String whiteBoardKey, NoteDTO note,
+			AsyncCallback<NoteDTO> callback);
 
 	void updateNote(NoteDTO note, AsyncCallback<Void> callback);
 

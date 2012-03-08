@@ -7,19 +7,21 @@ public class NoteDTO implements IsSerializable {
 	private String key;
 	private String title;
 	private String content;
+	private String color;
 	private CoordinateDTO position;
 	private CoordinateDTO size;
 
 	NoteDTO() {
 	}
 
-	public NoteDTO(String key, String title, String content,
+	public NoteDTO(String key, String title, String content, String color,
 			CoordinateDTO position, CoordinateDTO size) {
 		this.key = key;
 		this.title = title;
 		this.content = content;
 		this.position = position;
 		this.size = size;
+		this.color = color;
 	}
 
 	public String getKey() {
@@ -52,6 +54,18 @@ public class NoteDTO implements IsSerializable {
 
 	public void setPosition(CoordinateDTO position) {
 		this.position = position;
+	}
+
+	public String getColor() {
+		return color;
+	}
+
+	public void setColor(String color) {
+		this.color = color;
+	}
+
+	public void setTitle(String title) {
+		this.title = title;
 	}
 
 }

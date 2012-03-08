@@ -112,7 +112,8 @@ class NoteServiceTest extends LocalTestService with Persistence {
 
     val group_ = service.createGroupForUser(user.key, rootGroup_.getKey(), "new group")
     val whiteboard_ = service.createWhiteBoard(group_.getKey(), "new whiteboard")
-    val note_ = service.createNote(whiteboard_.getKey(), "new note", new CoordinateDTO(0, 0), new CoordinateDTO(0, 0))
+    val noteDTO = new NoteDTO("", "new note", "", "", new CoordinateDTO(0, 0), new CoordinateDTO(0, 0))
+    val note_ = service.createNote(whiteboard_.getKey(), noteDTO)
     service.removeGroup(user.key, group_.getKey())
 
     findObjectByKey(group_.getKey, classOf[Group]) match {
@@ -196,7 +197,8 @@ class NoteServiceTest extends LocalTestService with Persistence {
     val rootGroup_ = groups_.get(0)
 
     val whiteboard_ = service.createWhiteBoard(rootGroup_.getKey(), "new whiteboard")
-    val note_ = service.createNote(whiteboard_.getKey(), "new note", new CoordinateDTO(0, 0), new CoordinateDTO(0, 0))
+    val noteDTO = new NoteDTO("", "new note", "", "", new CoordinateDTO(0, 0), new CoordinateDTO(0, 0))
+    val note_ = service.createNote(whiteboard_.getKey(), noteDTO)
     service.removeWhiteBoard(whiteboard_.getKey())
 
     findObjectByKey(whiteboard_.getKey, classOf[WhiteBoard]) match {
@@ -217,7 +219,8 @@ class NoteServiceTest extends LocalTestService with Persistence {
     val rootGroup_ = groups_.get(0)
 
     val whiteboard_ = service.createWhiteBoard(rootGroup_.getKey(), "new whiteboard")
-    val note_ = service.createNote(whiteboard_.getKey(), "new note", new CoordinateDTO(0, 0), new CoordinateDTO(0, 0))
+    val noteDTO = new NoteDTO("", "new note", "", "", new CoordinateDTO(0, 0), new CoordinateDTO(0, 0))
+    val note_ = service.createNote(whiteboard_.getKey(), noteDTO)
 
     val groups = service.getAllGroupsForUser(user.key)
     assertEquals(1, groups.size)
@@ -237,7 +240,8 @@ class NoteServiceTest extends LocalTestService with Persistence {
     val rootGroup_ = groups_.get(0)
 
     val whiteboard_ = service.createWhiteBoard(rootGroup_.getKey(), "new whiteboard")
-    val note_ = service.createNote(whiteboard_.getKey(), "new note", new CoordinateDTO(0, 0), new CoordinateDTO(0, 0))
+    val noteDTO = new NoteDTO("", "new note", "", "", new CoordinateDTO(0, 0), new CoordinateDTO(0, 0))
+    val note_ = service.createNote(whiteboard_.getKey(), noteDTO)
     service.removeNote(note_.getKey())
 
     val groups = service.getAllGroupsForUser(user.key)
@@ -255,7 +259,8 @@ class NoteServiceTest extends LocalTestService with Persistence {
     val rootGroup_ = groups_.get(0)
 
     val whiteboard_ = service.createWhiteBoard(rootGroup_.getKey(), "new whiteboard")
-    val note_ = service.createNote(whiteboard_.getKey(), "new note", new CoordinateDTO(0, 0), new CoordinateDTO(0, 0))
+    val noteDTO = new NoteDTO("", "new note", "", "", new CoordinateDTO(0, 0), new CoordinateDTO(0, 0))
+    val note_ = service.createNote(whiteboard_.getKey(), noteDTO)
     note_.setContent("text")
     note_.setPosition(new CoordinateDTO(1, 2))
     note_.setSize(new CoordinateDTO(3, 4))
