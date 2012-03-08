@@ -10,6 +10,10 @@
 			<id>twig</id>
 			<url>http://mvn.twig-persist.googlecode.com/hg</url>
 		</repository>
+		<repository>
+			<id>axeiya</id>
+			<url>http://nexus.axeiya.com/nexus/content/repositories/releases</url>
+		</repository>
 	</repositories>
 
 	<dependencies>
@@ -142,6 +146,12 @@
 			<version>3.1.1</version>
 			<type>jar</type>
 			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.axeiya.gwt</groupId>
+			<artifactId>gwt-ckeditor</artifactId>
+			<version>1.0</version>
+			<scope>provided</scope>
 		</dependency>
 	</dependencies>
 	<build>

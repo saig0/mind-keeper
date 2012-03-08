@@ -35,7 +35,6 @@ public class ResizeableWidget extends SimplePanel implements HasResizeListener {
 	@Override
 	public void onBrowserEvent(Event event) {
 		final int eventType = DOM.eventGetType(event);
-		event.preventDefault();
 		if (Event.ONMOUSEOVER == eventType) {
 			// show different cursors
 			if (isCursorResize(event)) {
@@ -50,6 +49,7 @@ public class ResizeableWidget extends SimplePanel implements HasResizeListener {
 		}
 		if (Event.ONMOUSEDOWN == eventType) {
 			if (isCursorResize(event)) {
+				event.preventDefault();
 				// enable/disable resize
 				if (bDragDrop == false) {
 					bDragDrop = true;
@@ -68,6 +68,8 @@ public class ResizeableWidget extends SimplePanel implements HasResizeListener {
 
 			// calculate and set the new size
 			if (bDragDrop == true) {
+				event.preventDefault();
+
 				int absX = DOM.eventGetClientX(event);
 				int absY = DOM.eventGetClientY(event);
 				int originalX = DOM.getAbsoluteLeft(this.getElement());

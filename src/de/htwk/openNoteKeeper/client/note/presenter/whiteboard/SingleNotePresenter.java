@@ -1,7 +1,10 @@
 package de.htwk.openNoteKeeper.client.note.presenter.whiteboard;
 
+import com.google.gwt.event.dom.client.BlurEvent;
+import com.google.gwt.event.dom.client.BlurHandler;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.HasBlurHandlers;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.inject.Inject;
 import com.mvp4g.client.annotation.Presenter;
@@ -35,6 +38,10 @@ public class SingleNotePresenter extends
 		public HasClickHandlers getDeleteButton();
 
 		public void hide();
+
+		public HasBlurHandlers getEditor();
+
+		public String getContentOfEditor();
 	}
 
 	@Inject
@@ -79,11 +86,26 @@ public class SingleNotePresenter extends
 						});
 			}
 		});
+
+		view.getEditor().addBlurHandler(new BlurHandler() {
+
+			public void onBlur(BlurEvent event) {
+				final String newContent = view.getContentOfEditor();
+				note.setContent(newContent);
+				noteService.updateNote(note, new StatusScreenCallback<Void>(
+						"aktuallisiere Notiz") {
+
+					@Override
+					protected void success(Void result) {
+						view.setContent(newContent);
+					}
+				});
+			}
+		});
 	}
 
 	public DragableWidget showNote(NoteDTO note) {
 		this.note = note;
-		// TODO set data
 		view.setTitle(note.getTitle());
 		view.setContent(note.getContent());
 		view.setSize(note.getSize().getX(), note.getSize().getY());
