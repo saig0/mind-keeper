@@ -82,7 +82,7 @@ public class SingleNoteViewImpl implements SingleNoteView {
 
 		contentLabel = new RichTextArea();
 		contentLabel.addStyleName("noteEditor");
-		contentLabel.setSize("100%", "100%");
+		contentLabel.setSize("95%", "95%");
 		contentPanel.add(contentLabel);
 
 		main.setWidget(contentPanel);
@@ -108,6 +108,8 @@ public class SingleNoteViewImpl implements SingleNoteView {
 			public void onClick(ClickEvent event) {
 				main.addStyleName("activeNote");
 				isSelected = true;
+				// TODO Bugfix weil ContextMenu nicht schließt
+				contextMenu.hide();
 			}
 		});
 

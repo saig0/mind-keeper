@@ -7,11 +7,13 @@ import com.google.gwt.dom.client.Element;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.RootPanel;
-import com.google.gwt.user.client.ui.SimplePanel;
+import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
-public class ResizeableWidget extends SimplePanel implements HasResizeListener {
+public class ResizeableWidget extends VerticalPanel implements
+		HasResizeListener {
 
+	private static final int RESIZE_AREA = 20;
 	private boolean bDragDrop = false;
 	private boolean move = false;
 	private Element movingPanelElement;
@@ -25,7 +27,7 @@ public class ResizeableWidget extends SimplePanel implements HasResizeListener {
 		DOM.sinkEvents(this.getElement(), Event.ONMOUSEDOWN | Event.ONMOUSEMOVE
 				| Event.ONMOUSEUP | Event.ONMOUSEOVER);
 
-		setWidget(widget);
+		add(widget);
 	}
 
 	/**
@@ -139,8 +141,8 @@ public class ResizeableWidget extends SimplePanel implements HasResizeListener {
 		int width = this.getOffsetWidth();
 
 		// only in bottom right corner (area of 10 pixels in square)
-		if (((initialX + width - 15) < cursorX && cursorX <= (initialX + width))
-				&& ((initialY + height - 15) < cursorY && cursorY <= (initialY + height)))
+		if (((initialX + width - RESIZE_AREA) < cursorX && cursorX <= (initialX + width))
+				&& ((initialY + height - RESIZE_AREA) < cursorY && cursorY <= (initialY + height)))
 			return true;
 		else
 			return false;
