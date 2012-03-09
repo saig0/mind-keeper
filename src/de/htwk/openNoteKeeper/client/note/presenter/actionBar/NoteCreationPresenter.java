@@ -26,15 +26,22 @@ public class NoteCreationPresenter extends
 	private NoteServiceAsync noteService;
 
 	private WhiteBoardDTO activeWhiteBoard;
+	private NoteDTO note;
 
 	public interface NoteCreationView extends IsWidget {
-		public void show();
+		public void showForCreation();
+
+		public void showForEdit();
 
 		public void hide();
 
 		public String getName();
 
 		public String getColor();
+
+		public void setName(String name);
+
+		public void setColor(String color);
 
 		public HasClickHandlers getCreateButton();
 
@@ -49,29 +56,50 @@ public class NoteCreationPresenter extends
 				String nodeName = view.getName();
 				if (!nodeName.isEmpty()) {
 					String color = view.getColor();
-					// TODO position bestimmen
-					int left = (Window.getClientWidth() / 2)
-							+ -(int) (Math.random() * 100);
-					int top = (Window.getClientHeight() / 2)
-							+ (int) (Math.random() * 100);
-					CoordinateDTO position = new CoordinateDTO(left, top);
-					CoordinateDTO size = new CoordinateDTO(200, 200);
 
-					System.out.println("color: " + color);
+					if (note == null) {
+						// TODO position bestimmen
+						int left = (Window.getClientWidth() / 2)
+								- (int) (Math.random() * 100);
+						int top = (Window.getClientHeight() / 2)
+								+ (int) (Math.random() * 100);
+						CoordinateDTO position = new CoordinateDTO(left, top);
+						CoordinateDTO size = new CoordinateDTO(200, 200);
 
-					noteService.createNote(
-							activeWhiteBoard.getKey(),
-							new NoteDTO("", nodeName, "", color, position, size),
-							new LoadingScreenCallback<NoteDTO>(event) {
+						noteService.createNote(activeWhiteBoard.getKey(),
+								new NoteDTO("", nodeName, "", color, position,
+										size),
+								new LoadingScreenCallback<NoteDTO>(event) {
 
-								@Override
-								protected void success(NoteDTO note) {
-									view.hide();
-									eventBus.showNote(note);
-									// TODO Modell auf Client aktualliesieren
-									eventBus.loggedIn(Session.getCurrentUser());
-								}
-							});
+									@Override
+									protected void success(NoteDTO note) {
+										view.hide();
+										eventBus.showNote(note);
+										// TODO Modell auf Client
+										// aktualliesieren
+										eventBus.loggedIn(Session
+												.getCurrentUser());
+									}
+								});
+					} else {
+						note.setTitle(nodeName);
+						note.setColor(color);
+						noteService.updateNote(note,
+								new LoadingScreenCallback<Void>(event) {
+
+									@Override
+									protected void success(Void result) {
+										view.hide();
+										eventBus.removeNote(note);
+										eventBus.showNote(note);
+										note = null;
+										// TODO Modell auf Client
+										// aktualliesieren
+										eventBus.loggedIn(Session
+												.getCurrentUser());
+									}
+								});
+					}
 				}
 			}
 		});
@@ -86,7 +114,16 @@ public class NoteCreationPresenter extends
 
 	public void onShowNoteCreationView() {
 		if (activeWhiteBoard != null) {
-			view.show();
+			view.showForCreation();
+		}
+	}
+
+	public void onShowNoteEditView(NoteDTO note) {
+		if (note != null) {
+			this.note = note;
+			view.setName(note.getTitle());
+			view.setColor(note.getColor());
+			view.showForEdit();
 		}
 	}
 

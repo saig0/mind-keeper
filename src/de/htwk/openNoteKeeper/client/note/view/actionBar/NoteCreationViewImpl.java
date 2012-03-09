@@ -117,4 +117,22 @@ public class NoteCreationViewImpl implements NoteCreationView {
 		return colorPicker.getColor();
 	}
 
+	public void setName(String name) {
+		noteNameTextBox.setText(name);
+	}
+
+	public void setColor(String color) {
+		colorPicker.setColor(color);
+	}
+
+	public void showForCreation() {
+		show();
+	}
+
+	public void showForEdit() {
+		popupPanel.setText(noteConstants.editNote());
+		createButton.setText(commonConstants.edit());
+		show();
+	}
+
 }

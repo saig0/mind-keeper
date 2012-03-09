@@ -16,6 +16,7 @@ public class NoteContextMenu implements IsWidget {
 	private final PopupPanel popup;
 
 	private Button deleteButton;
+	private Button editButton;
 
 	public NoteContextMenu() {
 		this.popup = createLayout();
@@ -30,12 +31,20 @@ public class NoteContextMenu implements IsWidget {
 		popup.addStyleName("top");
 
 		VerticalPanel content = new VerticalPanel();
+		content.setSpacing(5);
 		content.setSize("100%", "100%");
 
 		Image deleteIcon = IconPool.Trash.createImage();
 		deleteIcon.setSize("16px", "16px");
 		deleteButton = new IconButton(deleteIcon, "löschen");
+		deleteButton.setWidth("100%");
 		content.add(deleteButton);
+
+		Image editIcon = IconPool.Settings_Small_2.createImage();
+		editIcon.setSize("16px", "16px");
+		editButton = new IconButton(editIcon, "ändern");
+		editButton.setWidth("100%");
+		content.add(editButton);
 
 		popup.setWidget(content);
 
@@ -53,5 +62,9 @@ public class NoteContextMenu implements IsWidget {
 
 	public HasClickHandlers getDeleteButton() {
 		return deleteButton;
+	}
+
+	public HasClickHandlers getEditButton() {
+		return editButton;
 	}
 }
