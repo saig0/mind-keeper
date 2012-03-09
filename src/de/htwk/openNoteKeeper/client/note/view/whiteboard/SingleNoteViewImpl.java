@@ -193,4 +193,8 @@ public class SingleNoteViewImpl implements SingleNoteView {
 	public HasClickHandlers getEditButton() {
 		return contextMenu.getEditButton();
 	}
+
+	public HasClickHandlers getMoveButton() {
+		return contextMenu.getMoveButton();
+	}
 }

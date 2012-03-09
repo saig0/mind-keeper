@@ -22,4 +22,6 @@ public interface CommonConstants extends Constants {
 	String create();
 
 	String edit();
+
+	String save();
 }

@@ -37,4 +37,7 @@ public interface NoteServiceAsync {
 	void moveWhiteBoard(String whiteBoardKey, String targetGroupKey,
 			Integer index, AsyncCallback<Void> callback);
 
+	void moveNote(String noteKey, String targetWhiteBoardKey,
+			AsyncCallback<Void> callback);
+
 }

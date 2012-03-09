@@ -446,4 +446,37 @@ class NoteServiceTest extends LocalTestService with Persistence {
     val newWhiteboard2 = whiteboardsOfSubGroup.get(0)
     assertEquals("whiteboard 1", newWhiteboard2.getTitle())
   }
+
+  @Test
+  def moveNote {
+    val groups_ = service.getAllGroupsForUser(user.key)
+    assertEquals(1, groups_.size)
+    val rootGroup_ = groups_.get(0)
+
+    val whiteboard1_ = service.createWhiteBoard(rootGroup_.getKey(), "whiteboard 1")
+    val whiteboard2_ = service.createWhiteBoard(rootGroup_.getKey(), "whiteboard 2")
+
+    val noteDTO = new NoteDTO("", "new note", "", "", new CoordinateDTO(0, 0), new CoordinateDTO(0, 0))
+    val note_ = service.createNote(whiteboard1_.getKey(), noteDTO)
+
+    service.moveNote(note_.getKey(), whiteboard2_.getKey())
+
+    val groups = service.getAllGroupsForUser(user.key)
+    assertEquals(1, groups.size)
+    val rootGroup = groups.get(0)
+
+    val whiteboards = rootGroup.getWhiteBoards()
+    assertEquals(2, whiteboards.size)
+
+    val whiteboard1 = whiteboards.get(0)
+    assertTrue(whiteboard1.getNotes().isEmpty)
+
+    val whiteboard2 = whiteboards.get(1)
+    assertEquals("whiteboard 2", whiteboard2.getTitle())
+
+    assertEquals(1, whiteboard2.getNotes().size)
+    val note = whiteboard2.getNotes().get(0)
+    assertEquals(note_.getKey(), note.getKey())
+
+  }
 }

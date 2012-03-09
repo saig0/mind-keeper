@@ -39,6 +39,8 @@ public class SingleNotePresenter extends
 
 		public HasClickHandlers getEditButton();
 
+		public HasClickHandlers getMoveButton();
+
 		public void hide();
 
 		public HasBlurHandlers getEditor();
@@ -96,6 +98,14 @@ public class SingleNotePresenter extends
 			public void onClick(ClickEvent event) {
 				view.hide();
 				eventBus.showNoteEditView(note);
+			}
+		});
+
+		view.getMoveButton().addClickHandler(new ClickHandler() {
+
+			public void onClick(ClickEvent event) {
+				view.hide();
+				eventBus.showNoteMoveView(note);
 			}
 		});
 

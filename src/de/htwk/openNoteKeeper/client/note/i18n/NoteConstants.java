@@ -20,4 +20,6 @@ public interface NoteConstants extends Constants {
 	String noteColor();
 
 	String editNote();
+
+	String moveNote();
 }

@@ -17,6 +17,7 @@ public class NoteContextMenu implements IsWidget {
 
 	private Button deleteButton;
 	private Button editButton;
+	private Button moveButton;
 
 	public NoteContextMenu() {
 		this.popup = createLayout();
@@ -46,6 +47,12 @@ public class NoteContextMenu implements IsWidget {
 		editButton.setWidth("100%");
 		content.add(editButton);
 
+		Image moveIcon = IconPool.Arrow_Left.createImage();
+		moveIcon.setSize("16px", "16px");
+		moveButton = new IconButton(moveIcon, "verschieben");
+		moveButton.setWidth("100%");
+		content.add(moveButton);
+
 		popup.setWidget(content);
 
 		return popup;
@@ -66,5 +73,9 @@ public class NoteContextMenu implements IsWidget {
 
 	public HasClickHandlers getEditButton() {
 		return editButton;
+	}
+
+	public HasClickHandlers getMoveButton() {
+		return moveButton;
 	}
 }

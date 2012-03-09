@@ -11,6 +11,7 @@ import de.htwk.openNoteKeeper.client.note.presenter.actionBar.NoteCreationPresen
 import de.htwk.openNoteKeeper.client.note.presenter.navigation.NavigationInputPresenter;
 import de.htwk.openNoteKeeper.client.note.presenter.navigation.NavigationTreePresenter;
 import de.htwk.openNoteKeeper.client.note.presenter.navigation.NavigationTreePresenter.NavigationTreeView;
+import de.htwk.openNoteKeeper.client.note.presenter.whiteboard.NoteMovePresenter;
 import de.htwk.openNoteKeeper.client.note.presenter.whiteboard.NotePresenter;
 import de.htwk.openNoteKeeper.shared.GroupDTO;
 import de.htwk.openNoteKeeper.shared.NoteDTO;
@@ -38,7 +39,7 @@ public interface NoteEventBus extends EventBus {
 	public void showInputFieldForNewWhiteBoard(
 			NavigationTreeView navigationTreeView, GroupDTO selectedGroup);
 
-	@Event(handlers = { NotePresenter.class, NoteCreationPresenter.class })
+	@Event(handlers = { NotePresenter.class, NoteCreationPresenter.class, NoteMovePresenter.class })
 	public void selectWhiteBoard(WhiteBoardDTO selectedWhiteBoard);
 
 	@Event(handlers = NoteCreationPresenter.class)
@@ -52,4 +53,7 @@ public interface NoteEventBus extends EventBus {
 
 	@Event(handlers = NotePresenter.class)
 	public void removeNote(NoteDTO note);
+
+	@Event(handlers = NoteMovePresenter.class)
+	public void showNoteMoveView(NoteDTO note);
 }
