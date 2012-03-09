@@ -41,7 +41,7 @@ public class NoteMoveViewImpl implements NoteMoveView {
 	private Button saveButton;
 	private Button abortButton;
 
-	private Map<NoteDTO, TreeItem> indexedNotes = new HashMap<NoteDTO, TreeItem>();
+	private Map<String, TreeItem> indexedNotes = new HashMap<String, TreeItem>();
 
 	public NoteMoveViewImpl() {
 		popup = createWidget();
@@ -106,7 +106,7 @@ public class NoteMoveViewImpl implements NoteMoveView {
 			parent.addItem(whiteBoardItem);
 
 			for (NoteDTO note : whiteBoard.getNotes()) {
-				indexedNotes.put(note, whiteBoardItem);
+				indexedNotes.put(note.getKey(), whiteBoardItem);
 			}
 		}
 		return parent;
@@ -173,8 +173,8 @@ public class NoteMoveViewImpl implements NoteMoveView {
 	}
 
 	public void expandTree(NoteDTO note) {
-		if (indexedNotes.containsKey(note)) {
-			TreeItem item = indexedNotes.get(note);
+		if (indexedNotes.containsKey(note.getKey())) {
+			TreeItem item = indexedNotes.get(note.getKey());
 
 			while (item.getParentItem() != null) {
 				item = item.getParentItem();
