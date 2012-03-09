@@ -205,4 +205,19 @@ class NoteServiceImpl extends RemoteServiceServlet with NoteService with Persist
     update[WhiteBoard](whiteboard.key, classOf[WhiteBoard], whiteboard => whiteboard.group = targetGroupKey)
   }
 
+  def moveNote(noteKey: String, targetWhiteBoardKey: String) {
+    val note = findNoteByKey(noteKey)
+
+    update[WhiteBoard](note.whiteboard, classOf[WhiteBoard], { whiteboard =>
+      val noteKey: Key = note.key
+      whiteboard.notes.remove(noteKey)
+    })
+
+    update[WhiteBoard](targetWhiteBoardKey, classOf[WhiteBoard], { whiteboard =>
+      whiteboard.notes.add(noteKey)
+    })
+
+    update[Note](note.key, classOf[Note], note => note.whiteboard = targetWhiteBoardKey)
+  }
+
 }

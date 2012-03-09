@@ -34,4 +34,5 @@ public interface NoteService extends RemoteService {
 	public void moveWhiteBoard(String whiteBoardKey, String targetGroupKey,
 			Integer index);
 
+	public void moveNote(String noteKey, String targetWhiteBoardKey);
 }
