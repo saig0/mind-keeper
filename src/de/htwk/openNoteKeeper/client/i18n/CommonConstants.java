@@ -20,4 +20,6 @@ public interface CommonConstants extends Constants {
 	String abort();
 
 	String create();
+
+	String edit();
 }

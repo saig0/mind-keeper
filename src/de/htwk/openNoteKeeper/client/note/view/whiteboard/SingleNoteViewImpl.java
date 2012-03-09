@@ -33,7 +33,8 @@ public class SingleNoteViewImpl implements SingleNoteView {
 
 	private NoteContextMenu contextMenu;
 
-	private final ResizeableWidget main;
+	private final ResizeableWidget resizePanel;
+	private FocusPanel main;
 	private VerticalPanel contentPanel;
 	private Label titleLabel;
 	private RichTextArea contentLabel;
@@ -41,11 +42,11 @@ public class SingleNoteViewImpl implements SingleNoteView {
 	private boolean isSelected = false;
 
 	public SingleNoteViewImpl() {
-		main = createLayout();
+		resizePanel = createLayout();
 	}
 
 	private ResizeableWidget createLayout() {
-		final FocusPanel main = new FocusPanel();
+		main = new FocusPanel();
 		main.setSize("100%", "100%");
 		main.addStyleName("note");
 		final ResizeableWidget resizeableWidget = new ResizeableWidget(main);
@@ -146,11 +147,11 @@ public class SingleNoteViewImpl implements SingleNoteView {
 	}
 
 	public Widget asWidget() {
-		return main;
+		return resizePanel;
 	}
 
 	public void setSize(int width, int height) {
-		main.setSize(width + "px", height + "px");
+		resizePanel.setSize(width + "px", height + "px");
 	}
 
 	public void setTitle(String title) {
@@ -166,7 +167,7 @@ public class SingleNoteViewImpl implements SingleNoteView {
 	}
 
 	public HasResizeListener getResizableWidget() {
-		return main;
+		return resizePanel;
 	}
 
 	public HasClickHandlers getDeleteButton() {
@@ -187,5 +188,9 @@ public class SingleNoteViewImpl implements SingleNoteView {
 
 	public void setColor(String color) {
 		main.getElement().getStyle().setBackgroundColor(color);
+	}
+
+	public HasClickHandlers getEditButton() {
+		return contextMenu.getEditButton();
 	}
 }

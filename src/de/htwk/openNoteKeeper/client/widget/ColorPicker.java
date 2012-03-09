@@ -280,4 +280,9 @@ public class ColorPicker implements IsWidget, HasValueChangeHandlers<String> {
 	public String getColor() {
 		return colorNameBox.getValue();
 	}
+
+	public void setColor(String color) {
+		colorNameBox.setValue(color);
+		colorBox.getElement().getStyle().setBackgroundColor(color);
+	}
 }
