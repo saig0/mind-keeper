@@ -28,6 +28,8 @@ public class ResizeableWidget extends VerticalPanel implements
 				| Event.ONMOUSEUP | Event.ONMOUSEOVER);
 
 		add(widget);
+		setCellWidth(widget, "100%");
+		setCellHeight(widget, "100%");
 	}
 
 	/**
