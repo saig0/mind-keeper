@@ -48,6 +48,7 @@ public class MainViewImpl implements MainView {
 
 		content.setSize("100%", "100%");
 		main.add(content);
+		main.setCellHeight(content, "90%");
 
 		return main;
 	}

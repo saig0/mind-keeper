@@ -54,6 +54,7 @@ public class NoteViewImpl implements NoteView {
 		HideablePanel hideableNavigation = new HideablePanel(
 				navigationTreeView.asWidget(), whiteboardPanel, 25);
 		main.add(hideableNavigation);
+		main.setCellHeight(hideableNavigation, "100%");
 
 		return main;
 	}

@@ -36,8 +36,10 @@ public class HideablePanel implements IsWidget {
 		Widget slidePanel = createSlidePanel(main);
 		main.add(slidePanel);
 		main.setCellWidth(slidePanel, widthOfHideWidgetInPercent + "%");
+		main.setCellHeight(slidePanel, "100%");
 
 		main.add(fullWidget);
+		main.setCellHeight(fullWidget, "100%");
 
 		return main;
 	}
@@ -47,6 +49,7 @@ public class HideablePanel implements IsWidget {
 		slidePanel.setSize("100%", "100%");
 
 		slidePanel.add(hideableWidget);
+		slidePanel.setCellHeight(hideableWidget, "100%");
 
 		VerticalPanel sidebarPanel = new VerticalPanel();
 		sidebarPanel.setSize("100%", "100%");
@@ -68,9 +71,11 @@ public class HideablePanel implements IsWidget {
 			}
 		});
 		sidebarPanel.add(hideButton);
+		sidebarPanel.setCellHeight(hideButton, "100%");
 
 		slidePanel.add(sidebarPanel);
 		slidePanel.setCellWidth(sidebarPanel, WIDTH_OF_SIDEBAR + "px");
+		slidePanel.setCellHeight(sidebarPanel, "100%");
 
 		return slidePanel;
 	}
