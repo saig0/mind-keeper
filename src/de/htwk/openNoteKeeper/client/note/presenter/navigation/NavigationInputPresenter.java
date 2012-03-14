@@ -83,6 +83,8 @@ public class NavigationInputPresenter extends
 
 										@Override
 										protected void success(GroupDTO newGroup) {
+											// TODO Modell auf Client
+											// aktualliesieren
 											eventBus.loggedIn(Session
 													.getCurrentUser());
 										}
@@ -129,6 +131,8 @@ public class NavigationInputPresenter extends
 										@Override
 										protected void success(
 												WhiteBoardDTO whiteboard) {
+											// TODO Modell auf Client
+											// aktualliesieren
 											eventBus.loggedIn(Session
 													.getCurrentUser());
 										}

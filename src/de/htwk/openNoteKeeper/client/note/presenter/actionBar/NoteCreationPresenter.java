@@ -15,6 +15,7 @@ import de.htwk.openNoteKeeper.client.note.service.NoteServiceAsync;
 import de.htwk.openNoteKeeper.client.note.view.actionBar.NoteCreationViewImpl;
 import de.htwk.openNoteKeeper.client.util.LoadingScreenCallback;
 import de.htwk.openNoteKeeper.shared.CoordinateDTO;
+import de.htwk.openNoteKeeper.shared.GroupDTO;
 import de.htwk.openNoteKeeper.shared.NoteDTO;
 import de.htwk.openNoteKeeper.shared.WhiteBoardDTO;
 
@@ -129,5 +130,9 @@ public class NoteCreationPresenter extends
 
 	public void onSelectWhiteBoard(WhiteBoardDTO selectedWhiteBoard) {
 		this.activeWhiteBoard = selectedWhiteBoard;
+	}
+
+	public void onSelectGroup(GroupDTO group) {
+		this.activeWhiteBoard = null;
 	}
 }
