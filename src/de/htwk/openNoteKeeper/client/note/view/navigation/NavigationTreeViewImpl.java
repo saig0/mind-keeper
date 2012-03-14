@@ -347,4 +347,8 @@ public class NavigationTreeViewImpl implements NavigationTreeView {
 	public HasSelectionHandlers<TreeItem> getNavigationTree() {
 		return navigationTree;
 	}
+
+	public void selectTreeItem(TreeItem item) {
+		navigationTree.setSelectedItem(item, true);
+	}
 }

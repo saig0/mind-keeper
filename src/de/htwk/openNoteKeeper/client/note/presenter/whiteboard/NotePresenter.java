@@ -22,6 +22,7 @@ import de.htwk.openNoteKeeper.client.util.DragableWidget;
 import de.htwk.openNoteKeeper.client.util.PresenterFactory;
 import de.htwk.openNoteKeeper.client.util.StatusScreenCallback;
 import de.htwk.openNoteKeeper.shared.CoordinateDTO;
+import de.htwk.openNoteKeeper.shared.GroupDTO;
 import de.htwk.openNoteKeeper.shared.NoteDTO;
 import de.htwk.openNoteKeeper.shared.UserDTO;
 import de.htwk.openNoteKeeper.shared.WhiteBoardDTO;
@@ -44,6 +45,10 @@ public class NotePresenter extends BasePresenter<NoteViewImpl, NoteEventBus> {
 		public int getWhiteBoardAbsoluteLeft();
 
 		public int getWhiteBoardAbsoluteTop();
+
+		public void showGroupWidget(String groupName);
+
+		public void cleanView();
 	}
 
 	@Override
@@ -97,9 +102,8 @@ public class NotePresenter extends BasePresenter<NoteViewImpl, NoteEventBus> {
 	}
 
 	public void onSelectWhiteBoard(WhiteBoardDTO selectedWhiteBoard) {
-		for (Widget noteWidget : noteWidgets.keySet()) {
-			view.removeNoteWidget(noteWidget);
-		}
+		view.cleanView();
+		noteWidgets.clear();
 
 		for (NoteDTO note : selectedWhiteBoard.getNotes()) {
 			onShowNote(note);
@@ -119,8 +123,17 @@ public class NotePresenter extends BasePresenter<NoteViewImpl, NoteEventBus> {
 		for (Widget noteWidget : noteWidgets.keySet()) {
 			if (noteWidgets.get(noteWidget).equals(note)) {
 				view.removeNoteWidget(noteWidget);
+				noteWidgets.remove(noteWidget);
 				return;
 			}
 		}
 	}
+
+	public void onSelectGroup(GroupDTO group) {
+		view.cleanView();
+		noteWidgets.clear();
+
+		view.showGroupWidget(group.getTitle());
+	}
+
 }

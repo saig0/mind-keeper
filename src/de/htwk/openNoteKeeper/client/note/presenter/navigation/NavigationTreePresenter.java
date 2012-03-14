@@ -69,6 +69,8 @@ public class NavigationTreePresenter extends
 		public void addTreeItemToParent(TreeItem parent, TreeItem child);
 
 		public HasSelectionHandlers<TreeItem> getNavigationTree();
+
+		public void selectTreeItem(TreeItem item);
 	}
 
 	@Override
@@ -106,7 +108,11 @@ public class NavigationTreePresenter extends
 
 								@Override
 								protected void success(Void result) {
+									TreeItem parentItem = view
+											.getSelectedTreeItem()
+											.getParentItem();
 									view.removeSelectedGroup();
+									view.selectTreeItem(parentItem);
 
 									statusArea
 											.addStatusMessage(new StatusPanel(
@@ -125,7 +131,11 @@ public class NavigationTreePresenter extends
 
 								@Override
 								protected void success(Void result) {
+									TreeItem parentItem = view
+											.getSelectedTreeItem()
+											.getParentItem();
 									view.removeSelectedWhiteBoard();
+									view.selectTreeItem(parentItem);
 
 									statusArea
 											.addStatusMessage(new StatusPanel(
@@ -134,6 +144,7 @@ public class NavigationTreePresenter extends
 																	.getTitle()
 															+ " gelöscht",
 													true, 5));
+
 								}
 							});
 				}
@@ -158,6 +169,7 @@ public class NavigationTreePresenter extends
 
 								@Override
 								protected void success(Void result) {
+									// TODO Modell auf Client aktualliesieren
 									eventBus.loggedIn(Session.getCurrentUser());
 								}
 							});
@@ -173,6 +185,7 @@ public class NavigationTreePresenter extends
 
 						@Override
 						protected void success(Void result) {
+							// TODO Modell auf Client aktualliesieren
 							eventBus.loggedIn(Session.getCurrentUser());
 						}
 					});
@@ -218,7 +231,7 @@ public class NavigationTreePresenter extends
 							if (userObject instanceof GroupDTO
 									&& !((GroupDTO) userObject).getKey()
 											.contains("dummy")) {
-								// ignore
+								eventBus.selectGroup((GroupDTO) userObject);
 							} else if (userObject instanceof WhiteBoardDTO
 									&& !((WhiteBoardDTO) userObject).getKey()
 											.contains("dummy")) {
@@ -236,6 +249,7 @@ public class NavigationTreePresenter extends
 					@Override
 					protected void success(List<GroupDTO> groups) {
 						view.setGroups(groups);
+						Session.setCachedGroups(groups);
 					}
 				});
 	}

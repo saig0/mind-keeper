@@ -4,13 +4,16 @@ import com.allen_sauer.gwt.dnd.client.DragController;
 import com.allen_sauer.gwt.dnd.client.PickupDragController;
 import com.allen_sauer.gwt.dnd.client.drop.AbsolutePositionDropController;
 import com.google.gwt.user.client.ui.AbsolutePanel;
+import com.google.gwt.user.client.ui.HasVerticalAlignment;
 import com.google.gwt.user.client.ui.HorizontalPanel;
+import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 
 import de.htwk.openNoteKeeper.client.note.presenter.whiteboard.NotePresenter.NoteView;
 import de.htwk.openNoteKeeper.client.note.view.navigation.NavigationTreeViewImpl;
 import de.htwk.openNoteKeeper.client.util.DragableWidget;
+import de.htwk.openNoteKeeper.client.util.IconPool;
 import de.htwk.openNoteKeeper.client.widget.panel.HideablePanel;
 
 public class NoteViewImpl implements NoteView {
@@ -79,5 +82,20 @@ public class NoteViewImpl implements NoteView {
 
 	public int getWhiteBoardAbsoluteTop() {
 		return whiteboardPanel.getAbsoluteTop();
+	}
+
+	public void showGroupWidget(String groupName) {
+		HorizontalPanel panel = new HorizontalPanel();
+		panel.setVerticalAlignment(HasVerticalAlignment.ALIGN_MIDDLE);
+		panel.setSpacing(10);
+		panel.add(IconPool.Folder_Big.createImage());
+		Label nameLabel = new Label(groupName);
+		nameLabel.addStyleName("big");
+		panel.add(nameLabel);
+		whiteboardPanel.add(panel, 50, 50);
+	}
+
+	public void cleanView() {
+		whiteboardPanel.clear();
 	}
 }
