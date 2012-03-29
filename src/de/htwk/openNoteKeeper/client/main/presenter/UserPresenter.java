@@ -11,6 +11,7 @@ import de.htwk.openNoteKeeper.client.main.MainEventBus;
 import de.htwk.openNoteKeeper.client.main.service.UserServiceAsync;
 import de.htwk.openNoteKeeper.client.main.view.UserViewImpl;
 import de.htwk.openNoteKeeper.client.util.StatusScreenCallback;
+import de.htwk.openNoteKeeper.client.util.StatusScreenCallback.Status;
 import de.htwk.openNoteKeeper.shared.OpenIdProvider;
 import de.htwk.openNoteKeeper.shared.UserDTO;
 
@@ -30,23 +31,24 @@ public class UserPresenter extends BasePresenter<UserViewImpl, MainEventBus> {
 	private UserServiceAsync userService;
 
 	public void onStart() {
-		userService.isLoggedIn(new StatusScreenCallback<Boolean>("login") {
+		userService
+				.isLoggedIn(new StatusScreenCallback<Boolean>(Status.Loading) {
 
-			@Override
-			protected void success(Boolean isLoggedIn) {
-				if (isLoggedIn) {
-					showUser();
-				} else {
-					showLogin();
-				}
-			}
-		});
+					@Override
+					protected void success(Boolean isLoggedIn) {
+						if (isLoggedIn) {
+							showUser();
+						} else {
+							showLogin();
+						}
+					}
+				});
 	}
 
 	private void showLogin() {
 		userService
 				.getLoginUrlsForOpenIdProviders(new StatusScreenCallback<Map<OpenIdProvider, String>>(
-						"login") {
+						Status.Loading) {
 
 					@Override
 					protected void success(
@@ -71,7 +73,8 @@ public class UserPresenter extends BasePresenter<UserViewImpl, MainEventBus> {
 	}
 
 	private void showLogout() {
-		userService.getLogoutUrl(new StatusScreenCallback<String>("login") {
+		userService.getLogoutUrl(new StatusScreenCallback<String>(
+				Status.Loading) {
 
 			@Override
 			protected void success(String logoutUrl) {

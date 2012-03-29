@@ -249,7 +249,6 @@ public class NavigationTreePresenter extends
 					@Override
 					protected void success(List<GroupDTO> groups) {
 						view.setGroups(groups);
-						Session.setCachedGroups(groups);
 					}
 				});
 	}
