@@ -48,6 +48,14 @@ public class SingleNotePresenter extends
 		public String getContentOfEditor();
 
 		public void setColor(String color);
+
+		public HasClickHandlers getEditorButton();
+
+		public void showEditor();
+
+		public void hideEditor();
+
+		public boolean isEditorVisible();
 	}
 
 	@Inject
@@ -112,18 +120,35 @@ public class SingleNotePresenter extends
 		view.getEditor().addBlurHandler(new BlurHandler() {
 
 			public void onBlur(BlurEvent event) {
-				final String newContent = view.getContentOfEditor();
-				note.setContent(newContent);
-				noteService.updateNote(note, new StatusScreenCallback<Void>(
-						"aktuallisiere Notiz") {
-
-					@Override
-					protected void success(Void result) {
-						view.setContent(newContent);
-					}
-				});
+				if (view.isEditorVisible()) {
+					updateNote();
+				}
 			}
 		});
+
+		view.getEditorButton().addClickHandler(new ClickHandler() {
+
+			public void onClick(ClickEvent event) {
+				eventBus.hideEditor();
+				view.showEditor();
+			}
+		});
+	}
+
+	private void updateNote() {
+		final String newContent = view.getContentOfEditor();
+		if (newContent != null) {
+			note.setContent(newContent);
+			view.setContent(newContent);
+			view.hideEditor();
+			noteService.updateNote(note, new StatusScreenCallback<Void>(
+					"aktuallisiere Notiz") {
+
+				@Override
+				protected void success(Void result) {
+				}
+			});
+		}
 	}
 
 	public DragableWidget showNote(NoteDTO note) {
@@ -137,5 +162,13 @@ public class SingleNotePresenter extends
 
 	private void destroy() {
 		PresenterFactory.destroyPresenter(eventBus, this);
+	}
+
+	public void onHideEditor() {
+		if (view.isEditorVisible()) {
+			updateNote();
+		} else {
+			view.hideEditor();
+		}
 	}
 }
