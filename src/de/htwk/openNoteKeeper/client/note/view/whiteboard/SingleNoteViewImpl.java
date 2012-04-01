@@ -3,10 +3,13 @@ package de.htwk.openNoteKeeper.client.note.view.whiteboard;
 import com.axeiya.gwtckeditor.client.CKConfig;
 import com.axeiya.gwtckeditor.client.CKConfig.PRESET_TOOLBAR;
 import com.axeiya.gwtckeditor.client.CKEditor;
+import com.google.gwt.dom.client.Document;
+import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.event.dom.client.BlurEvent;
 import com.google.gwt.event.dom.client.BlurHandler;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.DomEvent;
 import com.google.gwt.event.dom.client.FocusEvent;
 import com.google.gwt.event.dom.client.FocusHandler;
 import com.google.gwt.event.dom.client.HasBlurHandlers;
@@ -15,6 +18,8 @@ import com.google.gwt.event.dom.client.MouseOutEvent;
 import com.google.gwt.event.dom.client.MouseOutHandler;
 import com.google.gwt.event.dom.client.MouseOverEvent;
 import com.google.gwt.event.dom.client.MouseOverHandler;
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
+import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.user.client.ui.FocusPanel;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.HorizontalPanel;
@@ -38,6 +43,8 @@ public class SingleNoteViewImpl implements SingleNoteView {
 	private VerticalPanel contentPanel;
 	private Label titleLabel;
 	private RichTextArea contentLabel;
+	private CKEditor editor;
+	private String color;
 
 	private boolean isSelected = false;
 
@@ -122,11 +129,16 @@ public class SingleNoteViewImpl implements SingleNoteView {
 			}
 		});
 
-		contentLabel.addBlurHandler(new BlurHandler() {
+		main.addBlurHandler(new BlurHandler() {
 
 			public void onBlur(BlurEvent event) {
 				main.removeStyleName("activeNote");
 				isSelected = false;
+
+				// if (editor != null) {
+				// NativeEvent blurEvent = Document.get().createBlurEvent();
+				// DomEvent.fireNativeEvent(blurEvent, contentLabel);
+				// }
 			}
 		});
 
@@ -135,9 +147,10 @@ public class SingleNoteViewImpl implements SingleNoteView {
 
 	private CKEditor createEditor() {
 		CKConfig ckConfig = new CKConfig(PRESET_TOOLBAR.BASIC);
-		ckConfig.setUiColor("#F3F781");
-		ckConfig.setWidth("100%");
-		ckConfig.setHeight("100%");
+		ckConfig.setUiColor(color);
+		ckConfig.setWidth("95%");
+		// ckConfig.setHeight("100%");
+		ckConfig.setHeight(contentLabel.getOffsetHeight() + "px");
 
 		ckConfig.setResizeEnabled(false);
 		ckConfig.setFocusOnStartup(true);
@@ -183,10 +196,14 @@ public class SingleNoteViewImpl implements SingleNoteView {
 	}
 
 	public String getContentOfEditor() {
-		return contentLabel.getHTML();
+		if (editor != null)
+			return editor.getHTML();
+		else
+			return null;
 	}
 
 	public void setColor(String color) {
+		this.color = color;
 		main.getElement().getStyle().setBackgroundColor(color);
 	}
 
@@ -196,5 +213,37 @@ public class SingleNoteViewImpl implements SingleNoteView {
 
 	public HasClickHandlers getMoveButton() {
 		return contextMenu.getMoveButton();
+	}
+
+	public HasClickHandlers getEditorButton() {
+		return contentLabel;
+	}
+
+	public void showEditor() {
+		editor = createEditor();
+		editor.setData(contentLabel.getHTML());
+
+		contentPanel.remove(contentLabel);
+		contentPanel.add(editor);
+
+		editor.addValueChangeHandler(new ValueChangeHandler<String>() {
+
+			public void onValueChange(ValueChangeEvent<String> event) {
+				NativeEvent blurEvent = Document.get().createBlurEvent();
+				DomEvent.fireNativeEvent(blurEvent, contentLabel);
+			}
+		});
+	}
+
+	public void hideEditor() {
+		if (editor != null) {
+			contentPanel.remove(editor);
+			contentPanel.add(contentLabel);
+			editor = null;
+		}
+	}
+
+	public boolean isEditorVisible() {
+		return editor != null;
 	}
 }

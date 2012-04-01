@@ -13,6 +13,7 @@ import de.htwk.openNoteKeeper.client.note.presenter.navigation.NavigationTreePre
 import de.htwk.openNoteKeeper.client.note.presenter.navigation.NavigationTreePresenter.NavigationTreeView;
 import de.htwk.openNoteKeeper.client.note.presenter.whiteboard.NoteMovePresenter;
 import de.htwk.openNoteKeeper.client.note.presenter.whiteboard.NotePresenter;
+import de.htwk.openNoteKeeper.client.note.presenter.whiteboard.SingleNotePresenter;
 import de.htwk.openNoteKeeper.shared.GroupDTO;
 import de.htwk.openNoteKeeper.shared.NoteDTO;
 import de.htwk.openNoteKeeper.shared.UserDTO;
@@ -60,4 +61,7 @@ public interface NoteEventBus extends EventBus {
 
 	@Event(handlers = NoteMovePresenter.class)
 	public void showNoteMoveView(NoteDTO note);
+
+	@Event(handlers = SingleNotePresenter.class)
+	public void hideEditor();
 }

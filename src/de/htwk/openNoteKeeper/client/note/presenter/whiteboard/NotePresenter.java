@@ -64,6 +64,7 @@ public class NotePresenter extends BasePresenter<NoteViewImpl, NoteEventBus> {
 			}
 
 			public void onDragStart(DragStartEvent event) {
+				eventBus.hideEditor();
 			}
 
 			public void onDragEnd(DragEndEvent event) {
