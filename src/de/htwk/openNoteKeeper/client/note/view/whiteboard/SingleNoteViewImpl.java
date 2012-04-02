@@ -149,8 +149,7 @@ public class SingleNoteViewImpl implements SingleNoteView {
 		CKConfig ckConfig = new CKConfig(PRESET_TOOLBAR.BASIC);
 		ckConfig.setUiColor(color);
 		ckConfig.setWidth("95%");
-		// ckConfig.setHeight("100%");
-		ckConfig.setHeight(contentLabel.getOffsetHeight() + "px");
+		ckConfig.setHeight("100%");
 
 		ckConfig.setResizeEnabled(false);
 		ckConfig.setFocusOnStartup(true);
@@ -166,11 +165,11 @@ public class SingleNoteViewImpl implements SingleNoteView {
 		TOOLBAR_OPTIONS[] t2 = { TOOLBAR_OPTIONS.Bold, TOOLBAR_OPTIONS.Italic,
 				TOOLBAR_OPTIONS.Underline, TOOLBAR_OPTIONS.Strike,
 				TOOLBAR_OPTIONS._, TOOLBAR_OPTIONS.FontSize,
-				TOOLBAR_OPTIONS.TextColor, TOOLBAR_OPTIONS._,
-				TOOLBAR_OPTIONS.NumberedList, TOOLBAR_OPTIONS.BulletedList,
-				TOOLBAR_OPTIONS._, TOOLBAR_OPTIONS.Outdent,
-				TOOLBAR_OPTIONS.Indent, TOOLBAR_OPTIONS._, TOOLBAR_OPTIONS._,
-				TOOLBAR_OPTIONS.Image, TOOLBAR_OPTIONS.Table };
+				TOOLBAR_OPTIONS.TextColor, TOOLBAR_OPTIONS.NumberedList,
+				TOOLBAR_OPTIONS.BulletedList, TOOLBAR_OPTIONS._,
+				TOOLBAR_OPTIONS.Outdent, TOOLBAR_OPTIONS.Indent,
+				TOOLBAR_OPTIONS._, TOOLBAR_OPTIONS._, TOOLBAR_OPTIONS.Image,
+				TOOLBAR_OPTIONS.Table };
 		line2.addAll(t2);
 
 		// Creates the toolbar
