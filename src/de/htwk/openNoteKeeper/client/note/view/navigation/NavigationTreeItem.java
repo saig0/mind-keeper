@@ -1,5 +1,7 @@
 package de.htwk.openNoteKeeper.client.note.view.navigation;
 
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.MouseOutEvent;
 import com.google.gwt.event.dom.client.MouseOutHandler;
 import com.google.gwt.event.dom.client.MouseOverEvent;
@@ -69,6 +71,13 @@ public class NavigationTreeItem extends FocusPanel {
 				panel.removeStyleName("markedNavigationItem");
 
 				dragIcon.setVisible(false);
+			}
+		});
+
+		p.addClickHandler(new ClickHandler() {
+
+			public void onClick(ClickEvent event) {
+				treeItem.setState(true);
 			}
 		});
 
