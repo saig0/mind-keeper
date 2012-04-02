@@ -225,6 +225,8 @@ public class NavigationTreePresenter extends
 				new SelectionHandler<TreeItem>() {
 
 					public void onSelection(SelectionEvent<TreeItem> event) {
+						eventBus.hideEditor();
+
 						TreeItem selectedItem = event.getSelectedItem();
 						Object userObject = selectedItem.getUserObject();
 						if (selectedItem != null && userObject != null) {
