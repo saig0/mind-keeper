@@ -2,7 +2,12 @@ package de.htwk.openNoteKeeper.client.note.view.whiteboard;
 
 import com.axeiya.gwtckeditor.client.CKConfig;
 import com.axeiya.gwtckeditor.client.CKConfig.PRESET_TOOLBAR;
+import com.axeiya.gwtckeditor.client.CKConfig.TOOLBAR_OPTIONS;
 import com.axeiya.gwtckeditor.client.CKEditor;
+import com.axeiya.gwtckeditor.client.Toolbar;
+import com.axeiya.gwtckeditor.client.ToolbarLine;
+import com.axeiya.gwtckeditor.client.event.SaveEvent;
+import com.axeiya.gwtckeditor.client.event.SaveHandler;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.event.dom.client.BlurEvent;
@@ -12,14 +17,11 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.DomEvent;
 import com.google.gwt.event.dom.client.FocusEvent;
 import com.google.gwt.event.dom.client.FocusHandler;
-import com.google.gwt.event.dom.client.HasBlurHandlers;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.dom.client.MouseOutEvent;
 import com.google.gwt.event.dom.client.MouseOutHandler;
 import com.google.gwt.event.dom.client.MouseOverEvent;
 import com.google.gwt.event.dom.client.MouseOverHandler;
-import com.google.gwt.event.logical.shared.ValueChangeEvent;
-import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.user.client.ui.FocusPanel;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.HorizontalPanel;
@@ -45,6 +47,7 @@ public class SingleNoteViewImpl implements SingleNoteView {
 	private RichTextArea contentLabel;
 	private CKEditor editor;
 	private String color;
+	private Label dummyEditor;
 
 	private boolean isSelected = false;
 
@@ -93,6 +96,8 @@ public class SingleNoteViewImpl implements SingleNoteView {
 		contentLabel.setSize("95%", "95%");
 		contentPanel.add(contentLabel);
 
+		dummyEditor = new Label();
+
 		main.setWidget(contentPanel);
 
 		main.addMouseOverHandler(new MouseOverHandler() {
@@ -134,11 +139,6 @@ public class SingleNoteViewImpl implements SingleNoteView {
 			public void onBlur(BlurEvent event) {
 				main.removeStyleName("activeNote");
 				isSelected = false;
-
-				// if (editor != null) {
-				// NativeEvent blurEvent = Document.get().createBlurEvent();
-				// DomEvent.fireNativeEvent(blurEvent, contentLabel);
-				// }
 			}
 		});
 
@@ -154,6 +154,30 @@ public class SingleNoteViewImpl implements SingleNoteView {
 
 		ckConfig.setResizeEnabled(false);
 		ckConfig.setFocusOnStartup(true);
+
+		ToolbarLine line = new ToolbarLine();
+		// Define the first line
+		TOOLBAR_OPTIONS[] t1 = { TOOLBAR_OPTIONS.Save, TOOLBAR_OPTIONS.Undo,
+				TOOLBAR_OPTIONS.Redo };
+		line.addAll(t1);
+
+		// Define the second line
+		ToolbarLine line2 = new ToolbarLine();
+		TOOLBAR_OPTIONS[] t2 = { TOOLBAR_OPTIONS.Bold, TOOLBAR_OPTIONS.Italic,
+				TOOLBAR_OPTIONS.Underline, TOOLBAR_OPTIONS.Strike,
+				TOOLBAR_OPTIONS._, TOOLBAR_OPTIONS.FontSize,
+				TOOLBAR_OPTIONS.TextColor, TOOLBAR_OPTIONS._,
+				TOOLBAR_OPTIONS.NumberedList, TOOLBAR_OPTIONS.BulletedList,
+				TOOLBAR_OPTIONS._, TOOLBAR_OPTIONS.Outdent,
+				TOOLBAR_OPTIONS.Indent, TOOLBAR_OPTIONS._, TOOLBAR_OPTIONS._,
+				TOOLBAR_OPTIONS.Image, TOOLBAR_OPTIONS.Table };
+		line2.addAll(t2);
+
+		// Creates the toolbar
+		Toolbar toolbar = new Toolbar();
+		toolbar.add(line);
+		toolbar.add(line2);
+		ckConfig.setToolbar(toolbar);
 
 		CKEditor ckEditor = new CKEditor(ckConfig);
 		return ckEditor;
@@ -191,10 +215,6 @@ public class SingleNoteViewImpl implements SingleNoteView {
 		contextMenu.hide();
 	}
 
-	public HasBlurHandlers getEditor() {
-		return contentLabel;
-	}
-
 	public String getContentOfEditor() {
 		if (editor != null)
 			return editor.getHTML();
@@ -226,17 +246,19 @@ public class SingleNoteViewImpl implements SingleNoteView {
 		contentPanel.remove(contentLabel);
 		contentPanel.add(editor);
 
-		editor.addValueChangeHandler(new ValueChangeHandler<String>() {
+		editor.addSaveHandler(new SaveHandler<CKEditor>() {
 
-			public void onValueChange(ValueChangeEvent<String> event) {
-				NativeEvent blurEvent = Document.get().createBlurEvent();
-				DomEvent.fireNativeEvent(blurEvent, contentLabel);
+			public void onSave(SaveEvent<CKEditor> event) {
+				NativeEvent clickEvent = Document.get().createClickEvent(0, 0,
+						0, 0, 0, false, false, false, false);
+				DomEvent.fireNativeEvent(clickEvent, dummyEditor);
 			}
 		});
 	}
 
 	public void hideEditor() {
 		if (editor != null) {
+			editor.setDisabled(true);
 			contentPanel.remove(editor);
 			contentPanel.add(contentLabel);
 			editor = null;
@@ -245,5 +267,9 @@ public class SingleNoteViewImpl implements SingleNoteView {
 
 	public boolean isEditorVisible() {
 		return editor != null;
+	}
+
+	public HasClickHandlers getSaveButton() {
+		return dummyEditor;
 	}
 }
