@@ -25,7 +25,7 @@ public interface NoteService extends RemoteService {
 
 	public NoteDTO createNote(String whiteBoardKey, NoteDTO note);
 
-	public void updateNote(NoteDTO note);
+	public void updateNote(String userKey, NoteDTO note);
 
 	public void removeNote(String noteKey);
 

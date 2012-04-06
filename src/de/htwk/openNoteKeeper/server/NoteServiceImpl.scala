@@ -11,7 +11,7 @@ import com.google.appengine.api.datastore.Key
 import de.htwk.openNoteKeeper.shared._
 import com.google.gwt.user.client.rpc.SerializableException
 
-class NoteServiceImpl extends RemoteServiceServlet with NoteService with Persistence {
+class NoteServiceImpl extends RemoteServiceServlet with NoteService with Persistence with CipherUtil {
 
   def getAllGroupsForUser(userKey: String) = {
     findObjectByKey(userKey, classOf[User]) match {
@@ -25,7 +25,7 @@ class NoteServiceImpl extends RemoteServiceServlet with NoteService with Persist
         user.authorities foreach { authorityKey =>
           findObjectByKey(authorityKey, classOf[Authority]) match {
             case None            => throw new SerializableException("no authority with given key found")
-            case Some(authority) => groups.add(createGroupDtoForKey(authority.group))
+            case Some(authority) => groups.add(createGroupDtoForKey(authority.group, userKey))
           }
         }
         groups
@@ -43,11 +43,11 @@ class NoteServiceImpl extends RemoteServiceServlet with NoteService with Persist
     user.authorities.add(owner.key)
   }
 
-  private def createGroupDtoForKey(key: String): GroupDTO = {
+  private def createGroupDtoForKey(key: String, userKey: String): GroupDTO = {
     val group = findGroupByKey(key)
     val dto = new GroupDTO(group.key, group.title, AccessRole.Owner)
-    group.subGroups foreach (subGroup => dto.addSubGroup(createGroupDtoForKey(subGroup)))
-    group.whiteBoards foreach (whiteBoard => dto.addWhiteBoard(createWhiteBoardDtoForKey(whiteBoard)))
+    group.subGroups foreach (subGroup => dto.addSubGroup(createGroupDtoForKey(subGroup, userKey)))
+    group.whiteBoards foreach (whiteBoard => dto.addWhiteBoard(createWhiteBoardDtoForKey(whiteBoard, userKey)))
     dto
   }
 
@@ -71,10 +71,10 @@ class NoteServiceImpl extends RemoteServiceServlet with NoteService with Persist
     case Some(group) => group
   }
 
-  private def createWhiteBoardDtoForKey(whiteBoardKey: String) = {
+  private def createWhiteBoardDtoForKey(whiteBoardKey: String, userKey: String) = {
     val whiteboard = findWhiteBoardByKey(whiteBoardKey)
     val dto = new WhiteBoardDTO(whiteboard.key, whiteboard.title)
-    whiteboard.notes foreach (note => dto.addNote(createNoteDtoForKey(note)))
+    whiteboard.notes foreach (note => dto.addNote(createNoteDtoForKey(note, userKey)))
     dto
   }
 
@@ -83,9 +83,10 @@ class NoteServiceImpl extends RemoteServiceServlet with NoteService with Persist
     case Some(whiteboard) => whiteboard
   }
 
-  private def createNoteDtoForKey(noteKey: String) = {
+  private def createNoteDtoForKey(noteKey: String, userKey: String) = {
     val note = findNoteByKey(noteKey)
-    new NoteDTO(note.key, note.title, note.content, note.color, new CoordinateDTO(note.width, note.height), new CoordinateDTO(note.left, note.top))
+    val decryptedContent = decrypt(userKey, note.content)
+    new NoteDTO(note.key, note.title, decryptedContent, note.color, new CoordinateDTO(note.width, note.height), new CoordinateDTO(note.left, note.top))
   }
 
   private def findNoteByKey(noteKey: String) = findObjectByKey(noteKey, classOf[Note]) match {
@@ -138,10 +139,11 @@ class NoteServiceImpl extends RemoteServiceServlet with NoteService with Persist
     new NoteDTO(note.key, title, "", color, position, size)
   }
 
-  def updateNote(noteDto: NoteDTO) {
+  def updateNote(userKey: String, noteDto: NoteDTO) {
     update[Note](noteDto.getKey(), classOf[Note], { note =>
       note.title = noteDto.getTitle()
-      note.content = noteDto.getContent()
+      val encryptedContent = encrypt(userKey, noteDto.getContent())
+      note.content = encryptedContent
       note.color = noteDto.getColor()
       note.width = noteDto.getPosition().getX
       note.height = noteDto.getPosition().getY

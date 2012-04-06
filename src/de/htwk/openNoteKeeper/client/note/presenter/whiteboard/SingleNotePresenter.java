@@ -18,6 +18,7 @@ import de.htwk.openNoteKeeper.client.widget.resize.HasResizeListener;
 import de.htwk.openNoteKeeper.client.widget.resize.ResizeListener;
 import de.htwk.openNoteKeeper.shared.CoordinateDTO;
 import de.htwk.openNoteKeeper.shared.NoteDTO;
+import de.htwk.openNoteKeeper.shared.UserDTO;
 
 @Presenter(view = SingleNoteViewImpl.class, multiple = true)
 public class SingleNotePresenter extends
@@ -69,14 +70,15 @@ public class SingleNotePresenter extends
 
 			public void onReleasedResized(Integer width, Integer height) {
 				note.setSize(new CoordinateDTO(width, height));
-				noteService.updateNote(note, new StatusScreenCallback<Void>(
-						"aktuallisiere Notiz") {
+				UserDTO user = Session.getCurrentUser();
+				noteService.updateNote(user.getId(), note,
+						new StatusScreenCallback<Void>("aktuallisiere Notiz") {
 
-					@Override
-					protected void success(Void result) {
-						// just background
-					}
-				});
+							@Override
+							protected void success(Void result) {
+								// just background
+							}
+						});
 			}
 		});
 
@@ -136,13 +138,14 @@ public class SingleNotePresenter extends
 			note.setContent(newContent);
 			view.setContent(newContent);
 			view.hideEditor();
-			noteService.updateNote(note, new StatusScreenCallback<Void>(
-					"aktuallisiere Notiz") {
+			UserDTO user = Session.getCurrentUser();
+			noteService.updateNote(user.getId(), note,
+					new StatusScreenCallback<Void>("aktuallisiere Notiz") {
 
-				@Override
-				protected void success(Void result) {
-				}
-			});
+						@Override
+						protected void success(Void result) {
+						}
+					});
 		}
 	}
 

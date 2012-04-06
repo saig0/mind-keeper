@@ -27,7 +27,7 @@ public interface NoteServiceAsync {
 	void createNote(String whiteBoardKey, NoteDTO note,
 			AsyncCallback<NoteDTO> callback);
 
-	void updateNote(NoteDTO note, AsyncCallback<Void> callback);
+	void updateNote(String userKey, NoteDTO note, AsyncCallback<Void> callback);
 
 	void removeNote(String noteKey, AsyncCallback<Void> callback);
 

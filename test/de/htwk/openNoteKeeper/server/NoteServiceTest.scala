@@ -11,7 +11,7 @@ import de.htwk.openNoteKeeper.shared._
 import de.htwk.openNoteKeeper.shared.GroupDTO._
 import com.google.gwt.user.client.rpc.SerializableException
 
-class NoteServiceTest extends LocalTestService with Persistence {
+class NoteServiceTest extends LocalTestService with Persistence with CipherUtil {
 
   val service = new NoteServiceImpl
 
@@ -264,7 +264,7 @@ class NoteServiceTest extends LocalTestService with Persistence {
     note_.setContent("text")
     note_.setPosition(new CoordinateDTO(1, 2))
     note_.setSize(new CoordinateDTO(3, 4))
-    service.updateNote(note_)
+    service.updateNote(user.key, note_)
 
     val groups = service.getAllGroupsForUser(user.key)
     assertEquals(1, groups.size)
@@ -478,5 +478,28 @@ class NoteServiceTest extends LocalTestService with Persistence {
     val note = whiteboard2.getNotes().get(0)
     assertEquals(note_.getKey(), note.getKey())
 
+  }
+
+  @Test
+  def encryptNotes {
+    val groups_ = service.getAllGroupsForUser(user.key)
+    assertEquals(1, groups_.size)
+    val rootGroup_ = groups_.get(0)
+
+    val whiteboard_ = service.createWhiteBoard(rootGroup_.getKey(), "new whiteboard")
+    val noteDTO = new NoteDTO("", "new note", "", "", new CoordinateDTO(0, 0), new CoordinateDTO(0, 0))
+    val note_ = service.createNote(whiteboard_.getKey(), noteDTO)
+    note_.setContent("text")
+    note_.setPosition(new CoordinateDTO(1, 2))
+    note_.setSize(new CoordinateDTO(3, 4))
+    service.updateNote(user.key, note_)
+
+    findObjectByKey(note_.getKey(), classOf[Note]) match {
+      case None => fail("no note found")
+      case Some(note) => {
+        assertFalse("text" == note.content)
+        assertTrue("text" == decrypt(user.key, note.content))
+      }
+    }
   }
 }
