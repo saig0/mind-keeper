@@ -2,8 +2,7 @@ package de.htwk.openNoteKeeper.server
 import javax.crypto.spec.SecretKeySpec
 import javax.crypto.Cipher
 import javax.crypto.spec.IvParameterSpec
-import sun.misc.BASE64Encoder
-import sun.misc.BASE64Decoder
+import org.apache.commons.codec.binary.Base64
 
 trait CipherUtil {
 
@@ -22,7 +21,7 @@ trait CipherUtil {
     val cipher = Cipher.getInstance(cipherAlgorithm.spec)
     cipher.init(Cipher.ENCRYPT_MODE, secretKey, iv)
     val cipherBytes = cipher.doFinal(plaintext.getBytes("UTF-8"))
-    new BASE64Encoder().encode(cipherBytes)
+    new String(Base64.encodeBase64(cipherBytes))
   }
 
   def decrypt(key: String, ciphertext: String)(implicit cipherAlgorithm: CipherAlgorithm) = {
@@ -32,7 +31,7 @@ trait CipherUtil {
     val cipher = Cipher.getInstance(cipherAlgorithm.spec)
     cipher.init(Cipher.DECRYPT_MODE, secretKey, iv)
 
-    val encData = new BASE64Decoder().decodeBuffer(ciphertext)
+    val encData = Base64.decodeBase64(ciphertext.getBytes())
     val decryptedtxt = cipher.doFinal(encData)
     new String(decryptedtxt, "UTF-8")
   }
