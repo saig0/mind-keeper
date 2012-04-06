@@ -15,6 +15,7 @@ import com.google.inject.Inject;
 import com.mvp4g.client.annotation.Presenter;
 import com.mvp4g.client.presenter.BasePresenter;
 
+import de.htwk.openNoteKeeper.client.main.presenter.Session;
 import de.htwk.openNoteKeeper.client.note.NoteEventBus;
 import de.htwk.openNoteKeeper.client.note.service.NoteServiceAsync;
 import de.htwk.openNoteKeeper.client.note.view.whiteboard.NoteViewImpl;
@@ -76,9 +77,11 @@ public class NotePresenter extends BasePresenter<NoteViewImpl, NoteEventBus> {
 					int top = noteWidget.getAbsoluteTop()
 							- view.getWhiteBoardAbsoluteTop();
 					note.setPosition(new CoordinateDTO(left, top));
-					noteService
-							.updateNote(note, new StatusScreenCallback<Void>(
-									"aktualisiere Notiz") {
+					UserDTO user = Session.getCurrentUser();
+					noteService.updateNote(
+							user.getId(),
+							note,
+							new StatusScreenCallback<Void>("aktualisiere Notiz") {
 
 								@Override
 								protected void success(Void result) {

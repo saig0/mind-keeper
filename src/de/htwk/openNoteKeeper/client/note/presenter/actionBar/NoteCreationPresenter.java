@@ -17,6 +17,7 @@ import de.htwk.openNoteKeeper.client.util.LoadingScreenCallback;
 import de.htwk.openNoteKeeper.shared.CoordinateDTO;
 import de.htwk.openNoteKeeper.shared.GroupDTO;
 import de.htwk.openNoteKeeper.shared.NoteDTO;
+import de.htwk.openNoteKeeper.shared.UserDTO;
 import de.htwk.openNoteKeeper.shared.WhiteBoardDTO;
 
 @Presenter(view = NoteCreationViewImpl.class)
@@ -85,7 +86,8 @@ public class NoteCreationPresenter extends
 					} else {
 						note.setTitle(nodeName);
 						note.setColor(color);
-						noteService.updateNote(note,
+						UserDTO user = Session.getCurrentUser();
+						noteService.updateNote(user.getId(), note,
 								new LoadingScreenCallback<Void>(event) {
 
 									@Override
