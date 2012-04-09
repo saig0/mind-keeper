@@ -17,6 +17,8 @@ public class MainViewImpl implements MainView {
 	private UserViewImpl userView;
 	@Inject
 	private LanguageChooserViewImpl languageChooser;
+	@Inject
+	private CommunityViewImpl communityView;
 
 	private FlowPanel content = new FlowPanel();
 	private FlowPanel actionBar = new FlowPanel();
@@ -40,6 +42,7 @@ public class MainViewImpl implements MainView {
 		header.setCellHorizontalAlignment(actionBar,
 				HasHorizontalAlignment.ALIGN_LEFT);
 
+		header.add(communityView);
 		header.add(languageChooser);
 		header.add(userView);
 
