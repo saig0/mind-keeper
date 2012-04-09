@@ -9,7 +9,7 @@ public enum IconPool implements IsSerializable {
 			"warning_big.png"), Info("info.png"), Info_Big("info_big.png"), Home(
 			"home.png"), Home_Small("home_small.png"), Settings("settings.png"), Settings_Small(
 			"settings_small.png"), Admin("admin.png"), Admin_Small(
-			"admin_small.png"), Logo("logo-whiteboard-2.jpg"), Add("add.png"), Remove(
+			"admin_small.png"), Logo("logo-whiteboard-beta.jpg"), Add("add.png"), Remove(
 			"remove.png"), Arrow_Right("right_arrow.png"), Arrow_Left(
 			"left_arrow.png"), Buddies("buddies.png"), Buddy_Blue(
 			"buddy_blue.png"), Buddy_Green("buddy_green.png"), Add_User(

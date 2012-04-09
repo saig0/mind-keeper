@@ -4,16 +4,23 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.Window;
 
-import de.htwk.openNoteKeeper.client.main.view.RedirectClickHandlerData;
-
 public class RedirectClickHandler implements ClickHandler {
-	private RedirectClickHandlerData handler = new RedirectClickHandlerData();
+	private final String url;
+	private final boolean openInNewWindow;
 
 	public RedirectClickHandler(String url) {
-		this.handler.url = url;
+		this(url, false);
+	}
+
+	public RedirectClickHandler(String url, boolean openInNewWindow) {
+		this.url = url;
+		this.openInNewWindow = openInNewWindow;
 	}
 
 	public void onClick(ClickEvent event) {
-		Window.open(handler.url, "_self", "");
+		if (openInNewWindow)
+			Window.open(url, "_blank", "");
+		else
+			Window.open(url, "_self", "");
 	}
 }
