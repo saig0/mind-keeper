@@ -149,7 +149,8 @@ public class SingleNoteViewImpl implements SingleNoteView {
 		CKConfig ckConfig = new CKConfig(PRESET_TOOLBAR.BASIC);
 		ckConfig.setUiColor(color);
 		ckConfig.setWidth("95%");
-		ckConfig.setHeight("100%");
+		// ckConfig.setHeight("100%");
+		ckConfig.setHeight(contentLabel.getOffsetHeight() + "px");
 
 		ckConfig.setResizeEnabled(false);
 		ckConfig.setFocusOnStartup(true);
