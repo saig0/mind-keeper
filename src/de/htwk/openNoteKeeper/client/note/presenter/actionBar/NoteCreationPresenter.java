@@ -60,8 +60,8 @@ public class NoteCreationPresenter extends
 
 					if (note == null) {
 						// TODO position bestimmen
-						int left = 50 + (int) (Math.random() * 300);
-						int top = 50 + (int) (Math.random() * 300);
+						int left = 50 + (int) (Math.random() * 250);
+						int top = 50 + (int) (Math.random() * 250);
 						CoordinateDTO position = new CoordinateDTO(left, top);
 						CoordinateDTO size = new CoordinateDTO(200, 200);
 
