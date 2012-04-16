@@ -3,7 +3,6 @@ package de.htwk.openNoteKeeper.client.note.presenter.actionBar;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.inject.Inject;
 import com.mvp4g.client.annotation.Presenter;
@@ -61,10 +60,8 @@ public class NoteCreationPresenter extends
 
 					if (note == null) {
 						// TODO position bestimmen
-						int left = (Window.getClientWidth() / 2)
-								- (int) (Math.random() * 100);
-						int top = (Window.getClientHeight() / 2)
-								+ (int) (Math.random() * 100);
+						int left = 50 + (int) (Math.random() * 300);
+						int top = 50 + (int) (Math.random() * 300);
 						CoordinateDTO position = new CoordinateDTO(left, top);
 						CoordinateDTO size = new CoordinateDTO(200, 200);
 

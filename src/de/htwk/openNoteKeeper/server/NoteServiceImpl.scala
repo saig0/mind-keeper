@@ -86,7 +86,7 @@ class NoteServiceImpl extends RemoteServiceServlet with NoteService with Persist
   private def createNoteDtoForKey(noteKey: String, userKey: String) = {
     val note = findNoteByKey(noteKey)
     val decryptedContent = decrypt(userKey, note.content)
-    new NoteDTO(note.key, note.title, decryptedContent, note.color, new CoordinateDTO(note.width, note.height), new CoordinateDTO(note.left, note.top))
+    new NoteDTO(note.key, note.title, decryptedContent, note.color, new CoordinateDTO(note.left, note.top), new CoordinateDTO(note.width, note.height))
   }
 
   private def findNoteByKey(noteKey: String) = findObjectByKey(noteKey, classOf[Note]) match {
@@ -132,7 +132,7 @@ class NoteServiceImpl extends RemoteServiceServlet with NoteService with Persist
     val size = dto.getSize
     val position = dto.getPosition
 
-    val note = new Note(title, "", color, whiteboard.key, size.getY, size.getY, position.getX, position.getY)
+    val note = new Note(title, "", color, whiteboard.key, size.getX, size.getY, position.getX, position.getY)
     persist(note)
     update[WhiteBoard](whiteboard.key, classOf[WhiteBoard], whiteBoard => whiteBoard.notes.add(note.key))
 
@@ -145,10 +145,10 @@ class NoteServiceImpl extends RemoteServiceServlet with NoteService with Persist
       val encryptedContent = encrypt(userKey, noteDto.getContent())
       note.content = encryptedContent
       note.color = noteDto.getColor()
-      note.width = noteDto.getPosition().getX
-      note.height = noteDto.getPosition().getY
-      note.left = noteDto.getSize().getX
-      note.top = noteDto.getSize().getY
+      note.width = noteDto.getSize().getX
+      note.height = noteDto.getSize().getY
+      note.left = noteDto.getPosition().getX
+      note.top = noteDto.getPosition().getY
     })
   }
 
