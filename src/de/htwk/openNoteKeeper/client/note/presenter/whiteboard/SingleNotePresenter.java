@@ -77,6 +77,8 @@ public class SingleNotePresenter extends
 							@Override
 							protected void success(Void result) {
 								// just background
+								// TODO Modell auf Client aktualliesieren
+								eventBus.loggedIn(Session.getCurrentUser());
 							}
 						});
 			}
@@ -144,6 +146,8 @@ public class SingleNotePresenter extends
 
 						@Override
 						protected void success(Void result) {
+							// TODO Modell auf Client aktualliesieren
+							eventBus.loggedIn(Session.getCurrentUser());
 						}
 					});
 		}
