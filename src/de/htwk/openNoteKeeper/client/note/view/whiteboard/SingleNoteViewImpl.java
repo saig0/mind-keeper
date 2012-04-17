@@ -24,6 +24,7 @@ import com.google.gwt.event.dom.client.MouseOverEvent;
 import com.google.gwt.event.dom.client.MouseOverHandler;
 import com.google.gwt.user.client.ui.FocusPanel;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
+import com.google.gwt.user.client.ui.HasVerticalAlignment;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
@@ -145,12 +146,12 @@ public class SingleNoteViewImpl implements SingleNoteView {
 		return resizeableWidget;
 	}
 
-	private CKEditor createEditor() {
+	private CKEditor createEditor(int height) {
 		CKConfig ckConfig = new CKConfig(PRESET_TOOLBAR.BASIC);
 		ckConfig.setUiColor(color);
 		ckConfig.setWidth("95%");
 		// ckConfig.setHeight("100%");
-		ckConfig.setHeight(contentLabel.getOffsetHeight() + "px");
+		ckConfig.setHeight(height + "px");
 
 		ckConfig.setResizeEnabled(false);
 		ckConfig.setFocusOnStartup(true);
@@ -240,10 +241,20 @@ public class SingleNoteViewImpl implements SingleNoteView {
 	}
 
 	public void showEditor() {
-		editor = createEditor();
+		int height = contentLabel.getOffsetHeight();
+		contentPanel.remove(contentLabel);
+
+		Image loadingImage = IconPool.Loading.createImage();
+		contentPanel.add(loadingImage);
+		contentPanel.setCellHorizontalAlignment(loadingImage,
+				HasHorizontalAlignment.ALIGN_CENTER);
+		contentPanel.setCellVerticalAlignment(loadingImage,
+				HasVerticalAlignment.ALIGN_MIDDLE);
+
+		editor = createEditor(height);
 		editor.setData(contentLabel.getHTML());
 
-		contentPanel.remove(contentLabel);
+		contentPanel.remove(loadingImage);
 		contentPanel.add(editor);
 
 		editor.addSaveHandler(new SaveHandler<CKEditor>() {
