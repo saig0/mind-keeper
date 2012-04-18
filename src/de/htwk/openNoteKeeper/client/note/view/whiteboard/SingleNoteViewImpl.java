@@ -96,6 +96,7 @@ public class SingleNoteViewImpl implements SingleNoteView {
 		contentLabel.addStyleName("noteEditor");
 		contentLabel.setSize("95%", "95%");
 		contentPanel.add(contentLabel);
+		contentPanel.setCellHeight(contentLabel, "100%");
 
 		dummyEditor = new Label();
 
@@ -272,6 +273,7 @@ public class SingleNoteViewImpl implements SingleNoteView {
 			editor.setDisabled(true);
 			contentPanel.remove(editor);
 			contentPanel.add(contentLabel);
+			contentPanel.setCellHeight(contentLabel, "100%");
 			editor = null;
 		}
 	}
