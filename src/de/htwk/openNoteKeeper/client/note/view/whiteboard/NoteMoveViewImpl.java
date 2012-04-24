@@ -65,8 +65,6 @@ public class NoteMoveViewImpl implements NoteMoveView {
 				HasHorizontalAlignment.ALIGN_LEFT);
 		layout.setCellHeight(tree, "150px");
 
-		popup.setWidget(layout);
-
 		HorizontalPanel control = new HorizontalPanel();
 		control.setSpacing(5);
 		control.setSize("100%", "100%");
@@ -79,7 +77,7 @@ public class NoteMoveViewImpl implements NoteMoveView {
 		control.setCellWidth(saveButton, "65%");
 
 		layout.add(control);
-
+		popup.setWidget(layout);
 		return popup;
 	}
 

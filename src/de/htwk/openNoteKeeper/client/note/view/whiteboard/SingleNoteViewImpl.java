@@ -22,6 +22,9 @@ import com.google.gwt.event.dom.client.MouseOutEvent;
 import com.google.gwt.event.dom.client.MouseOutHandler;
 import com.google.gwt.event.dom.client.MouseOverEvent;
 import com.google.gwt.event.dom.client.MouseOverHandler;
+import com.google.gwt.user.client.DOM;
+import com.google.gwt.user.client.Element;
+import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.FocusPanel;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.HasVerticalAlignment;
@@ -245,17 +248,17 @@ public class SingleNoteViewImpl implements SingleNoteView {
 		int height = contentLabel.getOffsetHeight();
 		contentPanel.remove(contentLabel);
 
-		Image loadingImage = IconPool.Loading.createImage();
-		contentPanel.add(loadingImage);
-		contentPanel.setCellHorizontalAlignment(loadingImage,
+		final Image loadingWidget = IconPool.Loading.createImage();
+		contentPanel.add(loadingWidget);
+		contentPanel.setCellHorizontalAlignment(loadingWidget,
 				HasHorizontalAlignment.ALIGN_CENTER);
-		contentPanel.setCellVerticalAlignment(loadingImage,
+		contentPanel.setCellVerticalAlignment(loadingWidget,
 				HasVerticalAlignment.ALIGN_MIDDLE);
 
 		editor = createEditor(height);
 		editor.setData(contentLabel.getHTML());
 
-		contentPanel.remove(loadingImage);
+		removeLoadingWidgetWhenEditorIsVisable(loadingWidget);
 		contentPanel.add(editor);
 
 		editor.addSaveHandler(new SaveHandler<CKEditor>() {
@@ -266,6 +269,44 @@ public class SingleNoteViewImpl implements SingleNoteView {
 				DomEvent.fireNativeEvent(clickEvent, dummyEditor);
 			}
 		});
+
+	}
+
+	private void removeLoadingWidgetWhenEditorIsVisable(
+			final Image loadingWidget) {
+		new Timer() {
+
+			@Override
+			public void run() {
+				try {
+					Element td = assertNotNull(DOM.getParent(loadingWidget
+							.getElement()));
+					Element tr = assertNotNull(DOM.getParent(td));
+					Element tr2 = assertNotNull(DOM.getNextSibling(tr));
+					Element td2 = assertNotNull(DOM.getFirstChild(tr2));
+					Element form = assertNotNull(DOM.getFirstChild(td2));
+					Element div = assertNotNull(DOM.getFirstChild(form));
+					Element span = assertNotNull(DOM.getChild(div, 1));
+					Element span2 = assertNotNull(DOM.getChild(span, 1));
+					Element span3 = assertNotNull(DOM.getFirstChild(span2));
+					Element table = assertNotNull(DOM.getFirstChild(span3));
+					String cssClass = table.getClassName();
+					if ("cke_editor".equals(cssClass)) {
+						contentPanel.remove(loadingWidget);
+						this.cancel();
+					}
+				} catch (NullPointerException e) {
+				}
+			}
+
+			private Element assertNotNull(Element e)
+					throws NullPointerException {
+				if (e == null)
+					throw new NullPointerException();
+				else
+					return e;
+			}
+		}.scheduleRepeating(100);
 	}
 
 	public void hideEditor() {
