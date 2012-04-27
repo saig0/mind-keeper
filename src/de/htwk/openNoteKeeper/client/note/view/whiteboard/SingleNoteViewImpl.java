@@ -35,6 +35,7 @@ import com.google.gwt.user.client.ui.RichTextArea;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
+import de.htwk.openNoteKeeper.client.main.presenter.Session;
 import de.htwk.openNoteKeeper.client.note.presenter.whiteboard.SingleNotePresenter.SingleNoteView;
 import de.htwk.openNoteKeeper.client.util.IconPool;
 import de.htwk.openNoteKeeper.client.widget.resize.HasResizeListener;
@@ -245,7 +246,7 @@ public class SingleNoteViewImpl implements SingleNoteView {
 	}
 
 	public void showEditor() {
-		int height = contentLabel.getOffsetHeight();
+		final int height = contentLabel.getOffsetHeight();
 		contentPanel.remove(contentLabel);
 
 		final Image loadingWidget = IconPool.Loading.createImage();
@@ -255,6 +256,58 @@ public class SingleNoteViewImpl implements SingleNoteView {
 		contentPanel.setCellVerticalAlignment(loadingWidget,
 				HasVerticalAlignment.ALIGN_MIDDLE);
 
+		new Timer() {
+
+			@Override
+			public void run() {
+				if (!Session.isEditorVisable()) {
+					createAndInitEditor(height, loadingWidget);
+					this.cancel();
+				}
+			}
+		}.scheduleRepeating(100);
+	}
+
+	private void removeLoadingWidgetWhenEditorIsVisable(
+			final Image loadingWidget) {
+		if (isEditorVisable(loadingWidget.getElement())) {
+			contentPanel.remove(loadingWidget);
+		} else {
+			new Timer() {
+
+				@Override
+				public void run() {
+					if (isEditorVisable(loadingWidget.getElement())) {
+						contentPanel.remove(loadingWidget);
+						this.cancel();
+					}
+				}
+
+			}.scheduleRepeating(100);
+		}
+	}
+
+	public void hideEditor() {
+		if (editor != null) {
+			editor.setDisabled(true);
+			contentPanel.remove(editor);
+			contentPanel.add(contentLabel);
+			contentPanel.setCellHeight(contentLabel, "100%");
+			editor = null;
+			Session.setEditorIsVisable(false);
+		}
+	}
+
+	public boolean isEditorVisible() {
+		return editor != null;
+	}
+
+	public HasClickHandlers getSaveButton() {
+		return dummyEditor;
+	}
+
+	private void createAndInitEditor(final int height, final Image loadingWidget) {
+		Session.setEditorIsVisable(true);
 		editor = createEditor(height);
 		editor.setData(contentLabel.getHTML());
 
@@ -269,61 +322,35 @@ public class SingleNoteViewImpl implements SingleNoteView {
 				DomEvent.fireNativeEvent(clickEvent, dummyEditor);
 			}
 		});
-
 	}
 
-	private void removeLoadingWidgetWhenEditorIsVisable(
-			final Image loadingWidget) {
-		new Timer() {
-
-			@Override
-			public void run() {
-				try {
-					Element td = assertNotNull(DOM.getParent(loadingWidget
-							.getElement()));
-					Element tr = assertNotNull(DOM.getParent(td));
-					Element tr2 = assertNotNull(DOM.getNextSibling(tr));
-					Element td2 = assertNotNull(DOM.getFirstChild(tr2));
-					Element form = assertNotNull(DOM.getFirstChild(td2));
-					Element div = assertNotNull(DOM.getFirstChild(form));
-					Element span = assertNotNull(DOM.getChild(div, 1));
-					Element span2 = assertNotNull(DOM.getChild(span, 1));
-					Element span3 = assertNotNull(DOM.getFirstChild(span2));
-					Element table = assertNotNull(DOM.getFirstChild(span3));
-					String cssClass = table.getClassName();
-					if ("cke_editor".equals(cssClass)) {
-						contentPanel.remove(loadingWidget);
-						this.cancel();
-					}
-				} catch (NullPointerException e) {
-				}
+	private boolean isEditorVisable(Element e) {
+		try {
+			Element td = assertNotNull(DOM.getParent(e));
+			Element tr = assertNotNull(DOM.getParent(td));
+			Element tr2 = assertNotNull(DOM.getNextSibling(tr));
+			Element td2 = assertNotNull(DOM.getFirstChild(tr2));
+			Element form = assertNotNull(DOM.getFirstChild(td2));
+			Element div = assertNotNull(DOM.getFirstChild(form));
+			Element span = assertNotNull(DOM.getChild(div, 1));
+			Element span2 = assertNotNull(DOM.getChild(span, 1));
+			Element span3 = assertNotNull(DOM.getFirstChild(span2));
+			Element table = assertNotNull(DOM.getFirstChild(span3));
+			String cssClass = table.getClassName();
+			if ("cke_editor".equals(cssClass)) {
+				return true;
+			} else {
+				return false;
 			}
-
-			private Element assertNotNull(Element e)
-					throws NullPointerException {
-				if (e == null)
-					throw new NullPointerException();
-				else
-					return e;
-			}
-		}.scheduleRepeating(100);
-	}
-
-	public void hideEditor() {
-		if (editor != null) {
-			editor.setDisabled(true);
-			contentPanel.remove(editor);
-			contentPanel.add(contentLabel);
-			contentPanel.setCellHeight(contentLabel, "100%");
-			editor = null;
+		} catch (NullPointerException ex) {
+			return false;
 		}
 	}
 
-	public boolean isEditorVisible() {
-		return editor != null;
-	}
-
-	public HasClickHandlers getSaveButton() {
-		return dummyEditor;
+	private Element assertNotNull(Element e) throws NullPointerException {
+		if (e == null)
+			throw new NullPointerException();
+		else
+			return e;
 	}
 }

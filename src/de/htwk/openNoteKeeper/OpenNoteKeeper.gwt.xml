@@ -3,6 +3,7 @@
 <module rename-to='openNoteKeeper'>
 	<inherits name="com.google.gwt.user.User" />
 	<inherits name="com.google.gwt.i18n.I18N" />
+	<inherits name="com.google.gwt.resources.Resources" />
 
 	<extend-property name="locale" values="en" />
 	<extend-property name="locale" values="de" />
