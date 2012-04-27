@@ -54,6 +54,8 @@ public class SingleNoteViewImpl implements SingleNoteView {
 	private String color;
 	private Label dummyEditor;
 
+	private HorizontalPanel header;
+
 	private boolean isSelected = false;
 
 	public SingleNoteViewImpl() {
@@ -70,7 +72,7 @@ public class SingleNoteViewImpl implements SingleNoteView {
 		contentPanel.setSize("100%", "100%");
 		contentPanel.setSpacing(5);
 
-		HorizontalPanel header = new HorizontalPanel();
+		header = new HorizontalPanel();
 		header.setSize("100%", "100%");
 		header.addStyleName("noteHeader");
 
@@ -294,7 +296,18 @@ public class SingleNoteViewImpl implements SingleNoteView {
 			contentPanel.add(contentLabel);
 			contentPanel.setCellHeight(contentLabel, "100%");
 			editor = null;
-			Session.setEditorIsVisable(false);
+
+			new Timer() {
+
+				@Override
+				public void run() {
+					if (!isEditorVisable(header.getElement())) {
+						Session.setEditorIsVisable(false);
+						this.cancel();
+					}
+				}
+
+			}.scheduleRepeating(100);
 		}
 	}
 
