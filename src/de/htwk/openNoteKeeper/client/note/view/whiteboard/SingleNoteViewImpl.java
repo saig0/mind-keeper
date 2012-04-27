@@ -267,7 +267,7 @@ public class SingleNoteViewImpl implements SingleNoteView {
 					this.cancel();
 				}
 			}
-		}.scheduleRepeating(100);
+		}.scheduleRepeating(500);
 	}
 
 	private void removeLoadingWidgetWhenEditorIsVisable(
@@ -307,7 +307,7 @@ public class SingleNoteViewImpl implements SingleNoteView {
 					}
 				}
 
-			}.scheduleRepeating(100);
+			}.scheduleRepeating(500);
 		}
 	}
 
