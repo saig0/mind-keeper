@@ -3,6 +3,7 @@ package de.htwk.openNoteKeeper.client.note.view.whiteboard;
 import com.allen_sauer.gwt.dnd.client.DragController;
 import com.allen_sauer.gwt.dnd.client.PickupDragController;
 import com.allen_sauer.gwt.dnd.client.drop.AbsolutePositionDropController;
+import com.google.gwt.dom.client.Style.Overflow;
 import com.google.gwt.user.client.ui.AbsolutePanel;
 import com.google.gwt.user.client.ui.HasVerticalAlignment;
 import com.google.gwt.user.client.ui.HorizontalPanel;
@@ -42,6 +43,7 @@ public class NoteViewImpl implements NoteView {
 		main.setSize("100%", "100%");
 
 		whiteboardPanel.setHeight("100%");
+		whiteboardPanel.getElement().getStyle().setOverflow(Overflow.AUTO);
 		whiteboardPanel.addStyleName("whiteBoard");
 
 		AbsolutePositionDropController dropController = new AbsolutePositionDropController(
