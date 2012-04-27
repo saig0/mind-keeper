@@ -38,12 +38,11 @@ public class MainPresenter extends BasePresenter<MainViewImpl, MainEventBus> {
 			statusArea
 					.addStatusMessage(new StatusPanel(
 							"optimale Darstellung der Website mit Chrome-Browser (Firefox folgt)",
-							true));
+							true, 10));
 		} else {
-			statusArea
-					.addStatusMessage(new StatusPanel(
-							"optimale Darstellung der Website mit Chrome-Browser",
-							true));
+			statusArea.addStatusMessage(new StatusPanel(
+					"optimale Darstellung der Website mit Chrome-Browser",
+					true, 10));
 		}
 	}
 
