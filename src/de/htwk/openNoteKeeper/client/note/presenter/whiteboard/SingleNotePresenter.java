@@ -137,9 +137,6 @@ public class SingleNotePresenter extends
 	private void updateNote() {
 		final String newContent = view.getContentOfEditor();
 		if (newContent != null) {
-			note.setContent(newContent);
-			view.setContent(newContent);
-			view.hideEditor();
 			UserDTO user = Session.getCurrentUser();
 			noteService.updateNote(user.getId(), note,
 					new StatusScreenCallback<Void>("aktuallisiere Notiz") {
@@ -148,6 +145,10 @@ public class SingleNotePresenter extends
 						protected void success(Void result) {
 							// TODO Modell auf Client aktualliesieren
 							eventBus.loggedIn(Session.getCurrentUser());
+
+							note.setContent(newContent);
+							view.setContent(newContent);
+							view.hideEditor();
 						}
 					});
 		}
