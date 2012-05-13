@@ -61,4 +61,8 @@ public class GroupDTO implements IsSerializable {
 	public void setAccessRole(AccessRole accessRole) {
 		this.accessRole = accessRole;
 	}
+
+	public void setTitle(String title) {
+		this.title = title;
+	}
 }

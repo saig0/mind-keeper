@@ -1,4 +1,4 @@
-package de.htwk.openNoteKeeper.client.note.view.whiteboard;
+package de.htwk.openNoteKeeper.client.note.view.navigation;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.HasClickHandlers;
@@ -13,7 +13,7 @@ import de.htwk.openNoteKeeper.client.i18n.CommonConstants;
 import de.htwk.openNoteKeeper.client.util.IconPool;
 import de.htwk.openNoteKeeper.client.widget.IconButton;
 
-public class NoteContextMenu implements IsWidget {
+public class TreeItemContextMenu implements IsWidget {
 
 	private CommonConstants commonConstants = GWT.create(CommonConstants.class);
 
@@ -23,7 +23,7 @@ public class NoteContextMenu implements IsWidget {
 	private Button editButton;
 	private Button moveButton;
 
-	public NoteContextMenu() {
+	public TreeItemContextMenu() {
 		this.popup = createLayout();
 	}
 
@@ -39,26 +39,13 @@ public class NoteContextMenu implements IsWidget {
 		content.setSpacing(5);
 		content.setSize("100%", "100%");
 
-		Image deleteIcon = IconPool.Trash.createImage();
-		deleteIcon.setSize("16px", "16px");
-		deleteButton = new IconButton(deleteIcon, commonConstants.delete());
-		deleteButton.setWidth("100%");
-		content.add(deleteButton);
-
 		Image editIcon = IconPool.Settings_Small_2.createImage();
 		editIcon.setSize("16px", "16px");
 		editButton = new IconButton(editIcon, commonConstants.edit());
 		editButton.setWidth("100%");
 		content.add(editButton);
 
-		Image moveIcon = IconPool.Arrow_Left.createImage();
-		moveIcon.setSize("16px", "16px");
-		moveButton = new IconButton(moveIcon, commonConstants.move());
-		moveButton.setWidth("100%");
-		content.add(moveButton);
-
 		popup.setWidget(content);
-
 		return popup;
 	}
 
@@ -71,15 +58,8 @@ public class NoteContextMenu implements IsWidget {
 		popup.hide();
 	}
 
-	public HasClickHandlers getDeleteButton() {
-		return deleteButton;
-	}
-
 	public HasClickHandlers getEditButton() {
 		return editButton;
 	}
 
-	public HasClickHandlers getMoveButton() {
-		return moveButton;
-	}
 }

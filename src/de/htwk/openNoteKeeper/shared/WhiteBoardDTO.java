@@ -38,4 +38,8 @@ public class WhiteBoardDTO implements IsSerializable {
 	public void removeNote(NoteDTO note) {
 		notes.remove(note);
 	}
+
+	public void setTitle(String title) {
+		this.title = title;
+	}
 }
