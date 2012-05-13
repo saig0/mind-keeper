@@ -26,4 +26,8 @@ public interface CommonConstants extends Constants {
 	String save();
 
 	String issueTracker();
+
+	String delete();
+
+	String move();
 }

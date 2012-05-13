@@ -35,7 +35,7 @@ public class TreeDropController extends SimpleDropController implements
 	public void onDrop(DragContext context) {
 		TreeItem treeItem = findDragTarget(tree.getItem(0), context);
 		if (treeItem != null) {
-			TreeItem sourceItem = ((NavigationTreeItem) context.draggable)
+			TreeItem sourceItem = ((TreeItemViewImpl) context.draggable)
 					.asTreeItem();
 			sourceItem.remove();
 			for (TreeDropHandler handler : treeDropHandlers) {
@@ -47,8 +47,8 @@ public class TreeDropController extends SimpleDropController implements
 
 	private TreeItem cloneTreeItem(DragContext context) {
 		Widget dragWidget = context.draggable;
-		if (dragWidget instanceof NavigationTreeItem) {
-			TreeItem treeItem = ((NavigationTreeItem) dragWidget).asTreeItem();
+		if (dragWidget instanceof TreeItemViewImpl) {
+			TreeItem treeItem = ((TreeItemViewImpl) dragWidget).asTreeItem();
 			TreeItem clone = new TreeItem(dragWidget);
 			clone.setUserObject(treeItem.getUserObject());
 			if (treeItem.getChildCount() > 0) {

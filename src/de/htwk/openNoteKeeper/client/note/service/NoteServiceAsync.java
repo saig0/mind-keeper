@@ -40,4 +40,10 @@ public interface NoteServiceAsync {
 	void moveNote(String noteKey, String targetWhiteBoardKey,
 			AsyncCallback<Void> callback);
 
+	void updateGroup(String userKey, GroupDTO group,
+			AsyncCallback<Void> callback);
+
+	void updateWhiteBoard(String userKey, WhiteBoardDTO whiteBoard,
+			AsyncCallback<Void> callback);
+
 }

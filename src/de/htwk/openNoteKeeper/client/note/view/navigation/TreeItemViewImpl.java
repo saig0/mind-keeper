@@ -2,56 +2,71 @@ package de.htwk.openNoteKeeper.client.note.view.navigation;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.dom.client.MouseOutEvent;
 import com.google.gwt.event.dom.client.MouseOutHandler;
 import com.google.gwt.event.dom.client.MouseOverEvent;
 import com.google.gwt.event.dom.client.MouseOverHandler;
-import com.google.gwt.user.client.DOM;
-import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.FocusPanel;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
-import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.TreeItem;
 import com.google.gwt.user.client.ui.Widget;
 
+import de.htwk.openNoteKeeper.client.note.presenter.whiteboard.TreeItemPresenter.NavigationTreeItemView;
 import de.htwk.openNoteKeeper.client.util.IconPool;
 
-public class NavigationTreeItem extends FocusPanel {
+public class TreeItemViewImpl extends FocusPanel implements
+		NavigationTreeItemView {
 
 	private TreeItem treeItem;
 	private Widget dragWidget;
+	private TreeItemContextMenu contextMenu;
+	private Label textLabel;
+	private Image icon;
 
 	private FocusPanel p;
 
-	public NavigationTreeItem(Image icon, final String title, Object userObject) {
-		sinkEvents(Event.ONCONTEXTMENU);
-
-		treeItem = createLayout(icon, title, userObject);
+	public TreeItemViewImpl() {
+		treeItem = createLayout();
 	}
 
-	private TreeItem createLayout(Image icon, final String title,
-			Object userObject) {
+	private TreeItem createLayout() {
 		final HorizontalPanel panel = new HorizontalPanel();
 		panel.setSize("100%", "100%");
+		icon = new Image();
 		icon.setSize("24px", "24px");
 		panel.add(icon);
 		panel.setCellWidth(icon, "30px");
-		panel.add(new Label(title));
+		textLabel = new Label();
+		panel.add(textLabel);
+
+		final Image settingsIcon = IconPool.Settings.createImage();
+		settingsIcon.setSize("24px", "24px");
+		settingsIcon.setVisible(false);
+		panel.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_RIGHT);
+		panel.add(settingsIcon);
+		panel.setCellWidth(settingsIcon, "30px");
+
+		contextMenu = new TreeItemContextMenu();
+		settingsIcon.addClickHandler(new ClickHandler() {
+
+			public void onClick(ClickEvent event) {
+				contextMenu.show(event.getClientX(), event.getClientY());
+			}
+		});
 
 		final Image dragIcon = IconPool.Up_And_Down.createImage();
 		dragIcon.setSize("24px", "24px");
 		dragIcon.setVisible(false);
 		panel.add(dragIcon);
-		panel.setCellHorizontalAlignment(dragIcon,
-				HasHorizontalAlignment.ALIGN_RIGHT);
+		panel.setCellWidth(dragIcon, "30px");
 
 		dragWidget = dragIcon;
 
 		final TreeItem treeItem = new TreeItem();
-		treeItem.setUserObject(userObject);
 
 		p = new FocusPanel(panel);
 		p.setSize("100%", "100%");
@@ -61,6 +76,7 @@ public class NavigationTreeItem extends FocusPanel {
 			public void onMouseOver(MouseOverEvent event) {
 				panel.addStyleName("markedNavigationItem");
 
+				settingsIcon.setVisible(true);
 				dragIcon.setVisible(true);
 			}
 		});
@@ -70,6 +86,7 @@ public class NavigationTreeItem extends FocusPanel {
 			public void onMouseOut(MouseOutEvent event) {
 				panel.removeStyleName("markedNavigationItem");
 
+				settingsIcon.setVisible(false);
 				dragIcon.setVisible(false);
 			}
 		});
@@ -97,24 +114,23 @@ public class NavigationTreeItem extends FocusPanel {
 		return treeItem;
 	}
 
-	public void showContextMenu(int x, int y) {
-		PopupPanel popup = new PopupPanel(true, false);
-		popup.setWidget(new Label("context menu coming soon..."));
-		popup.setPopupPosition(x, y);
-		popup.show();
+	public void hideContextMenu() {
+		contextMenu.hide();
 	}
 
-	@Override
-	public void onBrowserEvent(Event event) {
-		event.stopPropagation();
-		event.preventDefault();
-		switch (DOM.eventGetType(event)) {
-		case Event.ONCONTEXTMENU:
-			showContextMenu(event.getClientX(), event.getClientY());
-			break;
-		default:
-			super.onBrowserEvent(event);
-			break;
-		}
+	public void setIcon(String url) {
+		icon.setUrl(url);
+	}
+
+	public void setText(String text) {
+		textLabel.setText(text);
+	}
+
+	public void setUserObject(Object userObject) {
+		treeItem.setUserObject(userObject);
+	}
+
+	public HasClickHandlers getEditButton() {
+		return contextMenu.getEditButton();
 	}
 }

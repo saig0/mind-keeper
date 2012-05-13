@@ -1,7 +1,9 @@
 package de.htwk.openNoteKeeper.client.note.presenter.navigation;
 
+import java.util.LinkedList;
 import java.util.List;
 
+import com.allen_sauer.gwt.dnd.client.DragController;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
@@ -17,8 +19,12 @@ import com.mvp4g.client.presenter.BasePresenter;
 import de.htwk.openNoteKeeper.client.main.presenter.Session;
 import de.htwk.openNoteKeeper.client.note.NoteEventBus;
 import de.htwk.openNoteKeeper.client.note.presenter.navigation.HasTreeDropHandler.TreeDropHandler;
+import de.htwk.openNoteKeeper.client.note.presenter.whiteboard.TreeItemPresenter;
+import de.htwk.openNoteKeeper.client.note.presenter.whiteboard.TreeItemPresenter.NavigationTreeItemView;
 import de.htwk.openNoteKeeper.client.note.service.NoteServiceAsync;
 import de.htwk.openNoteKeeper.client.note.view.navigation.NavigationTreeViewImpl;
+import de.htwk.openNoteKeeper.client.util.IconPool;
+import de.htwk.openNoteKeeper.client.util.PresenterFactory;
 import de.htwk.openNoteKeeper.client.util.StatusScreenCallback;
 import de.htwk.openNoteKeeper.client.util.StatusScreenCallback.Status;
 import de.htwk.openNoteKeeper.client.widget.StatusArea;
@@ -38,7 +44,11 @@ public class NavigationTreePresenter extends
 	private StatusArea statusArea;
 
 	public interface NavigationTreeView extends IsWidget {
-		public void setGroups(List<GroupDTO> groups);
+		public void setGroups(List<TreeItem> groupItems);
+
+		public void addTreeItemAndSetStyle(TreeItem parent, TreeItem child);
+
+		public DragController getDragController();
 
 		public HasTreeDropHandler getDropHandler();
 
@@ -49,10 +59,6 @@ public class NavigationTreePresenter extends
 		public GroupDTO getSelectedGroup();
 
 		public WhiteBoardDTO getSelectedWhiteBoard();
-
-		public void addGroupToTree(GroupDTO group);
-
-		public void addWhiteBoardToGroup(WhiteBoardDTO whiteboard);
 
 		public HasClickHandlers getRemoveButton();
 
@@ -244,13 +250,61 @@ public class NavigationTreePresenter extends
 				});
 	}
 
+	// TODO Refactoring
 	public void onLoggedIn(UserDTO user) {
 		noteService.getAllGroupsForUser(user.getId(),
 				new StatusScreenCallback<List<GroupDTO>>(Status.Load_Notes) {
 
 					@Override
 					protected void success(List<GroupDTO> groups) {
-						view.setGroups(groups);
+						List<TreeItem> groupItems = new LinkedList<TreeItem>();
+						for (GroupDTO group : groups) {
+							TreeItem groupItem = createTreeItem(group);
+							groupItems.add(groupItem);
+						}
+						view.setGroups(groupItems);
+					}
+
+					private TreeItem createTreeItem(GroupDTO group) {
+						TreeItem parent = createGroupTreeItem(group);
+						for (GroupDTO childGroup : group.getSubGroups()) {
+							final TreeItem groupItem = createTreeItem(childGroup);
+							view.addTreeItemAndSetStyle(parent, groupItem);
+						}
+						for (WhiteBoardDTO whiteBoard : group.getWhiteBoards()) {
+							TreeItem whiteBoardItem = createWhiteBoardTreeItem(whiteBoard);
+							view.addTreeItemAndSetStyle(parent, whiteBoardItem);
+						}
+						return parent;
+					}
+
+					private TreeItem createGroupTreeItem(GroupDTO group) {
+						TreeItemPresenter treeItemPresenter = PresenterFactory
+								.createPresenter(eventBus,
+										TreeItemPresenter.class);
+						NavigationTreeItemView navigationTreeItem = treeItemPresenter
+								.onShowTreeItem(IconPool.Folder_Big.getUrl(),
+										group.getTitle(), group);
+						TreeItem item = navigationTreeItem.asTreeItem();
+						view.getDragController().makeDraggable(
+								navigationTreeItem.asWidget(),
+								navigationTreeItem.getDragHandle());
+						return item;
+					}
+
+					private TreeItem createWhiteBoardTreeItem(
+							WhiteBoardDTO whiteBoard) {
+						TreeItemPresenter treeItemPresenter = PresenterFactory
+								.createPresenter(eventBus,
+										TreeItemPresenter.class);
+						NavigationTreeItemView navigationTreeItem = treeItemPresenter
+								.onShowTreeItem(
+										IconPool.Blank_Sheet_Big.getUrl(),
+										whiteBoard.getTitle(), whiteBoard);
+						view.getDragController().makeDraggable(
+								navigationTreeItem.asWidget(),
+								navigationTreeItem.getDragHandle());
+						return navigationTreeItem.asTreeItem();
 					}
 				});
 	}

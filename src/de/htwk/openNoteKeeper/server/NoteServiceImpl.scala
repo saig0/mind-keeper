@@ -222,4 +222,16 @@ class NoteServiceImpl extends RemoteServiceServlet with NoteService with Persist
     update[Note](note.key, classOf[Note], note => note.whiteboard = targetWhiteBoardKey)
   }
 
+  def updateGroup(userKey: String, groupDTO: GroupDTO) {
+    update[Group](groupDTO.getKey(), classOf[Group], { group =>
+      group.title = groupDTO.getTitle()
+    })
+  }
+
+  def updateWhiteBoard(userKey: String, whiteboardDTO: WhiteBoardDTO) {
+    update[WhiteBoard](whiteboardDTO.getKey(), classOf[WhiteBoard], { whiteboard =>
+      whiteboard.title = whiteboardDTO.getTitle()
+    })
+  }
+
 }

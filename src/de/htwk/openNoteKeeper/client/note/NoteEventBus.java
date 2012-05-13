@@ -9,6 +9,7 @@ import com.mvp4g.client.view.NoStartView;
 import de.htwk.openNoteKeeper.client.note.presenter.actionBar.NoteActionBarPresenter;
 import de.htwk.openNoteKeeper.client.note.presenter.actionBar.NoteCreationPresenter;
 import de.htwk.openNoteKeeper.client.note.presenter.navigation.NavigationInputPresenter;
+import de.htwk.openNoteKeeper.client.note.presenter.navigation.TreeItemCreationPresenter;
 import de.htwk.openNoteKeeper.client.note.presenter.navigation.NavigationTreePresenter;
 import de.htwk.openNoteKeeper.client.note.presenter.navigation.NavigationTreePresenter.NavigationTreeView;
 import de.htwk.openNoteKeeper.client.note.presenter.whiteboard.NoteMovePresenter;
@@ -64,4 +65,10 @@ public interface NoteEventBus extends EventBus {
 
 	@Event(handlers = SingleNotePresenter.class)
 	public void hideEditor();
+
+	@Event(handlers = TreeItemCreationPresenter.class)
+	public void showGroupEditView(GroupDTO group);
+
+	@Event(handlers = TreeItemCreationPresenter.class)
+	public void showWhiteboardEditView(WhiteBoardDTO whiteBoard);
 }
