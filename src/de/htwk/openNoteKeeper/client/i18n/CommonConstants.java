@@ -32,4 +32,6 @@ public interface CommonConstants extends Constants {
 	String move();
 
 	String settings();
+
+	String confirm();
 }
