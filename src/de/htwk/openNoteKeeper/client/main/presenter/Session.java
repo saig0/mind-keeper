@@ -1,10 +1,13 @@
 package de.htwk.openNoteKeeper.client.main.presenter;
 
+import de.htwk.openNoteKeeper.shared.SettingsDTO;
 import de.htwk.openNoteKeeper.shared.UserDTO;
 
 public class Session {
 
 	private static UserDTO currentUser;
+
+	private static SettingsDTO settings;
 
 	private static boolean editorIsVisable = false;
 
@@ -24,5 +27,13 @@ public class Session {
 
 	public static void setEditorIsVisable(boolean editorIsVisable) {
 		Session.editorIsVisable = editorIsVisable;
+	}
+
+	public static void setSettings(SettingsDTO settings) {
+		Session.settings = settings;
+	}
+
+	public static SettingsDTO getSettings() {
+		return settings;
 	}
 }

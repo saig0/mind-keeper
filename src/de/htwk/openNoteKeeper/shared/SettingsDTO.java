@@ -4,18 +4,27 @@ import com.google.gwt.user.client.rpc.IsSerializable;
 
 public class SettingsDTO implements IsSerializable {
 
+	private String key;
 	private boolean shouldAskBeforeDelete;
 
-	public SettingsDTO(boolean shouldAskBeforeDelete) {
+	SettingsDTO() {
+	}
+
+	public SettingsDTO(String key, boolean shouldAskBeforeDelete) {
+		this.key = key;
 		this.shouldAskBeforeDelete = shouldAskBeforeDelete;
 	}
 
-	public boolean isShouldAskBeforeDelete() {
+	public boolean shouldAskBeforeDelete() {
 		return shouldAskBeforeDelete;
 	}
 
 	public void setShouldAskBeforeDelete(boolean shouldAskBeforeDelete) {
 		this.shouldAskBeforeDelete = shouldAskBeforeDelete;
+	}
+
+	public String getKey() {
+		return key;
 	}
 
 }

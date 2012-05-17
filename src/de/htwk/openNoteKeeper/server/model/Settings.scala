@@ -7,8 +7,7 @@ import javax.jdo.annotations.IdGeneratorStrategy
 import javax.jdo.annotations.Extension
 
 @PersistenceCapable
-class Settings(
-    @Persistent var user: Key) {
+class Settings() {
 
   @PrimaryKey
   @Persistent(valueStrategy = IdGeneratorStrategy.IDENTITY)

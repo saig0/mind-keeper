@@ -4,11 +4,18 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.user.client.ui.IsWidget;
+import com.google.inject.Inject;
 import com.mvp4g.client.annotation.Presenter;
 import com.mvp4g.client.presenter.BasePresenter;
 
 import de.htwk.openNoteKeeper.client.main.MainEventBus;
+import de.htwk.openNoteKeeper.client.main.service.UserServiceAsync;
 import de.htwk.openNoteKeeper.client.main.view.SettingsViewImpl;
+import de.htwk.openNoteKeeper.client.util.LoadingScreenCallback;
+import de.htwk.openNoteKeeper.client.util.StatusScreenCallback;
+import de.htwk.openNoteKeeper.client.util.StatusScreenCallback.Status;
+import de.htwk.openNoteKeeper.shared.SettingsDTO;
+import de.htwk.openNoteKeeper.shared.UserDTO;
 
 @Presenter(view = SettingsViewImpl.class)
 public class SettingsPresenter extends
@@ -19,18 +26,35 @@ public class SettingsPresenter extends
 
 		public void hide();
 
-		public HasClickHandlers getCreateButton();
+		public HasClickHandlers getSaveButton();
 
 		public HasClickHandlers getAbortButton();
+
+		public void setShouldAskBeforeDelete(boolean shouldAskBeforeDelete);
+
+		public boolean shouldAskBeforeDelete();
 	}
+
+	@Inject
+	private UserServiceAsync userService;
+
+	private SettingsDTO settings;
 
 	@Override
 	public void bind() {
-		view.getCreateButton().addClickHandler(new ClickHandler() {
+		view.getSaveButton().addClickHandler(new ClickHandler() {
 
 			public void onClick(ClickEvent event) {
-				// TODO Auto-generated method stub
+				settings.setShouldAskBeforeDelete(view.shouldAskBeforeDelete());
+				userService.updateSettings(settings,
+						new LoadingScreenCallback<Void>(event) {
 
+							@Override
+							protected void success(Void result) {
+								Session.setSettings(settings);
+								view.hide();
+							}
+						});
 			}
 		});
 
@@ -43,6 +67,19 @@ public class SettingsPresenter extends
 	}
 
 	public void onShowSettings() {
+		view.setShouldAskBeforeDelete(settings.shouldAskBeforeDelete());
 		view.show();
+	}
+
+	public void onLoggedIn(UserDTO user) {
+		userService.getSettings(user.getId(),
+				new StatusScreenCallback<SettingsDTO>(Status.Loading) {
+
+					@Override
+					protected void success(SettingsDTO settingsDto) {
+						settings = settingsDto;
+						Session.setSettings(settings);
+					}
+				});
 	}
 }

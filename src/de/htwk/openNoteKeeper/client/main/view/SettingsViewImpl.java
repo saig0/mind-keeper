@@ -3,26 +3,28 @@ package de.htwk.openNoteKeeper.client.main.view;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.user.client.ui.Button;
+import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.DialogBox;
+import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
-import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
 import de.htwk.openNoteKeeper.client.i18n.CommonConstants;
+import de.htwk.openNoteKeeper.client.i18n.SettingsConstants;
 import de.htwk.openNoteKeeper.client.main.presenter.SettingsPresenter.SettingsView;
-import de.htwk.openNoteKeeper.client.note.i18n.NoteConstants;
 import de.htwk.openNoteKeeper.client.util.EnterKeyPressHandler;
 
 public class SettingsViewImpl implements SettingsView {
 
 	private final DialogBox popupPanel;
-	private Button createButton;
+	private Button saveButton;
 	private Button abortButton;
-	private TextBox noteNameTextBox;
+	private CheckBox shouldAskBeforeDeleteCheckBox;
 
-	private NoteConstants noteConstants = GWT.create(NoteConstants.class);
+	private SettingsConstants settingsConstants = GWT
+			.create(SettingsConstants.class);
 	private CommonConstants commonConstants = GWT.create(CommonConstants.class);
 
 	public SettingsViewImpl() {
@@ -41,16 +43,18 @@ public class SettingsViewImpl implements SettingsView {
 		layout.setHorizontalAlignment(VerticalPanel.ALIGN_CENTER);
 		layout.setSize("100%", "100%");
 
-		HorizontalPanel namePanel = new HorizontalPanel();
-		namePanel.setSpacing(5);
-		namePanel.setSize("100%", "100%");
-		namePanel.add(new Label(noteConstants.noteName()));
-		noteNameTextBox = new TextBox();
-		// TODO width fix
-		noteNameTextBox.setWidth("95%");
-		namePanel.add(noteNameTextBox);
-		namePanel.setCellWidth(noteNameTextBox, "65%");
-		layout.add(namePanel);
+		HorizontalPanel commonSettingsPanel = new HorizontalPanel();
+		commonSettingsPanel.setSpacing(5);
+		commonSettingsPanel.setSize("100%", "100%");
+		Label safelyDeleteLabel = new Label(settingsConstants.safelyDelete());
+		safelyDeleteLabel.setTitle(settingsConstants.safelyDeleteDescription());
+		commonSettingsPanel.add(safelyDeleteLabel);
+		shouldAskBeforeDeleteCheckBox = new CheckBox();
+		commonSettingsPanel.add(shouldAskBeforeDeleteCheckBox);
+		commonSettingsPanel.setCellHorizontalAlignment(
+				shouldAskBeforeDeleteCheckBox,
+				HasHorizontalAlignment.ALIGN_RIGHT);
+		layout.add(commonSettingsPanel);
 
 		HorizontalPanel control = new HorizontalPanel();
 		control.setSpacing(5);
@@ -58,13 +62,13 @@ public class SettingsViewImpl implements SettingsView {
 		abortButton = new Button(commonConstants.abort());
 		abortButton.setWidth("100%");
 		control.add(abortButton);
-		createButton = new Button(commonConstants.create());
-		createButton.setWidth("100%");
-		control.add(createButton);
-		control.setCellWidth(createButton, "65%");
+		saveButton = new Button(commonConstants.save());
+		saveButton.setWidth("100%");
+		control.add(saveButton);
+		control.setCellWidth(saveButton, "65%");
 
-		noteNameTextBox.addKeyPressHandler(new EnterKeyPressHandler(
-				createButton));
+		shouldAskBeforeDeleteCheckBox
+				.addKeyPressHandler(new EnterKeyPressHandler(saveButton));
 
 		layout.add(control);
 		popup.setWidget(layout);
@@ -77,19 +81,27 @@ public class SettingsViewImpl implements SettingsView {
 
 	public void show() {
 		popupPanel.center();
-		noteNameTextBox.setFocus(true);
+		shouldAskBeforeDeleteCheckBox.setFocus(true);
 	}
 
 	public void hide() {
 		popupPanel.hide();
-		noteNameTextBox.setText("");
+		shouldAskBeforeDeleteCheckBox.setText("");
 	}
 
-	public HasClickHandlers getCreateButton() {
-		return createButton;
+	public HasClickHandlers getSaveButton() {
+		return saveButton;
 	}
 
 	public HasClickHandlers getAbortButton() {
 		return abortButton;
+	}
+
+	public void setShouldAskBeforeDelete(boolean shouldAskBeforeDelete) {
+		shouldAskBeforeDeleteCheckBox.setValue(shouldAskBeforeDelete);
+	}
+
+	public boolean shouldAskBeforeDelete() {
+		return shouldAskBeforeDeleteCheckBox.getValue();
 	}
 }

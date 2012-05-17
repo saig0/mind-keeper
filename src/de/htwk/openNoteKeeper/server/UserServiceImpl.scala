@@ -7,6 +7,8 @@ import scala.collection.JavaConversions._
 import de.htwk.openNoteKeeper.server.model.User
 import de.htwk.openNoteKeeper.server.model.Settings
 import de.htwk.openNoteKeeper.shared.SettingsDTO
+import com.google.gwt.user.client.rpc.SerializableException
+import com.google.appengine.api.datastore.Key
 
 class UserServiceImpl extends RemoteServiceServlet with UserService with Persistence {
 
@@ -41,21 +43,39 @@ class UserServiceImpl extends RemoteServiceServlet with UserService with Persist
   }
 
   def getSettings(userKey: String) = {
-    findObjectByCriteria(classOf[Settings], new Criteria("user", userKey)) match {
-      case None => {
-        val settings = new Settings(userKey)
-        persist(settings)
-        new SettingsDTO(false)
-      }
-      case Some(settings) => {
-        val shouldAskBeforeDelete = settings.shouldAskBeforeDelete
-        new SettingsDTO(shouldAskBeforeDelete)
+    findObjectByKey(userKey, classOf[User]) match {
+      case None => throw new SerializableException("no user with given key found")
+      case Some(user) => {
+        val settingsKey = user.settings
+        if (settingsKey == null) {
+          createSettings(userKey)
+        } else {
+          findSettings(settingsKey)
+        }
       }
     }
   }
 
-  def updateSettings(settings: SettingsDTO) {
-
+  private def createSettings(userKey: String): SettingsDTO = {
+    val settings = new Settings()
+    persist(settings)
+    update[User](userKey, classOf[User], user => user.settings = settings.key)
+    new SettingsDTO(settings.key, false)
   }
 
+  private def findSettings(settingsKey: Key): SettingsDTO = {
+    findObjectByKey(settingsKey, classOf[Settings]) match {
+      case Some(settings) => {
+        val shouldAskBeforeDelete = settings.shouldAskBeforeDelete
+        new SettingsDTO(settings.key, shouldAskBeforeDelete)
+      }
+      case None => throw new SerializableException("no settings with given key found")
+    }
+  }
+
+  def updateSettings(settingsDto: SettingsDTO) {
+    update[Settings](settingsDto.getKey(), classOf[Settings], { settings =>
+      settings.shouldAskBeforeDelete = settingsDto.shouldAskBeforeDelete()
+    })
+  }
 }
