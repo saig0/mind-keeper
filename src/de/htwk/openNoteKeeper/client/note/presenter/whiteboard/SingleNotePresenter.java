@@ -138,6 +138,7 @@ public class SingleNotePresenter extends
 		final String newContent = view.getContentOfEditor();
 		if (newContent != null) {
 			UserDTO user = Session.getCurrentUser();
+			note.setContent(newContent);
 			noteService.updateNote(user.getId(), note,
 					new StatusScreenCallback<Void>("aktuallisiere Notiz") {
 
@@ -146,7 +147,6 @@ public class SingleNotePresenter extends
 							// TODO Modell auf Client aktualliesieren
 							eventBus.loggedIn(Session.getCurrentUser());
 
-							note.setContent(newContent);
 							view.setContent(newContent);
 							view.hideEditor();
 						}
