@@ -27,11 +27,15 @@ import de.htwk.openNoteKeeper.client.util.IconPool;
 import de.htwk.openNoteKeeper.client.util.PresenterFactory;
 import de.htwk.openNoteKeeper.client.util.StatusScreenCallback;
 import de.htwk.openNoteKeeper.client.util.StatusScreenCallback.Status;
+import de.htwk.openNoteKeeper.client.widget.ConfirmationPopup;
+import de.htwk.openNoteKeeper.client.widget.ConfirmationPopup.SaveAction;
 import de.htwk.openNoteKeeper.client.widget.StatusArea;
 import de.htwk.openNoteKeeper.client.widget.StatusPanel;
 import de.htwk.openNoteKeeper.shared.GroupDTO;
 import de.htwk.openNoteKeeper.shared.UserDTO;
 import de.htwk.openNoteKeeper.shared.WhiteBoardDTO;
+
+;
 
 @Presenter(view = NavigationTreeViewImpl.class)
 public class NavigationTreePresenter extends
@@ -106,11 +110,14 @@ public class NavigationTreePresenter extends
 			public void onClick(ClickEvent event) {
 				if (view.hasSelectedGroup()) {
 					final GroupDTO group = view.getSelectedGroup();
-					UserDTO user = Session.getCurrentUser();
-					noteService.removeGroup(
-							user.getId(),
-							group.getKey(),
-							new StatusScreenCallback<Void>(Status.Remove_Group) {
+					new ConfirmationPopup("Gruppe " + group.getTitle()
+							+ " löschen?", new SaveAction() {
+
+						public void run() {
+							UserDTO user = Session.getCurrentUser();
+							noteService.removeGroup(user.getId(), group
+									.getKey(), new StatusScreenCallback<Void>(
+									Status.Remove_Group) {
 
 								@Override
 								protected void success(Void result) {
@@ -128,31 +135,40 @@ public class NavigationTreePresenter extends
 													true, 5));
 								}
 							});
+						}
+
+					}).show();
 				} else if (view.hasSelectedWhiteBoard()) {
 					final WhiteBoardDTO whiteBoard = view
 							.getSelectedWhiteBoard();
-					noteService.removeWhiteBoard(whiteBoard.getKey(),
-							new StatusScreenCallback<Void>(
-									Status.Remove_Whiteboard) {
+					new ConfirmationPopup("Whiteboard " + whiteBoard.getTitle()
+							+ " löschen?", new SaveAction() {
 
-								@Override
-								protected void success(Void result) {
-									TreeItem parentItem = view
-											.getSelectedTreeItem()
-											.getParentItem();
-									view.removeSelectedWhiteBoard();
-									view.selectTreeItem(parentItem);
+						public void run() {
+							noteService.removeWhiteBoard(whiteBoard.getKey(),
+									new StatusScreenCallback<Void>(
+											Status.Remove_Whiteboard) {
 
-									statusArea
-											.addStatusMessage(new StatusPanel(
-													"Whiteboard: "
-															+ whiteBoard
-																	.getTitle()
-															+ " gelöscht",
-													true, 5));
+										@Override
+										protected void success(Void result) {
+											TreeItem parentItem = view
+													.getSelectedTreeItem()
+													.getParentItem();
+											view.removeSelectedWhiteBoard();
+											view.selectTreeItem(parentItem);
 
-								}
-							});
+											statusArea
+													.addStatusMessage(new StatusPanel(
+															"Whiteboard: "
+																	+ whiteBoard
+																			.getTitle()
+																	+ " gelöscht",
+															true, 5));
+
+										}
+									});
+						}
+					}).show();
 				}
 			}
 		});

@@ -14,6 +14,8 @@ import de.htwk.openNoteKeeper.client.note.view.whiteboard.SingleNoteViewImpl;
 import de.htwk.openNoteKeeper.client.util.DragableWidget;
 import de.htwk.openNoteKeeper.client.util.PresenterFactory;
 import de.htwk.openNoteKeeper.client.util.StatusScreenCallback;
+import de.htwk.openNoteKeeper.client.widget.ConfirmationPopup;
+import de.htwk.openNoteKeeper.client.widget.ConfirmationPopup.SaveAction;
 import de.htwk.openNoteKeeper.client.widget.resize.HasResizeListener;
 import de.htwk.openNoteKeeper.client.widget.resize.ResizeListener;
 import de.htwk.openNoteKeeper.shared.CoordinateDTO;
@@ -87,18 +89,28 @@ public class SingleNotePresenter extends
 		view.getDeleteButton().addClickHandler(new ClickHandler() {
 
 			public void onClick(ClickEvent event) {
-				noteService.removeNote(note.getKey(),
-						new StatusScreenCallback<Void>("lösche Notiz") {
+				view.hide();
+				new ConfirmationPopup("Notiz " + note.getTitle() + " löschen?",
+						new SaveAction() {
 
-							@Override
-							protected void success(Void result) {
-								view.hide();
-								eventBus.removeNote(note);
-								// TODO Modell auf Client aktualliesieren
-								eventBus.loggedIn(Session.getCurrentUser());
-								destroy();
+							public void run() {
+								noteService.removeNote(note.getKey(),
+										new StatusScreenCallback<Void>(
+												"lösche Notiz") {
+
+											@Override
+											protected void success(Void result) {
+												view.hide();
+												eventBus.removeNote(note);
+												// TODO Modell auf Client
+												// aktualliesieren
+												eventBus.loggedIn(Session
+														.getCurrentUser());
+												destroy();
+											}
+										});
 							}
-						});
+						}).show();
 			}
 		});
 
