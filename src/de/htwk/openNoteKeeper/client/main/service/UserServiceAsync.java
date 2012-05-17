@@ -5,6 +5,7 @@ import java.util.Map;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
 import de.htwk.openNoteKeeper.shared.OpenIdProvider;
+import de.htwk.openNoteKeeper.shared.SettingsDTO;
 import de.htwk.openNoteKeeper.shared.UserDTO;
 
 public interface UserServiceAsync {
@@ -20,4 +21,8 @@ public interface UserServiceAsync {
 	void getLoginUrlsForOpenIdProviders(
 			AsyncCallback<Map<OpenIdProvider, String>> callback);
 
+	void getSettings(String userKey, AsyncCallback<SettingsDTO> callback);
+
+	public void updateSettings(SettingsDTO settings,
+			AsyncCallback<Void> callback);
 }

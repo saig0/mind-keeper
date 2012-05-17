@@ -5,6 +5,8 @@ import com.google.appengine.api.users.UserServiceFactory
 import de.htwk.openNoteKeeper.client.main.service.UserService
 import scala.collection.JavaConversions._
 import de.htwk.openNoteKeeper.server.model.User
+import de.htwk.openNoteKeeper.server.model.Settings
+import de.htwk.openNoteKeeper.shared.SettingsDTO
 
 class UserServiceImpl extends RemoteServiceServlet with UserService with Persistence {
 
@@ -37,4 +39,23 @@ class UserServiceImpl extends RemoteServiceServlet with UserService with Persist
       case Some(user) => new UserDTO(user.key, nick, email)
     }
   }
+
+  def getSettings(userKey: String) = {
+    findObjectByCriteria(classOf[Settings], new Criteria("user", userKey)) match {
+      case None => {
+        val settings = new Settings(userKey)
+        persist(settings)
+        new SettingsDTO(false)
+      }
+      case Some(settings) => {
+        val shouldAskBeforeDelete = settings.shouldAskBeforeDelete
+        new SettingsDTO(shouldAskBeforeDelete)
+      }
+    }
+  }
+
+  def updateSettings(settings: SettingsDTO) {
+
+  }
+
 }

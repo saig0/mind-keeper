@@ -9,9 +9,9 @@ import com.mvp4g.client.view.NoStartView;
 import de.htwk.openNoteKeeper.client.note.presenter.actionBar.NoteActionBarPresenter;
 import de.htwk.openNoteKeeper.client.note.presenter.actionBar.NoteCreationPresenter;
 import de.htwk.openNoteKeeper.client.note.presenter.navigation.NavigationInputPresenter;
-import de.htwk.openNoteKeeper.client.note.presenter.navigation.TreeItemCreationPresenter;
 import de.htwk.openNoteKeeper.client.note.presenter.navigation.NavigationTreePresenter;
 import de.htwk.openNoteKeeper.client.note.presenter.navigation.NavigationTreePresenter.NavigationTreeView;
+import de.htwk.openNoteKeeper.client.note.presenter.navigation.TreeItemCreationPresenter;
 import de.htwk.openNoteKeeper.client.note.presenter.whiteboard.NoteMovePresenter;
 import de.htwk.openNoteKeeper.client.note.presenter.whiteboard.NotePresenter;
 import de.htwk.openNoteKeeper.client.note.presenter.whiteboard.SingleNotePresenter;
@@ -71,4 +71,7 @@ public interface NoteEventBus extends EventBus {
 
 	@Event(handlers = TreeItemCreationPresenter.class)
 	public void showWhiteboardEditView(WhiteBoardDTO whiteBoard);
+
+	@Event(forwardToParent = true)
+	public void showSettings();
 }
