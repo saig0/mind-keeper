@@ -17,4 +17,5 @@ class User(
 
   @Persistent var authorities: java.util.List[Key] = new java.util.LinkedList[Key]()
 
+  @Persistent var settings: Key = _
 }

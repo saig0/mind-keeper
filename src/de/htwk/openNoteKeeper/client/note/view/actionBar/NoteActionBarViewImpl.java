@@ -34,7 +34,7 @@ public class NoteActionBarViewImpl implements NoteActionBarView {
 		noteIcon.setStyleName("clickable");
 		main.add(noteIcon);
 
-		settingsIcon = IconPool.Settings.createImage();
+		settingsIcon = IconPool.Settings_Big.createImage();
 		settingsIcon.setTitle(commonConstants.settings());
 		settingsIcon.setStyleName("clickable");
 		main.add(settingsIcon);
