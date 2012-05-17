@@ -18,6 +18,8 @@ public class NoteActionBarPresenter extends
 	public interface NoteActionBarView extends IsWidget {
 
 		public HasClickHandlers getAddButton();
+
+		public HasClickHandlers getSettingsButton();
 	}
 
 	@Override
@@ -26,6 +28,13 @@ public class NoteActionBarPresenter extends
 
 			public void onClick(ClickEvent event) {
 				eventBus.showNoteCreationView();
+			}
+		});
+
+		view.getSettingsButton().addClickHandler(new ClickHandler() {
+
+			public void onClick(ClickEvent event) {
+				eventBus.showSettings();
 			}
 		});
 	}

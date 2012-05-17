@@ -10,6 +10,7 @@ import com.mvp4g.client.event.EventBus;
 
 import de.htwk.openNoteKeeper.client.main.presenter.LanguageChooserPresenter;
 import de.htwk.openNoteKeeper.client.main.presenter.MainPresenter;
+import de.htwk.openNoteKeeper.client.main.presenter.SettingsPresenter;
 import de.htwk.openNoteKeeper.client.main.presenter.UserPresenter;
 import de.htwk.openNoteKeeper.client.main.view.MainViewImpl;
 import de.htwk.openNoteKeeper.client.note.NoteModule;
@@ -32,4 +33,7 @@ public interface MainEventBus extends EventBus {
 
 	@Event(handlers = MainPresenter.class, modulesToLoad = NoteModule.class)
 	public void loggedIn(UserDTO user);
+
+	@Event(handlers = SettingsPresenter.class)
+	public void showSettings();
 }

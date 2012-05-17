@@ -30,4 +30,6 @@ public interface CommonConstants extends Constants {
 	String delete();
 
 	String move();
+
+	String settings();
 }
