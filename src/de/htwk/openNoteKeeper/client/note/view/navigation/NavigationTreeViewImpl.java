@@ -176,6 +176,10 @@ public class NavigationTreeViewImpl implements NavigationTreeView {
 
 	// TODO Refactoring
 	private void mergeTreeItems(TreeItem oldItem, TreeItem newItem) {
+		GroupDTO newRootGroup = getGroupOfTreeItem(newItem);
+		((TreeItemViewImpl) oldItem.getWidget()).setText(newRootGroup
+				.getTitle());
+
 		int i = 0;
 		int j = 0;
 		while (i < newItem.getChildCount()) {
