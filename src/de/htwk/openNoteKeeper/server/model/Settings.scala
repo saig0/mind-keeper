@@ -16,4 +16,7 @@ class Settings() {
 
   @Persistent
   var shouldAskBeforeDelete: Boolean = false
+
+  @Persistent
+  var defaultNoteColor: String = "#F3F781"
 }

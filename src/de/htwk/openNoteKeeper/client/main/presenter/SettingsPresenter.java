@@ -33,6 +33,10 @@ public class SettingsPresenter extends
 		public void setShouldAskBeforeDelete(boolean shouldAskBeforeDelete);
 
 		public boolean shouldAskBeforeDelete();
+
+		public void setDefaultNoteColor(String color);
+
+		public String getDefaultNoteColor();
 	}
 
 	@Inject
@@ -46,6 +50,7 @@ public class SettingsPresenter extends
 
 			public void onClick(ClickEvent event) {
 				settings.setShouldAskBeforeDelete(view.shouldAskBeforeDelete());
+				settings.setDefaultNoteColor(view.getDefaultNoteColor());
 				userService.updateSettings(settings,
 						new LoadingScreenCallback<Void>(event) {
 
@@ -68,6 +73,8 @@ public class SettingsPresenter extends
 
 	public void onShowSettings() {
 		view.setShouldAskBeforeDelete(settings.shouldAskBeforeDelete());
+		view.setDefaultNoteColor(settings.getDefaultNoteColor());
+
 		view.show();
 	}
 
