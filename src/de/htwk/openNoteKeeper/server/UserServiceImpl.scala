@@ -60,14 +60,13 @@ class UserServiceImpl extends RemoteServiceServlet with UserService with Persist
     val settings = new Settings()
     persist(settings)
     update[User](userKey, classOf[User], user => user.settings = settings.key)
-    new SettingsDTO(settings.key, false)
+    new SettingsDTO(settings.key, settings.shouldAskBeforeDelete, settings.defaultNoteColor)
   }
 
   private def findSettings(settingsKey: Key): SettingsDTO = {
     findObjectByKey(settingsKey, classOf[Settings]) match {
       case Some(settings) => {
-        val shouldAskBeforeDelete = settings.shouldAskBeforeDelete
-        new SettingsDTO(settings.key, shouldAskBeforeDelete)
+        new SettingsDTO(settings.key, settings.shouldAskBeforeDelete, settings.defaultNoteColor)
       }
       case None => throw new SerializableException("no settings with given key found")
     }
@@ -76,6 +75,7 @@ class UserServiceImpl extends RemoteServiceServlet with UserService with Persist
   def updateSettings(settingsDto: SettingsDTO) {
     update[Settings](settingsDto.getKey(), classOf[Settings], { settings =>
       settings.shouldAskBeforeDelete = settingsDto.shouldAskBeforeDelete()
+      settings.defaultNoteColor = settingsDto.getDefaultNoteColor()
     })
   }
 }

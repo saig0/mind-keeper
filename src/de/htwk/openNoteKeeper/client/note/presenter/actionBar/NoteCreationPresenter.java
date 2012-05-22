@@ -114,6 +114,8 @@ public class NoteCreationPresenter extends
 
 	public void onShowNoteCreationView() {
 		if (activeWhiteBoard != null) {
+			String defaultColor = Session.getSettings().getDefaultNoteColor();
+			view.setColor(defaultColor);
 			view.showForCreation();
 		}
 	}

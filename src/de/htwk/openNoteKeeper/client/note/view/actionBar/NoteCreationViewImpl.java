@@ -24,9 +24,6 @@ public class NoteCreationViewImpl implements NoteCreationView {
 	private TextBox noteNameTextBox;
 	private ColorPicker colorPicker;
 
-	// TODO benutzerdefinitiert
-	private final String defaultColor = "#F3F781";
-
 	private NoteConstants noteConstants = GWT.create(NoteConstants.class);
 	private CommonConstants commonConstants = GWT.create(CommonConstants.class);
 
@@ -63,7 +60,7 @@ public class NoteCreationViewImpl implements NoteCreationView {
 		colorPanel.setSize("100%", "100%");
 		colorPanel.add(new Label(noteConstants.noteColor()));
 
-		colorPicker = new ColorPicker(defaultColor);
+		colorPicker = new ColorPicker("#ffffff");
 		colorPanel.add(colorPicker);
 		colorPanel.setCellWidth(colorPicker, "65%");
 		layout.add(colorPanel);

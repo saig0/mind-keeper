@@ -5,7 +5,7 @@ import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.DialogBox;
-import com.google.gwt.user.client.ui.HasHorizontalAlignment;
+import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.VerticalPanel;
@@ -15,6 +15,7 @@ import de.htwk.openNoteKeeper.client.i18n.CommonConstants;
 import de.htwk.openNoteKeeper.client.i18n.SettingsConstants;
 import de.htwk.openNoteKeeper.client.main.presenter.SettingsPresenter.SettingsView;
 import de.htwk.openNoteKeeper.client.util.EnterKeyPressHandler;
+import de.htwk.openNoteKeeper.client.widget.ColorPicker;
 
 public class SettingsViewImpl implements SettingsView {
 
@@ -22,6 +23,8 @@ public class SettingsViewImpl implements SettingsView {
 	private Button saveButton;
 	private Button abortButton;
 	private CheckBox shouldAskBeforeDeleteCheckBox;
+	private ColorPicker defaultNoteColorPicker;
+	private CheckBox shouldUseRichTextEditorCheckBox;
 
 	private SettingsConstants settingsConstants = GWT
 			.create(SettingsConstants.class);
@@ -43,18 +46,36 @@ public class SettingsViewImpl implements SettingsView {
 		layout.setHorizontalAlignment(VerticalPanel.ALIGN_CENTER);
 		layout.setSize("100%", "100%");
 
-		HorizontalPanel commonSettingsPanel = new HorizontalPanel();
-		commonSettingsPanel.setSpacing(5);
-		commonSettingsPanel.setSize("100%", "100%");
+		FlexTable settingsPanel = new FlexTable();
+		settingsPanel.setSize("100%", "100%");
+		settingsPanel.getCellFormatter().setWidth(0, 0, "60%");
+
 		Label safelyDeleteLabel = new Label(settingsConstants.safelyDelete());
 		safelyDeleteLabel.setTitle(settingsConstants.safelyDeleteDescription());
-		commonSettingsPanel.add(safelyDeleteLabel);
+		settingsPanel.setWidget(0, 0, safelyDeleteLabel);
+
 		shouldAskBeforeDeleteCheckBox = new CheckBox();
-		commonSettingsPanel.add(shouldAskBeforeDeleteCheckBox);
-		commonSettingsPanel.setCellHorizontalAlignment(
-				shouldAskBeforeDeleteCheckBox,
-				HasHorizontalAlignment.ALIGN_RIGHT);
-		layout.add(commonSettingsPanel);
+		settingsPanel.setWidget(0, 1, shouldAskBeforeDeleteCheckBox);
+
+		Label defaultNoteColorLabel = new Label(
+				settingsConstants.defaultNoteColor());
+		defaultNoteColorLabel.setTitle(settingsConstants
+				.defaultNoteColorDescription());
+		settingsPanel.setWidget(1, 0, defaultNoteColorLabel);
+
+		defaultNoteColorPicker = new ColorPicker("#ffffff");
+		settingsPanel.setWidget(1, 1, defaultNoteColorPicker);
+
+		Label shouldUseRichTextEditorLabel = new Label(
+				settingsConstants.richTextEditor());
+		shouldUseRichTextEditorLabel.setTitle(settingsConstants
+				.richTextEditorDescription());
+		settingsPanel.setWidget(2, 0, shouldUseRichTextEditorLabel);
+
+		shouldUseRichTextEditorCheckBox = new CheckBox();
+		settingsPanel.setWidget(2, 1, shouldUseRichTextEditorCheckBox);
+
+		layout.add(settingsPanel);
 
 		HorizontalPanel control = new HorizontalPanel();
 		control.setSpacing(5);
@@ -103,5 +124,13 @@ public class SettingsViewImpl implements SettingsView {
 
 	public boolean shouldAskBeforeDelete() {
 		return shouldAskBeforeDeleteCheckBox.getValue();
+	}
+
+	public void setDefaultNoteColor(String color) {
+		defaultNoteColorPicker.setColor(color);
+	}
+
+	public String getDefaultNoteColor() {
+		return defaultNoteColorPicker.getColor();
 	}
 }

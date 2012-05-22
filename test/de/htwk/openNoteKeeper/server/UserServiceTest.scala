@@ -38,12 +38,15 @@ class UserServiceTest extends LocalTestService with Persistence {
   def updateSettings {
     var settings = service.getSettings(user.key)
     assert(settings.shouldAskBeforeDelete() == false)
+    assert(settings.getDefaultNoteColor() == "#F3F781")
 
     settings.setShouldAskBeforeDelete(true)
+    settings.setDefaultNoteColor("#ffffff")
     service.updateSettings(settings)
 
     settings = service.getSettings(user.key)
     assert(settings.shouldAskBeforeDelete() == true)
+    assert(settings.getDefaultNoteColor() == "#ffffff")
   }
 
 }
