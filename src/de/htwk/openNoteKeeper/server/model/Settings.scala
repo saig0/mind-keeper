@@ -22,4 +22,7 @@ class Settings() {
 
   @Persistent
   var shouldUseRichTextEditor: Boolean = false
+
+  @Persistent
+  var textEditorOptions: java.util.List[String] = new java.util.LinkedList[String]()
 }

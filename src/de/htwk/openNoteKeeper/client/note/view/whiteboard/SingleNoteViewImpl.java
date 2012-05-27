@@ -1,5 +1,7 @@
 package de.htwk.openNoteKeeper.client.note.view.whiteboard;
 
+import java.util.List;
+
 import com.google.gwt.event.dom.client.BlurEvent;
 import com.google.gwt.event.dom.client.BlurHandler;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -221,6 +223,10 @@ public class SingleNoteViewImpl implements SingleNoteView {
 
 	public void setTextEditor(TextEditor editor) {
 		this.editor = editor;
+	}
+
+	public void setTextEditorOptions(List<String> textEditorOptions) {
+		editor.setTextEditorOptions(textEditorOptions);
 	}
 
 }

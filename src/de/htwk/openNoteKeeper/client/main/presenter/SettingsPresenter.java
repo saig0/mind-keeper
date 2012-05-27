@@ -1,5 +1,7 @@
 package de.htwk.openNoteKeeper.client.main.presenter;
 
+import java.util.List;
+
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
@@ -41,6 +43,10 @@ public class SettingsPresenter extends
 		public void setShouldUseRichTextEditor(boolean shouldUseRichTextEditor);
 
 		public boolean shouldUseRichTextEditor();
+
+		public void setTextEditorOptions(List<String> editorOptions);
+
+		public List<String> getTextEditorOptions();
 	}
 
 	@Inject
@@ -57,6 +63,7 @@ public class SettingsPresenter extends
 				settings.setDefaultNoteColor(view.getDefaultNoteColor());
 				settings.setShouldUseRichTextEditor(view
 						.shouldUseRichTextEditor());
+				settings.setTextEditorOptions(view.getTextEditorOptions());
 				userService.updateSettings(settings,
 						new LoadingScreenCallback<Void>(event) {
 
@@ -81,6 +88,7 @@ public class SettingsPresenter extends
 		view.setShouldAskBeforeDelete(settings.shouldAskBeforeDelete());
 		view.setDefaultNoteColor(settings.getDefaultNoteColor());
 		view.setShouldUseRichTextEditor(settings.shouldUseRichTextEditor());
+		view.setTextEditorOptions(settings.getTextEditorOptions());
 		view.show();
 	}
 

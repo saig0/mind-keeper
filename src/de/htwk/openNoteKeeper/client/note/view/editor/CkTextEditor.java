@@ -1,5 +1,8 @@
 package de.htwk.openNoteKeeper.client.note.view.editor;
 
+import java.util.LinkedList;
+import java.util.List;
+
 import com.axeiya.gwtckeditor.client.CKConfig;
 import com.axeiya.gwtckeditor.client.CKConfig.PRESET_TOOLBAR;
 import com.axeiya.gwtckeditor.client.CKConfig.TOOLBAR_OPTIONS;
@@ -33,6 +36,7 @@ public class CkTextEditor implements TextEditor {
 	private int height;
 	private String color;
 	private String text;
+	private List<String> textEditorOptions;
 
 	public CkTextEditor() {
 		dummyEditor = new Label();
@@ -96,15 +100,15 @@ public class CkTextEditor implements TextEditor {
 
 		// Define the second line
 		ToolbarLine line2 = new ToolbarLine();
-		TOOLBAR_OPTIONS[] t2 = { TOOLBAR_OPTIONS.Bold, TOOLBAR_OPTIONS.Italic,
-				TOOLBAR_OPTIONS.Underline, TOOLBAR_OPTIONS.Strike,
-				TOOLBAR_OPTIONS._, TOOLBAR_OPTIONS.FontSize,
-				TOOLBAR_OPTIONS.TextColor, TOOLBAR_OPTIONS.NumberedList,
-				TOOLBAR_OPTIONS.BulletedList, TOOLBAR_OPTIONS._,
-				TOOLBAR_OPTIONS.Outdent, TOOLBAR_OPTIONS.Indent,
-				TOOLBAR_OPTIONS._, TOOLBAR_OPTIONS._, TOOLBAR_OPTIONS.Image,
-				TOOLBAR_OPTIONS.Table };
-		line2.addAll(t2);
+
+		List<TOOLBAR_OPTIONS> toolbarOptions = new LinkedList<CKConfig.TOOLBAR_OPTIONS>();
+		for (String option : textEditorOptions) {
+			try {
+				toolbarOptions.add(TOOLBAR_OPTIONS.valueOf(option));
+			} catch (IllegalArgumentException e) {
+			}
+		}
+		line2.addAll(toolbarOptions.toArray(new TOOLBAR_OPTIONS[] {}));
 
 		// Creates the toolbar
 		Toolbar toolbar = new Toolbar();
@@ -207,5 +211,9 @@ public class CkTextEditor implements TextEditor {
 			return editor.getHTML();
 		else
 			return null;
+	}
+
+	public void setTextEditorOptions(List<String> textEditorOptions) {
+		this.textEditorOptions = textEditorOptions;
 	}
 }

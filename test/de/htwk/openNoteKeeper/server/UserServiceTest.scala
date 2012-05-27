@@ -34,6 +34,7 @@ class UserServiceTest extends LocalTestService with Persistence {
     assert(settings.shouldAskBeforeDelete() == false)
     assert(settings.getDefaultNoteColor() == "#F3F781")
     assert(settings.shouldUseRichTextEditor() == false)
+    assert(settings.getTextEditorOptions().isEmpty() == true)
   }
 
   @Test
@@ -42,16 +43,22 @@ class UserServiceTest extends LocalTestService with Persistence {
     assert(settings.shouldAskBeforeDelete() == false)
     assert(settings.getDefaultNoteColor() == "#F3F781")
     assert(settings.shouldUseRichTextEditor() == false)
+    assert(settings.getTextEditorOptions().isEmpty() == true)
 
     settings.setShouldAskBeforeDelete(true)
     settings.setDefaultNoteColor("#ffffff")
     settings.setShouldUseRichTextEditor(true)
+    val textEditorOptions = new java.util.LinkedList[String]()
+    textEditorOptions.add("Bold")
+    settings.setTextEditorOptions(textEditorOptions)
     service.updateSettings(settings)
 
     settings = service.getSettings(user.key)
     assert(settings.shouldAskBeforeDelete() == true)
     assert(settings.getDefaultNoteColor() == "#ffffff")
     assert(settings.shouldUseRichTextEditor() == true)
+    assert(settings.getTextEditorOptions().size() == 1)
+    assert(settings.getTextEditorOptions().contains("Bold") == true)
   }
 
 }

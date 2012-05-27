@@ -1,5 +1,7 @@
 package de.htwk.openNoteKeeper.client.note.view.editor;
 
+import java.util.List;
+
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
@@ -18,4 +20,6 @@ public interface TextEditor {
 	public HasClickHandlers getSaveButton();
 
 	public String getContentOfEditor();
+
+	public void setTextEditorOptions(List<String> textEditorOptions);
 }
