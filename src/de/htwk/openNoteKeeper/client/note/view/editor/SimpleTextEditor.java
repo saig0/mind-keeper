@@ -1,5 +1,7 @@
 package de.htwk.openNoteKeeper.client.note.view.editor;
 
+import java.util.List;
+
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.user.client.Timer;
@@ -103,6 +105,9 @@ public class SimpleTextEditor implements TextEditor {
 			return editor.getHTML();
 		else
 			return null;
+	}
+
+	public void setTextEditorOptions(List<String> textEditorOptions) {
 	}
 
 }

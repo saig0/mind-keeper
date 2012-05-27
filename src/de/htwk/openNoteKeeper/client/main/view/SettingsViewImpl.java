@@ -1,5 +1,7 @@
 package de.htwk.openNoteKeeper.client.main.view;
 
+import java.util.List;
+
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -180,5 +182,13 @@ public class SettingsViewImpl implements SettingsView {
 
 	public boolean shouldUseRichTextEditor() {
 		return shouldUseRichTextEditorCheckBox.getValue();
+	}
+
+	public void setTextEditorOptions(List<String> editorOptions) {
+		richTextEditorOptionsDialog.setTextEditorOptions(editorOptions);
+	}
+
+	public List<String> getTextEditorOptions() {
+		return richTextEditorOptionsDialog.getTextEditorOptions();
 	}
 }

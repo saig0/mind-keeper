@@ -1,5 +1,7 @@
 package de.htwk.openNoteKeeper.client.note.presenter.whiteboard;
 
+import java.util.List;
+
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
@@ -60,6 +62,8 @@ public class SingleNotePresenter extends
 		public boolean isEditorVisible();
 
 		public void setTextEditor(TextEditor editor);
+
+		public void setTextEditorOptions(List<String> textEditorOptions);
 	}
 
 	@Inject
@@ -140,6 +144,8 @@ public class SingleNotePresenter extends
 				eventBus.hideEditor();
 				view.setTextEditor(TextEditorFactory.createTextEditor());
 				view.setColor(note.getColor());
+				view.setTextEditorOptions(Session.getSettings()
+						.getTextEditorOptions());
 				view.showEditor();
 			}
 		});
@@ -179,6 +185,7 @@ public class SingleNotePresenter extends
 		view.setContent(note.getContent());
 		view.setColor(note.getColor());
 		view.setSize(note.getSize().getX(), note.getSize().getY());
+		view.setTextEditorOptions(Session.getSettings().getTextEditorOptions());
 		return view;
 	}
 
