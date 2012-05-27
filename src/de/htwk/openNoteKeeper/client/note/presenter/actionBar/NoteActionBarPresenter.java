@@ -27,6 +27,7 @@ public class NoteActionBarPresenter extends
 		view.getAddButton().addClickHandler(new ClickHandler() {
 
 			public void onClick(ClickEvent event) {
+				eventBus.hideEditor();
 				eventBus.showNoteCreationView();
 			}
 		});
