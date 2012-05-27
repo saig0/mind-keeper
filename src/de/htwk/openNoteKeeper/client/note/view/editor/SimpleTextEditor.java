@@ -64,8 +64,6 @@ public class SimpleTextEditor implements TextEditor {
 			@Override
 			public void run() {
 				if (!Session.isEditorVisable()) {
-					System.out.println("show: " + text);
-
 					createAndInitEditor(text, loadingWidget);
 					this.cancel();
 				}
