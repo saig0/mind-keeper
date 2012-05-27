@@ -7,15 +7,17 @@ public class SettingsDTO implements IsSerializable {
 	private String key;
 	private boolean shouldAskBeforeDelete;
 	private String defaultNoteColor;
+	private boolean shouldUseRichTextEditor;
 
 	SettingsDTO() {
 	}
 
 	public SettingsDTO(String key, boolean shouldAskBeforeDelete,
-			String defaultNoteColor) {
+			String defaultNoteColor, boolean shouldUseRichTextEditor) {
 		this.key = key;
 		this.shouldAskBeforeDelete = shouldAskBeforeDelete;
 		this.defaultNoteColor = defaultNoteColor;
+		this.shouldUseRichTextEditor = shouldUseRichTextEditor;
 	}
 
 	public boolean shouldAskBeforeDelete() {
@@ -36,6 +38,14 @@ public class SettingsDTO implements IsSerializable {
 
 	public String getDefaultNoteColor() {
 		return defaultNoteColor;
+	}
+
+	public boolean shouldUseRichTextEditor() {
+		return shouldUseRichTextEditor;
+	}
+
+	public void setShouldUseRichTextEditor(boolean shouldUseRichTextEditor) {
+		this.shouldUseRichTextEditor = shouldUseRichTextEditor;
 	}
 
 }

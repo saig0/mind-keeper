@@ -10,6 +10,8 @@ import com.mvp4g.client.presenter.BasePresenter;
 import de.htwk.openNoteKeeper.client.main.presenter.Session;
 import de.htwk.openNoteKeeper.client.note.NoteEventBus;
 import de.htwk.openNoteKeeper.client.note.service.NoteServiceAsync;
+import de.htwk.openNoteKeeper.client.note.view.editor.TextEditor;
+import de.htwk.openNoteKeeper.client.note.view.editor.TextEditorFactory;
 import de.htwk.openNoteKeeper.client.note.view.whiteboard.SingleNoteViewImpl;
 import de.htwk.openNoteKeeper.client.util.DragableWidget;
 import de.htwk.openNoteKeeper.client.util.PresenterFactory;
@@ -56,6 +58,8 @@ public class SingleNotePresenter extends
 		public void hideEditor();
 
 		public boolean isEditorVisible();
+
+		public void setTextEditor(TextEditor editor);
 	}
 
 	@Inject
@@ -134,6 +138,8 @@ public class SingleNotePresenter extends
 
 			public void onClick(ClickEvent event) {
 				eventBus.hideEditor();
+				view.setTextEditor(TextEditorFactory.createTextEditor());
+				view.setColor(note.getColor());
 				view.showEditor();
 			}
 		});
@@ -168,6 +174,7 @@ public class SingleNotePresenter extends
 
 	public DragableWidget showNote(NoteDTO note) {
 		this.note = note;
+		view.setTextEditor(TextEditorFactory.createTextEditor());
 		view.setTitle(note.getTitle());
 		view.setContent(note.getContent());
 		view.setColor(note.getColor());

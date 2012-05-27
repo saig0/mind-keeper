@@ -15,4 +15,8 @@ public interface SettingsConstants extends Constants {
 	public String richTextEditor();
 
 	public String richTextEditorDescription();
+
+	public String richTextEditorOptions();
+
+	public String richTextEditorOptionsDescription();
 }

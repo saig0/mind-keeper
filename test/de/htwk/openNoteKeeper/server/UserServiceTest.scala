@@ -32,6 +32,8 @@ class UserServiceTest extends LocalTestService with Persistence {
 
     assertNotNull(settings)
     assert(settings.shouldAskBeforeDelete() == false)
+    assert(settings.getDefaultNoteColor() == "#F3F781")
+    assert(settings.shouldUseRichTextEditor() == false)
   }
 
   @Test
@@ -39,14 +41,17 @@ class UserServiceTest extends LocalTestService with Persistence {
     var settings = service.getSettings(user.key)
     assert(settings.shouldAskBeforeDelete() == false)
     assert(settings.getDefaultNoteColor() == "#F3F781")
+    assert(settings.shouldUseRichTextEditor() == false)
 
     settings.setShouldAskBeforeDelete(true)
     settings.setDefaultNoteColor("#ffffff")
+    settings.setShouldUseRichTextEditor(true)
     service.updateSettings(settings)
 
     settings = service.getSettings(user.key)
     assert(settings.shouldAskBeforeDelete() == true)
     assert(settings.getDefaultNoteColor() == "#ffffff")
+    assert(settings.shouldUseRichTextEditor() == true)
   }
 
 }

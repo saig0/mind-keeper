@@ -1,7 +1,11 @@
 package de.htwk.openNoteKeeper.client.main.view;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
+import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.DialogBox;
@@ -25,6 +29,8 @@ public class SettingsViewImpl implements SettingsView {
 	private CheckBox shouldAskBeforeDeleteCheckBox;
 	private ColorPicker defaultNoteColorPicker;
 	private CheckBox shouldUseRichTextEditorCheckBox;
+	private Button openRichTextEditorOptionsDialogButton;
+	private RichTextEditorOptionsDialog richTextEditorOptionsDialog;
 
 	private SettingsConstants settingsConstants = GWT
 			.create(SettingsConstants.class);
@@ -73,7 +79,41 @@ public class SettingsViewImpl implements SettingsView {
 		settingsPanel.setWidget(2, 0, shouldUseRichTextEditorLabel);
 
 		shouldUseRichTextEditorCheckBox = new CheckBox();
+		shouldUseRichTextEditorCheckBox
+				.addValueChangeHandler(new ValueChangeHandler<Boolean>() {
+
+					public void onValueChange(ValueChangeEvent<Boolean> event) {
+						if (shouldUseRichTextEditorCheckBox.getValue()) {
+							openRichTextEditorOptionsDialogButton
+									.setEnabled(true);
+						} else {
+							openRichTextEditorOptionsDialogButton
+									.setEnabled(false);
+						}
+					}
+				});
 		settingsPanel.setWidget(2, 1, shouldUseRichTextEditorCheckBox);
+
+		Label richTextEditorOptionsLabel = new Label(
+				settingsConstants.richTextEditorOptions());
+		richTextEditorOptionsLabel.setTitle(settingsConstants
+				.richTextEditorOptionsDescription());
+		settingsPanel.setWidget(3, 0, richTextEditorOptionsLabel);
+
+		richTextEditorOptionsDialog = new RichTextEditorOptionsDialog();
+		openRichTextEditorOptionsDialogButton = new Button(
+				commonConstants.open());
+		openRichTextEditorOptionsDialogButton.setWidth("100%");
+		openRichTextEditorOptionsDialogButton.setEnabled(false);
+		openRichTextEditorOptionsDialogButton
+				.addClickHandler(new ClickHandler() {
+
+					public void onClick(ClickEvent event) {
+						richTextEditorOptionsDialog.show(event.getClientX(),
+								event.getClientY());
+					}
+				});
+		settingsPanel.setWidget(3, 1, openRichTextEditorOptionsDialogButton);
 
 		layout.add(settingsPanel);
 
@@ -132,5 +172,13 @@ public class SettingsViewImpl implements SettingsView {
 
 	public String getDefaultNoteColor() {
 		return defaultNoteColorPicker.getColor();
+	}
+
+	public void setShouldUseRichTextEditor(boolean shouldUseRichTextEditor) {
+		shouldUseRichTextEditorCheckBox.setValue(shouldUseRichTextEditor, true);
+	}
+
+	public boolean shouldUseRichTextEditor() {
+		return shouldUseRichTextEditorCheckBox.getValue();
 	}
 }
