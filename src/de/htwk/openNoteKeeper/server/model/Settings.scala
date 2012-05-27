@@ -19,4 +19,7 @@ class Settings() {
 
   @Persistent
   var defaultNoteColor: String = "#F3F781"
+
+  @Persistent
+  var shouldUseRichTextEditor: Boolean = false
 }

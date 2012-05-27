@@ -37,6 +37,10 @@ public class SettingsPresenter extends
 		public void setDefaultNoteColor(String color);
 
 		public String getDefaultNoteColor();
+
+		public void setShouldUseRichTextEditor(boolean shouldUseRichTextEditor);
+
+		public boolean shouldUseRichTextEditor();
 	}
 
 	@Inject
@@ -51,6 +55,8 @@ public class SettingsPresenter extends
 			public void onClick(ClickEvent event) {
 				settings.setShouldAskBeforeDelete(view.shouldAskBeforeDelete());
 				settings.setDefaultNoteColor(view.getDefaultNoteColor());
+				settings.setShouldUseRichTextEditor(view
+						.shouldUseRichTextEditor());
 				userService.updateSettings(settings,
 						new LoadingScreenCallback<Void>(event) {
 
@@ -74,7 +80,7 @@ public class SettingsPresenter extends
 	public void onShowSettings() {
 		view.setShouldAskBeforeDelete(settings.shouldAskBeforeDelete());
 		view.setDefaultNoteColor(settings.getDefaultNoteColor());
-
+		view.setShouldUseRichTextEditor(settings.shouldUseRichTextEditor());
 		view.show();
 	}
 
