@@ -50,6 +50,8 @@ public class NotePresenter extends BasePresenter<NoteViewImpl, NoteEventBus> {
 		public void showGroupWidget(String groupName);
 
 		public void cleanView();
+
+		public void setScrollEnable(boolean enable);
 	}
 
 	@Override
@@ -72,10 +74,10 @@ public class NotePresenter extends BasePresenter<NoteViewImpl, NoteEventBus> {
 				NoteDTO note = getDraggedNote(event.getContext());
 				if (note != null) {
 					Widget noteWidget = event.getContext().draggable;
-					int left = noteWidget.getAbsoluteLeft()
-							- view.getWhiteBoardAbsoluteLeft();
-					int top = noteWidget.getAbsoluteTop()
-							- view.getWhiteBoardAbsoluteTop();
+					int left = getIntOfPixelValue(noteWidget.getElement()
+							.getStyle().getLeft());
+					int top = getIntOfPixelValue(noteWidget.getElement()
+							.getStyle().getTop());
 					note.setPosition(new CoordinateDTO(left, top));
 					UserDTO user = Session.getCurrentUser();
 					noteService.updateNote(
@@ -88,6 +90,11 @@ public class NotePresenter extends BasePresenter<NoteViewImpl, NoteEventBus> {
 								}
 							});
 				}
+			}
+
+			private int getIntOfPixelValue(String pixelValue) {
+				return Integer.valueOf(pixelValue.substring(0,
+						pixelValue.length() - 2));
 			}
 
 			private NoteDTO getDraggedNote(DragContext context) {
@@ -108,6 +115,7 @@ public class NotePresenter extends BasePresenter<NoteViewImpl, NoteEventBus> {
 	public void onSelectWhiteBoard(WhiteBoardDTO selectedWhiteBoard) {
 		view.cleanView();
 		noteWidgets.clear();
+		view.setScrollEnable(true);
 
 		for (NoteDTO note : selectedWhiteBoard.getNotes()) {
 			onShowNote(note);
@@ -136,6 +144,7 @@ public class NotePresenter extends BasePresenter<NoteViewImpl, NoteEventBus> {
 	public void onSelectGroup(GroupDTO group) {
 		view.cleanView();
 		noteWidgets.clear();
+		view.setScrollEnable(false);
 
 		view.showGroupWidget(group.getTitle());
 	}
