@@ -131,6 +131,7 @@ public class NavigationTreeViewImpl implements NavigationTreeView {
 				navigationTree.addItem(groupItem);
 			}
 		}
+		navigationTree.setSelectedItem(navigationTree.getItem(0), true);
 	}
 
 	private TreeItem getExistingTreeItem(TreeItem groupItem) {

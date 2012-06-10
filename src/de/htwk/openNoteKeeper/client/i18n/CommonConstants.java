@@ -36,4 +36,6 @@ public interface CommonConstants extends Constants {
 	String confirm();
 
 	String open();
+
+	String increase();
 }
