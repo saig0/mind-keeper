@@ -26,4 +26,9 @@ public interface NoteConstants extends Constants {
 	String editGroup();
 
 	String editWhiteboard();
+
+	String findNotes();
+
+	String findNotesField();
+
 }

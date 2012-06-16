@@ -1,7 +1,9 @@
 package de.htwk.openNoteKeeper.client.note.presenter.navigation;
 
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 import com.allen_sauer.gwt.dnd.client.DragController;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -19,8 +21,7 @@ import com.mvp4g.client.presenter.BasePresenter;
 import de.htwk.openNoteKeeper.client.main.presenter.Session;
 import de.htwk.openNoteKeeper.client.note.NoteEventBus;
 import de.htwk.openNoteKeeper.client.note.presenter.navigation.HasTreeDropHandler.TreeDropHandler;
-import de.htwk.openNoteKeeper.client.note.presenter.whiteboard.TreeItemPresenter;
-import de.htwk.openNoteKeeper.client.note.presenter.whiteboard.TreeItemPresenter.NavigationTreeItemView;
+import de.htwk.openNoteKeeper.client.note.presenter.navigation.TreeItemPresenter.NavigationTreeItemView;
 import de.htwk.openNoteKeeper.client.note.service.NoteServiceAsync;
 import de.htwk.openNoteKeeper.client.note.view.navigation.NavigationTreeViewImpl;
 import de.htwk.openNoteKeeper.client.util.IconPool;
@@ -46,6 +47,8 @@ public class NavigationTreePresenter extends
 
 	@Inject
 	private StatusArea statusArea;
+
+	private Map<String, TreeItem> whiteboardKeyToTreeItemMapper = new HashMap<String, TreeItem>();
 
 	public interface NavigationTreeView extends IsWidget {
 		public void setGroups(List<TreeItem> groupItems);
@@ -273,55 +276,63 @@ public class NavigationTreePresenter extends
 
 					@Override
 					protected void success(List<GroupDTO> groups) {
-						List<TreeItem> groupItems = new LinkedList<TreeItem>();
-						for (GroupDTO group : groups) {
-							TreeItem groupItem = createTreeItem(group);
-							groupItems.add(groupItem);
-						}
-						view.setGroups(groupItems);
-					}
-
-					private TreeItem createTreeItem(GroupDTO group) {
-						TreeItem parent = createGroupTreeItem(group);
-						for (GroupDTO childGroup : group.getSubGroups()) {
-							final TreeItem groupItem = createTreeItem(childGroup);
-							view.addTreeItemAndSetStyle(parent, groupItem);
-						}
-						for (WhiteBoardDTO whiteBoard : group.getWhiteBoards()) {
-							TreeItem whiteBoardItem = createWhiteBoardTreeItem(whiteBoard);
-							view.addTreeItemAndSetStyle(parent, whiteBoardItem);
-						}
-						return parent;
-					}
-
-					private TreeItem createGroupTreeItem(GroupDTO group) {
-						TreeItemPresenter treeItemPresenter = PresenterFactory
-								.createPresenter(eventBus,
-										TreeItemPresenter.class);
-						NavigationTreeItemView navigationTreeItem = treeItemPresenter
-								.onShowTreeItem(IconPool.Folder_Big.getUrl(),
-										group.getTitle(), group);
-						TreeItem item = navigationTreeItem.asTreeItem();
-						view.getDragController().makeDraggable(
-								navigationTreeItem.asWidget(),
-								navigationTreeItem.getDragHandle());
-						return item;
-					}
-
-					private TreeItem createWhiteBoardTreeItem(
-							WhiteBoardDTO whiteBoard) {
-						TreeItemPresenter treeItemPresenter = PresenterFactory
-								.createPresenter(eventBus,
-										TreeItemPresenter.class);
-						NavigationTreeItemView navigationTreeItem = treeItemPresenter
-								.onShowTreeItem(
-										IconPool.Blank_Sheet_Big.getUrl(),
-										whiteBoard.getTitle(), whiteBoard);
-						view.getDragController().makeDraggable(
-								navigationTreeItem.asWidget(),
-								navigationTreeItem.getDragHandle());
-						return navigationTreeItem.asTreeItem();
+						eventBus.showGroupsForUser(groups);
 					}
 				});
+	}
+
+	public void onShowGroupsForUser(List<GroupDTO> groups) {
+		whiteboardKeyToTreeItemMapper.clear();
+		List<TreeItem> groupItems = new LinkedList<TreeItem>();
+		for (GroupDTO group : groups) {
+			TreeItem groupItem = createTreeItem(group);
+			groupItems.add(groupItem);
+		}
+		view.setGroups(groupItems);
+	}
+
+	private TreeItem createTreeItem(GroupDTO group) {
+		TreeItem parent = createGroupTreeItem(group);
+		for (GroupDTO childGroup : group.getSubGroups()) {
+			final TreeItem groupItem = createTreeItem(childGroup);
+			view.addTreeItemAndSetStyle(parent, groupItem);
+		}
+		for (WhiteBoardDTO whiteBoard : group.getWhiteBoards()) {
+			TreeItem whiteBoardItem = createWhiteBoardTreeItem(whiteBoard);
+			view.addTreeItemAndSetStyle(parent, whiteBoardItem);
+			whiteboardKeyToTreeItemMapper.put(whiteBoard.getKey(),
+					whiteBoardItem);
+		}
+		return parent;
+	}
+
+	private TreeItem createGroupTreeItem(GroupDTO group) {
+		TreeItemPresenter treeItemPresenter = PresenterFactory.createPresenter(
+				eventBus, TreeItemPresenter.class);
+		NavigationTreeItemView navigationTreeItem = treeItemPresenter
+				.onShowTreeItem(IconPool.Folder_Big.getUrl(), group.getTitle(),
+						group);
+		TreeItem item = navigationTreeItem.asTreeItem();
+		view.getDragController().makeDraggable(navigationTreeItem.asWidget(),
+				navigationTreeItem.getDragHandle());
+		return item;
+	}
+
+	private TreeItem createWhiteBoardTreeItem(WhiteBoardDTO whiteBoard) {
+		TreeItemPresenter treeItemPresenter = PresenterFactory.createPresenter(
+				eventBus, TreeItemPresenter.class);
+		NavigationTreeItemView navigationTreeItem = treeItemPresenter
+				.onShowTreeItem(IconPool.Blank_Sheet_Big.getUrl(),
+						whiteBoard.getTitle(), whiteBoard);
+		view.getDragController().makeDraggable(navigationTreeItem.asWidget(),
+				navigationTreeItem.getDragHandle());
+		return navigationTreeItem.asTreeItem();
+	}
+
+	public void onShowWhiteboard(String whiteboardKey) {
+		if (whiteboardKeyToTreeItemMapper.containsKey(whiteboardKey)) {
+			TreeItem item = whiteboardKeyToTreeItemMapper.get(whiteboardKey);
+			view.selectTreeItem(item);
+		}
 	}
 }
