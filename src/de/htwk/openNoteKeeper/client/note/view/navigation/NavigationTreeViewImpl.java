@@ -317,6 +317,17 @@ public class NavigationTreeViewImpl implements NavigationTreeView {
 
 	public void selectTreeItem(TreeItem item) {
 		navigationTree.setSelectedItem(item, true);
+		openParentItems(item);
+	}
+
+	private void openParentItems(TreeItem item) {
+		if (!item.getState()) {
+			item.setState(true);
+		}
+		TreeItem parentItem = item.getParentItem();
+		if (parentItem != null) {
+			openParentItems(parentItem);
+		}
 	}
 
 	public DragController getDragController() {

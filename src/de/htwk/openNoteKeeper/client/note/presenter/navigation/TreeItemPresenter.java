@@ -1,4 +1,4 @@
-package de.htwk.openNoteKeeper.client.note.presenter.whiteboard;
+package de.htwk.openNoteKeeper.client.note.presenter.navigation;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;

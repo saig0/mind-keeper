@@ -15,7 +15,7 @@ import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.TreeItem;
 import com.google.gwt.user.client.ui.Widget;
 
-import de.htwk.openNoteKeeper.client.note.presenter.whiteboard.TreeItemPresenter.NavigationTreeItemView;
+import de.htwk.openNoteKeeper.client.note.presenter.navigation.TreeItemPresenter.NavigationTreeItemView;
 import de.htwk.openNoteKeeper.client.util.IconPool;
 
 public class TreeItemViewImpl extends FocusPanel implements

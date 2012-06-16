@@ -2,9 +2,11 @@ package de.htwk.openNoteKeeper.client.note.view.actionBar;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.user.client.ui.HasVerticalAlignment;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Widget;
+import com.google.inject.Inject;
 
 import de.htwk.openNoteKeeper.client.i18n.CommonConstants;
 import de.htwk.openNoteKeeper.client.note.i18n.NoteConstants;
@@ -16,33 +18,44 @@ public class NoteActionBarViewImpl implements NoteActionBarView {
 	private NoteConstants constants = GWT.create(NoteConstants.class);
 	private CommonConstants commonConstants = GWT.create(CommonConstants.class);
 
-	private final HorizontalPanel main;
+	private HorizontalPanel main;
 	private Image noteIcon;
 	private Image settingsIcon;
 
+	@Inject
+	private NoteFindViewImpl noteFindView;
+
 	public NoteActionBarViewImpl() {
-		main = createLayout();
+		noteIcon = IconPool.Notice_Big.createImage();
+		settingsIcon = IconPool.Settings_Big.createImage();
 	}
 
 	private HorizontalPanel createLayout() {
 		HorizontalPanel main = new HorizontalPanel();
 		main.setSize("100%", "100%");
 		main.addStyleName("actionBar");
+		main.setSpacing(10);
+		main.setVerticalAlignment(HasVerticalAlignment.ALIGN_MIDDLE);
 
-		noteIcon = IconPool.Notice_Big.createImage();
 		noteIcon.setTitle(constants.newNote());
 		noteIcon.setStyleName("clickable");
 		main.add(noteIcon);
 
-		settingsIcon = IconPool.Settings_Big.createImage();
 		settingsIcon.setTitle(commonConstants.settings());
 		settingsIcon.setStyleName("clickable");
 		main.add(settingsIcon);
+
+		main.add(noteFindView);
+		main.setCellVerticalAlignment(noteFindView,
+				HasVerticalAlignment.ALIGN_MIDDLE);
 
 		return main;
 	}
 
 	public Widget asWidget() {
+		if (main == null) {
+			main = createLayout();
+		}
 		return main;
 	}
 
