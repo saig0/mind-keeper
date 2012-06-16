@@ -31,7 +31,9 @@ public class NoteViewImpl implements NoteView {
 
 	private final class SizeExtenderHandler implements MouseMoveHandler {
 		public void onMouseMove(MouseMoveEvent event) {
-			if (isScrollEnable) {
+			// FIXME Notizen können nicht auf erweiterten Bereich verschoben
+			// werden
+			if (isScrollEnable && false) {
 				int spacing = 30;
 				int sizeOfScrollPanel = 20;
 				int whiteboardWidthArea = (whiteboardPanel.getAbsoluteLeft()
