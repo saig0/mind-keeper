@@ -38,4 +38,8 @@ public interface CommonConstants extends Constants {
 	String open();
 
 	String increase();
+
+	String german();
+
+	String english();
 }

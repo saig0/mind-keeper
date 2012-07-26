@@ -28,7 +28,8 @@ public enum IconPool implements IsSerializable {
 			"blank_sheet_big.png"), Blank_Sheet("blank_sheet.png"), Up_And_Down(
 			"up_and_down_arrows.png"), PostIt("Postit.jpg"), Settings_Small_2(
 			"settings2.png"), Settings_Big("settings_big.png"), Save_Small(
-			"save_small.png"), Save("save.png");
+			"save_small.png"), Save("save.png"), World("world.png"), ConstructionArea(
+			"construction-area.png"), Login("login.png"), Logout("logout.png");
 
 	private final String dir = "images/";
 	private final String url;

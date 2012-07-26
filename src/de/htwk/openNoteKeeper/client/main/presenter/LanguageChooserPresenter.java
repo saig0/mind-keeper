@@ -3,14 +3,12 @@ package de.htwk.openNoteKeeper.client.main.presenter;
 import java.util.Arrays;
 import java.util.Date;
 
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.http.client.UrlBuilder;
 import com.google.gwt.i18n.client.LocaleInfo;
+import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.Cookies;
 import com.google.gwt.user.client.Window.Location;
-import com.google.gwt.user.client.ui.IsWidget;
+import com.google.gwt.user.client.ui.MenuItem;
 import com.mvp4g.client.annotation.Presenter;
 import com.mvp4g.client.presenter.BasePresenter;
 
@@ -24,31 +22,29 @@ public class LanguageChooserPresenter extends
 	private static final String COOKIE_NAME = "locale";
 	private static final int COOKIE_TIMEOUT = 1000 * 60 * 60 * 24 * 14;
 
-	private final class ChangeLocalClickHandler implements ClickHandler {
+	public interface LanguageChooserView {
+		public MenuItem asMenuItem();
 
-		private final String newLocale;
+		public void setGermanCommand(Command command);
 
-		public ChangeLocalClickHandler(String newLocale) {
-			this.newLocale = newLocale;
-		}
-
-		public void onClick(ClickEvent event) {
-			setLocaleTo(newLocale);
-		}
-	}
-
-	public interface LanguageChooserView extends IsWidget {
-		public HasClickHandlers getGermanWidget();
-
-		public HasClickHandlers getUsWidget();
+		public void setUsCommand(Command command);
 	}
 
 	@Override
 	public void bind() {
-		view.getGermanWidget().addClickHandler(
-				new ChangeLocalClickHandler("de"));
+		view.setGermanCommand(new Command() {
 
-		view.getUsWidget().addClickHandler(new ChangeLocalClickHandler("en"));
+			public void execute() {
+				setLocaleTo("de");
+			}
+		});
+
+		view.setUsCommand(new Command() {
+
+			public void execute() {
+				setLocaleTo("en");
+			}
+		});
 	}
 
 	public void onStart() {

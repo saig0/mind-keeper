@@ -8,9 +8,9 @@
 	<extend-property name="locale" values="en" />
 	<extend-property name="locale" values="de" />
 
-	<!-- <inherits name='com.google.gwt.user.theme.standard.Standard' /> -->
-	<inherits name='com.google.gwt.user.theme.chrome.Chrome' />
-
+	<!-- <inherits name='com.google.gwt.user.theme.chrome.Chrome' /> -->
+	<stylesheet src="OpenNoteKeeper.css" />
+	
 	<!-- Other module inherits -->
 	<inherits name='com.mvp4g.Mvp4gModule' />
 	<inherits name='com.allen_sauer.gwt.dnd.gwt-dnd' />
@@ -20,6 +20,7 @@
 	<!-- Specify the paths for translatable code -->
 	<source path='client' />
 	<source path='shared' />
+
 
 	<entry-point class="de.htwk.openNoteKeeper.client.OpenNoteKeeper" />
 </module>

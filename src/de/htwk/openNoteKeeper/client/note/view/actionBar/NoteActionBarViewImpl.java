@@ -8,7 +8,6 @@ import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 
-import de.htwk.openNoteKeeper.client.i18n.CommonConstants;
 import de.htwk.openNoteKeeper.client.note.i18n.NoteConstants;
 import de.htwk.openNoteKeeper.client.note.presenter.actionBar.NoteActionBarPresenter.NoteActionBarView;
 import de.htwk.openNoteKeeper.client.util.IconPool;
@@ -16,18 +15,15 @@ import de.htwk.openNoteKeeper.client.util.IconPool;
 public class NoteActionBarViewImpl implements NoteActionBarView {
 
 	private NoteConstants constants = GWT.create(NoteConstants.class);
-	private CommonConstants commonConstants = GWT.create(CommonConstants.class);
 
 	private HorizontalPanel main;
 	private Image noteIcon;
-	private Image settingsIcon;
 
 	@Inject
 	private NoteFindViewImpl noteFindView;
 
 	public NoteActionBarViewImpl() {
 		noteIcon = IconPool.Notice_Big.createImage();
-		settingsIcon = IconPool.Settings_Big.createImage();
 	}
 
 	private HorizontalPanel createLayout() {
@@ -40,10 +36,6 @@ public class NoteActionBarViewImpl implements NoteActionBarView {
 		noteIcon.setTitle(constants.newNote());
 		noteIcon.setStyleName("clickable");
 		main.add(noteIcon);
-
-		settingsIcon.setTitle(commonConstants.settings());
-		settingsIcon.setStyleName("clickable");
-		main.add(settingsIcon);
 
 		main.add(noteFindView);
 		main.setCellVerticalAlignment(noteFindView,
@@ -61,9 +53,5 @@ public class NoteActionBarViewImpl implements NoteActionBarView {
 
 	public HasClickHandlers getAddButton() {
 		return noteIcon;
-	}
-
-	public HasClickHandlers getSettingsButton() {
-		return settingsIcon;
 	}
 }

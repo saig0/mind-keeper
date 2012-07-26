@@ -1,13 +1,13 @@
 package de.htwk.openNoteKeeper.client.main.presenter;
 
-import com.google.gwt.event.dom.client.HasClickHandlers;
-import com.google.gwt.user.client.ui.IsWidget;
+import com.google.gwt.user.client.Command;
+import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.ui.MenuItem;
 import com.mvp4g.client.annotation.Presenter;
 import com.mvp4g.client.presenter.BasePresenter;
 
 import de.htwk.openNoteKeeper.client.main.MainEventBus;
 import de.htwk.openNoteKeeper.client.main.view.CommunityViewImpl;
-import de.htwk.openNoteKeeper.client.util.RedirectClickHandler;
 
 @Presenter(view = CommunityViewImpl.class)
 public class CommunityPresenter extends
@@ -15,15 +15,20 @@ public class CommunityPresenter extends
 
 	private static final String ISSUE_TRACKER_URL = "https://bitbucket.org/saigo/mind-keeper/issues";
 
-	public interface CommunityView extends IsWidget {
-		HasClickHandlers getIssueTrackerButton();
+	public interface CommunityView {
+		public MenuItem asMenuItem();
 
+		public void setCommand(Command command);
 	}
 
 	@Override
 	public void bind() {
-		view.getIssueTrackerButton().addClickHandler(
-				new RedirectClickHandler(ISSUE_TRACKER_URL, true));
+		view.setCommand(new Command() {
+
+			public void execute() {
+				Window.open(ISSUE_TRACKER_URL, "_blank", "");
+			}
+		});
 	}
 
 	public void onStart() {
