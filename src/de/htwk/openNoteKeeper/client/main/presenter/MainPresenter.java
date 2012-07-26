@@ -2,6 +2,7 @@ package de.htwk.openNoteKeeper.client.main.presenter;
 
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.IsWidget;
+import com.google.gwt.user.client.ui.MenuItem;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.mvp4g.client.annotation.Presenter;
@@ -11,7 +12,6 @@ import de.htwk.openNoteKeeper.client.main.MainEventBus;
 import de.htwk.openNoteKeeper.client.main.view.MainViewImpl;
 import de.htwk.openNoteKeeper.client.widget.StatusArea;
 import de.htwk.openNoteKeeper.client.widget.StatusPanel;
-import de.htwk.openNoteKeeper.shared.UserDTO;
 
 @Presenter(view = MainViewImpl.class)
 public class MainPresenter extends BasePresenter<MainViewImpl, MainEventBus> {
@@ -19,6 +19,10 @@ public class MainPresenter extends BasePresenter<MainViewImpl, MainEventBus> {
 		public void setContent(Widget content);
 
 		public void setActionBar(Widget actionWidget);
+
+		public void setSettingsMenu(MenuItem menuItem);
+
+		public void setUserMenu(MenuItem menuItem);
 	}
 
 	@Inject
@@ -34,11 +38,7 @@ public class MainPresenter extends BasePresenter<MainViewImpl, MainEventBus> {
 		if (userAgent.contains("chrome")) {
 			// ok
 		} else if (userAgent.contains("firefox")) {
-			// TODO für Firefox optimieren
-			statusArea
-					.addStatusMessage(new StatusPanel(
-							"optimale Darstellung der Website mit Chrome-Browser (Firefox folgt)",
-							true, 10));
+			// naja
 		} else {
 			statusArea.addStatusMessage(new StatusPanel(
 					"optimale Darstellung der Website mit Chrome-Browser",
@@ -50,15 +50,19 @@ public class MainPresenter extends BasePresenter<MainViewImpl, MainEventBus> {
 		return Window.Navigator.getUserAgent().toLowerCase();
 	}
 
-	public void onLoggedIn(UserDTO user) {
-
-	}
-
 	public void onSetContent(Widget content) {
 		view.setContent(content);
 	}
 
 	public void onSetActionBar(Widget actionWidget) {
 		view.setActionBar(actionWidget);
+	}
+
+	public void onSetSettingsMenu(MenuItem menuItem) {
+		view.setSettingsMenu(menuItem);
+	}
+
+	public void onSetUserMenu(MenuItem menuItem) {
+		view.setUserMenu(menuItem);
 	}
 }

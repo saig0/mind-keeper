@@ -6,7 +6,6 @@ import de.htwk.openNoteKeeper.server.model.Note._
 import org.junit._
 import Assert._
 import com.google.appengine.api.datastore.Text
-import com.vercer.engine.persist.annotation.AnnotationObjectDatastore
 import com.google.appengine.api.datastore.Query.FilterOperator
 import de.htwk.openNoteKeeper.shared._
 import com.google.appengine.api.datastore.KeyFactory

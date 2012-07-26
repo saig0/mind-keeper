@@ -1,48 +1,31 @@
 package de.htwk.openNoteKeeper.client.main.view;
 
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.dom.client.HasClickHandlers;
-import com.google.gwt.user.client.ui.Button;
-import com.google.gwt.user.client.ui.HorizontalPanel;
-import com.google.gwt.user.client.ui.Widget;
+import com.google.gwt.user.client.Command;
+import com.google.gwt.user.client.ui.MenuItem;
+import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 import de.htwk.openNoteKeeper.client.i18n.CommonConstants;
 import de.htwk.openNoteKeeper.client.main.presenter.CommunityPresenter.CommunityView;
-import de.htwk.openNoteKeeper.client.util.RedirectClickHandler;
+import de.htwk.openNoteKeeper.client.util.IconPool;
+import de.htwk.openNoteKeeper.client.widget.IconButton;
 
 @Singleton
 public class CommunityViewImpl implements CommunityView {
 
-	private CommonConstants constants = GWT.create(CommonConstants.class);
+	@Inject
+	private CommonConstants constants;
+	private Command command;
 
-	private static final String ISSUE_TRACKER_URL = "https://bitbucket.org/saigo/mind-keeper/issues";
-
-	private final Widget main;
-	private Button issueTrackerButton;
-
-	public CommunityViewImpl() {
-		main = createView();
+	public MenuItem asMenuItem() {
+		IconButton issue = new IconButton(
+				IconPool.ConstructionArea.createImage(),
+				constants.issueTracker());
+		return new MenuItem(issue.getHTML(), true, command);
 	}
 
-	private Widget createView() {
-		HorizontalPanel panel = new HorizontalPanel();
-		panel.setSpacing(10);
-
-		issueTrackerButton = new Button(constants.issueTracker());
-		issueTrackerButton.addClickHandler(new RedirectClickHandler(
-				ISSUE_TRACKER_URL, true));
-		panel.add(issueTrackerButton);
-
-		return panel;
-	}
-
-	public Widget asWidget() {
-		return main;
-	}
-
-	public HasClickHandlers getIssueTrackerButton() {
-		return issueTrackerButton;
+	public void setCommand(Command command) {
+		this.command = command;
 	}
 
 }

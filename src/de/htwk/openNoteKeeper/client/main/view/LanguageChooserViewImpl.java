@@ -1,16 +1,15 @@
 package de.htwk.openNoteKeeper.client.main.view;
 
-import com.google.gwt.event.dom.client.HasClickHandlers;
-import com.google.gwt.user.client.ui.HorizontalPanel;
-import com.google.gwt.user.client.ui.Image;
-import com.google.gwt.user.client.ui.Label;
-import com.google.gwt.user.client.ui.Widget;
+import com.google.gwt.user.client.Command;
+import com.google.gwt.user.client.ui.MenuBar;
+import com.google.gwt.user.client.ui.MenuItem;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 import de.htwk.openNoteKeeper.client.i18n.CommonConstants;
 import de.htwk.openNoteKeeper.client.main.presenter.LanguageChooserPresenter.LanguageChooserView;
 import de.htwk.openNoteKeeper.client.util.IconPool;
+import de.htwk.openNoteKeeper.client.widget.IconButton;
 
 @Singleton
 public class LanguageChooserViewImpl implements LanguageChooserView {
@@ -18,31 +17,27 @@ public class LanguageChooserViewImpl implements LanguageChooserView {
 	@Inject
 	private CommonConstants constants;
 
-	private Image germanFlag = IconPool.Flag_German.createImage();
-	private Image usFlag = IconPool.Flag_Us.createImage();
+	private Command germanCommand;
+	private Command usCommand;
 
-	public Widget asWidget() {
-		HorizontalPanel panel = new HorizontalPanel();
-		panel.setSpacing(10);
-
-		panel.add(new Label(constants.language()));
-
-		germanFlag.setTitle("German");
-		germanFlag.setStyleName("clickable");
-		panel.add(germanFlag);
-
-		usFlag.setTitle("United States");
-		usFlag.setStyleName("clickable");
-		panel.add(usFlag);
-
-		return panel;
+	public MenuItem asMenuItem() {
+		MenuBar menuBar = new MenuBar(true);
+		IconButton german = new IconButton(IconPool.Flag_German.createImage(),
+				constants.german());
+		menuBar.addItem(german.getHTML(), true, germanCommand);
+		IconButton us = new IconButton(IconPool.Flag_Us.createImage(),
+				constants.english());
+		menuBar.addItem(us.getHTML(), true, usCommand);
+		IconButton language = new IconButton(IconPool.World.createImage(),
+				constants.language());
+		return new MenuItem(language.getHTML(), true, menuBar);
 	}
 
-	public HasClickHandlers getGermanWidget() {
-		return germanFlag;
+	public void setGermanCommand(Command command) {
+		this.germanCommand = command;
 	}
 
-	public HasClickHandlers getUsWidget() {
-		return usFlag;
+	public void setUsCommand(Command command) {
+		this.usCommand = command;
 	}
 }
