@@ -45,10 +45,11 @@ public interface NoteEventBus extends EventBus {
 			NavigationTreeView navigationTreeView, GroupDTO selectedGroup);
 
 	@Event(handlers = { NotePresenter.class, NoteCreationPresenter.class,
-			NoteMovePresenter.class })
+			NoteMovePresenter.class, NoteActionBarPresenter.class })
 	public void selectWhiteBoard(WhiteBoardDTO selectedWhiteBoard);
 
-	@Event(handlers = { NotePresenter.class, NoteCreationPresenter.class })
+	@Event(handlers = { NotePresenter.class, NoteCreationPresenter.class,
+			NoteActionBarPresenter.class })
 	public void selectGroup(GroupDTO group);
 
 	@Event(handlers = NoteCreationPresenter.class)

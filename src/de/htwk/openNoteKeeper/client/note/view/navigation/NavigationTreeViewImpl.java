@@ -7,6 +7,10 @@ import com.allen_sauer.gwt.dnd.client.PickupDragController;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.event.dom.client.MouseOutEvent;
+import com.google.gwt.event.dom.client.MouseOutHandler;
+import com.google.gwt.event.dom.client.MouseOverEvent;
+import com.google.gwt.event.dom.client.MouseOverHandler;
 import com.google.gwt.event.logical.shared.HasSelectionHandlers;
 import com.google.gwt.event.logical.shared.SelectionEvent;
 import com.google.gwt.event.logical.shared.SelectionHandler;
@@ -63,12 +67,12 @@ public class NavigationTreeViewImpl implements NavigationTreeView {
 		navigationPanel.add(controlPanel);
 		navigationPanel.setCellHeight(controlPanel, "10%");
 
-		groupIcon = IconPool.Folder_Big.createImage();
+		groupIcon = IconPool.Folder_Add.createImage();
 		groupIcon.setTitle(constants.newGroup());
 		groupIcon.setStyleName("clickable");
 		controlPanel.add(groupIcon);
 
-		whiteBoardIcon = IconPool.Blank_Sheet_Big.createImage();
+		whiteBoardIcon = IconPool.Blank_Sheet_Add.createImage();
 		whiteBoardIcon.setTitle(constants.newWhiteBoard());
 		whiteBoardIcon.setStyleName("clickable");
 		controlPanel.add(whiteBoardIcon);
@@ -76,6 +80,18 @@ public class NavigationTreeViewImpl implements NavigationTreeView {
 		trashIcon = IconPool.Trash_Big.createImage();
 		trashIcon.setTitle(constants.delete());
 		trashIcon.setStyleName("clickable");
+		trashIcon.addMouseOverHandler(new MouseOverHandler() {
+
+			public void onMouseOver(MouseOverEvent event) {
+				trashIcon.setUrl(IconPool.Trash_Full_Big.getUrl());
+			}
+		});
+		trashIcon.addMouseOutHandler(new MouseOutHandler() {
+
+			public void onMouseOut(MouseOutEvent event) {
+				trashIcon.setUrl(IconPool.Trash_Big.getUrl());
+			}
+		});
 		controlPanel.add(trashIcon);
 
 		navigationTree = new DragAndDropTreeAdapter();
@@ -332,5 +348,21 @@ public class NavigationTreeViewImpl implements NavigationTreeView {
 
 	public DragController getDragController() {
 		return dragController;
+	}
+
+	public void setEnableAddFolder(boolean enable) {
+		if (enable) {
+			groupIcon.setUrl(IconPool.Folder_Add.getUrl());
+		} else {
+			groupIcon.setUrl(IconPool.Folder_Disable.getUrl());
+		}
+	}
+
+	public void setEnableAddWhiteBoard(boolean enable) {
+		if (enable) {
+			whiteBoardIcon.setUrl(IconPool.Blank_Sheet_Add.getUrl());
+		} else {
+			whiteBoardIcon.setUrl(IconPool.Blank_Sheet_Diable.getUrl());
+		}
 	}
 }
