@@ -23,7 +23,7 @@ public class NoteActionBarViewImpl implements NoteActionBarView {
 	private NoteFindViewImpl noteFindView;
 
 	public NoteActionBarViewImpl() {
-		noteIcon = IconPool.Notice_Big.createImage();
+		noteIcon = IconPool.Notice_Add.createImage();
 	}
 
 	private HorizontalPanel createLayout() {
@@ -53,5 +53,13 @@ public class NoteActionBarViewImpl implements NoteActionBarView {
 
 	public HasClickHandlers getAddButton() {
 		return noteIcon;
+	}
+
+	public void setEnableAdd(boolean enable) {
+		if (enable) {
+			noteIcon.setUrl(IconPool.Notice_Add.getUrl());
+		} else {
+			noteIcon.setUrl(IconPool.Notice_Disable.getUrl());
+		}
 	}
 }

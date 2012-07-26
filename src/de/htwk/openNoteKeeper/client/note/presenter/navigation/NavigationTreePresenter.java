@@ -84,6 +84,10 @@ public class NavigationTreePresenter extends
 		public HasSelectionHandlers<TreeItem> getNavigationTree();
 
 		public void selectTreeItem(TreeItem item);
+
+		public void setEnableAddFolder(boolean enable);
+
+		public void setEnableAddWhiteBoard(boolean enable);
 	}
 
 	@Override
@@ -259,10 +263,14 @@ public class NavigationTreePresenter extends
 									&& !((GroupDTO) userObject).getKey()
 											.contains("dummy")) {
 								eventBus.selectGroup((GroupDTO) userObject);
+								view.setEnableAddFolder(true);
+								view.setEnableAddWhiteBoard(true);
 							} else if (userObject instanceof WhiteBoardDTO
 									&& !((WhiteBoardDTO) userObject).getKey()
 											.contains("dummy")) {
 								eventBus.selectWhiteBoard((WhiteBoardDTO) userObject);
+								view.setEnableAddFolder(false);
+								view.setEnableAddWhiteBoard(false);
 							}
 						}
 					}
@@ -310,7 +318,7 @@ public class NavigationTreePresenter extends
 		TreeItemPresenter treeItemPresenter = PresenterFactory.createPresenter(
 				eventBus, TreeItemPresenter.class);
 		NavigationTreeItemView navigationTreeItem = treeItemPresenter
-				.onShowTreeItem(IconPool.Folder_Big.getUrl(), group.getTitle(),
+				.onShowTreeItem(IconPool.Folder.getUrl(), group.getTitle(),
 						group);
 		TreeItem item = navigationTreeItem.asTreeItem();
 		view.getDragController().makeDraggable(navigationTreeItem.asWidget(),
@@ -322,7 +330,7 @@ public class NavigationTreePresenter extends
 		TreeItemPresenter treeItemPresenter = PresenterFactory.createPresenter(
 				eventBus, TreeItemPresenter.class);
 		NavigationTreeItemView navigationTreeItem = treeItemPresenter
-				.onShowTreeItem(IconPool.Blank_Sheet_Big.getUrl(),
+				.onShowTreeItem(IconPool.Blank_Sheet.getUrl(),
 						whiteBoard.getTitle(), whiteBoard);
 		view.getDragController().makeDraggable(navigationTreeItem.asWidget(),
 				navigationTreeItem.getDragHandle());

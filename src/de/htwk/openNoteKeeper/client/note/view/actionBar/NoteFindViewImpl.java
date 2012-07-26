@@ -33,12 +33,12 @@ public class NoteFindViewImpl implements NoteFindView {
 
 	private Widget createWidget() {
 		HorizontalPanel main = new HorizontalPanel();
-		main.setSize("130px", "100%");
+		main.setSize("100%", "100%");
 		main.setSpacing(3);
 
 		oracle = new MultiWordSuggestOracle(" ()");
 		suggestBox = new SuggestBox(oracle);
-		suggestBox.setWidth("100px");
+		suggestBox.setWidth("150px");
 		suggestBox.setTitle(noteConstants.findNotesField());
 		main.add(suggestBox);
 

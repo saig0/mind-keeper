@@ -9,7 +9,9 @@ import com.mvp4g.client.presenter.BasePresenter;
 
 import de.htwk.openNoteKeeper.client.note.NoteEventBus;
 import de.htwk.openNoteKeeper.client.note.view.actionBar.NoteActionBarViewImpl;
+import de.htwk.openNoteKeeper.shared.GroupDTO;
 import de.htwk.openNoteKeeper.shared.UserDTO;
+import de.htwk.openNoteKeeper.shared.WhiteBoardDTO;
 
 @Presenter(view = NoteActionBarViewImpl.class)
 public class NoteActionBarPresenter extends
@@ -18,6 +20,8 @@ public class NoteActionBarPresenter extends
 	public interface NoteActionBarView extends IsWidget {
 
 		public HasClickHandlers getAddButton();
+
+		public void setEnableAdd(boolean enable);
 	}
 
 	@Override
@@ -33,6 +37,14 @@ public class NoteActionBarPresenter extends
 
 	public void onLoggedIn(UserDTO user) {
 		eventBus.setActionBar(view.asWidget());
+	}
+
+	public void onSelectWhiteBoard(WhiteBoardDTO selectedWhiteBoard) {
+		view.setEnableAdd(true);
+	}
+
+	public void onSelectGroup(GroupDTO group) {
+		view.setEnableAdd(false);
 	}
 
 }

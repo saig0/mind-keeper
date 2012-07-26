@@ -25,11 +25,15 @@ public enum IconPool implements IsSerializable {
 			"flag_german.png"), Flag_Us("flag_us.png"), Arrow_Right_Light(
 			"right_arrow_light.png"), Arrow_Down_Light("down_arrow_light.png"), Folder_Big(
 			"folder_big.png"), Folder("folder.png"), Blank_Sheet_Big(
-			"blank_sheet_big.png"), Blank_Sheet("blank_sheet.png"), Up_And_Down(
+			"blank_sheet_big-2.png"), Blank_Sheet("blank_sheet-2.png"), Up_And_Down(
 			"up_and_down_arrows.png"), PostIt("Postit.jpg"), Settings_Small_2(
 			"settings2.png"), Settings_Big("settings_big.png"), Save_Small(
 			"save_small.png"), Save("save.png"), World("world.png"), ConstructionArea(
-			"construction-area.png"), Login("login.png"), Logout("logout.png");
+			"construction-area.png"), Login("login.png"), Logout("logout.png"), Notice_Add(
+			"postit-add-big.jpg"), Notice_Disable("postit-disable-big.jpg"), Folder_Add(
+			"folder_add_big.png"), Blank_Sheet_Add("blank_sheet_add_big.png"), Folder_Disable(
+			"folder_disable_big.png"), Blank_Sheet_Diable(
+			"blank_sheet_disable_big.png");
 
 	private final String dir = "images/";
 	private final String url;
