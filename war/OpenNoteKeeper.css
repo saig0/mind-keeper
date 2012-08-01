@@ -146,3 +146,15 @@
 .gwt-MenuBar .gwt-MenuItem-selected {
 	background: #C8DCFA;
 }
+
+.welcome {
+	font-weight: bold;
+	font-size: 28px;
+	color: #829AE2;
+}
+
+.welcome-small {
+	font-weight: bold;
+	font-size: 24px;
+	color: #A9B7E0;
+}
