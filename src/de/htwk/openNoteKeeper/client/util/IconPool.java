@@ -33,7 +33,9 @@ public enum IconPool implements IsSerializable {
 			"postit-add-big.jpg"), Notice_Disable("postit-disable-big.jpg"), Folder_Add(
 			"folder_add_big.png"), Blank_Sheet_Add("blank_sheet_add_big.png"), Folder_Disable(
 			"folder_disable_big.png"), Blank_Sheet_Diable(
-			"blank_sheet_disable_big.png");
+			"blank_sheet_disable_big.png"), Online_Notes("online-notizen-2.jpg"), Note_Hierarchy(
+			"hierarchie-notizen.jpg"), Note_Search("notizen-suche.jpg"), Editor_Config(
+			"notizen-einstellungen.jpg"), Note_Security("notizen-sicherheit.jpg");
 
 	private final String dir = "images/";
 	private final String url;

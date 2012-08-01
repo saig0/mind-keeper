@@ -15,6 +15,7 @@ import de.htwk.openNoteKeeper.client.main.presenter.MainPresenter;
 import de.htwk.openNoteKeeper.client.main.presenter.SettingsMenuPresenter;
 import de.htwk.openNoteKeeper.client.main.presenter.SettingsPresenter;
 import de.htwk.openNoteKeeper.client.main.presenter.UserPresenter;
+import de.htwk.openNoteKeeper.client.main.presenter.WelcomePresenter;
 import de.htwk.openNoteKeeper.client.main.view.MainViewImpl;
 import de.htwk.openNoteKeeper.client.note.NoteModule;
 import de.htwk.openNoteKeeper.shared.UserDTO;
@@ -26,7 +27,7 @@ public interface MainEventBus extends EventBus {
 	@Start
 	@Event(handlers = { MainPresenter.class, UserPresenter.class,
 			LanguageChooserPresenter.class, CommunityPresenter.class,
-			SettingsMenuPresenter.class })
+			SettingsMenuPresenter.class, WelcomePresenter.class })
 	public void start();
 
 	@Event(handlers = MainPresenter.class)
